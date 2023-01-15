@@ -7,6 +7,7 @@ jawiki="true"
 neologd="true"
 personal_names="true"
 place_names="true"
+sudachidict="true"
 
 rm -f mozcdic-ut.txt
 
@@ -24,6 +25,10 @@ fi
 
 if [[ $place_names = "true" ]]; then
 cat mozcdic-ut-place-names.txt >> mozcdic-ut.txt
+fi
+
+if [[ $sudachidict = "true" ]]; then
+cat mozcdic-ut-sudachidict.txt >> mozcdic-ut.txt
 fi
 
 ruby remove_duplicate_ut_entries.rb mozcdic-ut.txt
