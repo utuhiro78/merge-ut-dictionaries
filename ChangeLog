@@ -1,0 +1,1796 @@
+# ==============================================================================
+# mozcdic-ut
+# ==============================================================================
+
+2023-01-15
+  データごとにプロジェクトを分割した。
+  ほぼすべてのソースを改変した。
+  プロジェクトごとにドキュメントを書いた。
+  GitHub にリポジトリを作成した。
+
+2023-01-06
+- Update remove_unnecessary_entries.rb.
+  デフォルト辞書と同じ読み表記を持つエントリの削除量を増やして、
+  配布ファイルを小さくした。
+
+- Update filter_unsuitable_entries.rb
+  不適切語をフィルタリングした後のIDを、「名詞,一般,」に変更した。
+
+- Update get_mozc_git.rb.
+  Mozcの圧縮ファイルの日付を、ファイル取得日ではなく最終コミット日に変更。
+
+- Update README.md.
+- Update jawiki-articles.
+- Update utdic.
+
+2022-12-30
+- Update generate_jawiki_ut.rb.
+- Update jawiki-articles.
+- Update utdic.
+
+2022-10-22
+- Change "jinmei-ut" to "utdic".
+  人名以外にも追加したい項目があるので、jinmei-ut を utdic に変更。
+  例: 有機EL、昼白色
+
+- Change URL of SudachiDict.
+  https://github.com/WorksApplications/SudachiDict
+  > Dictionary sources were hosted on git lfs, but are hosted on S3 now. 
+  > They will be moved to github in the future once more.
+
+- Fix convert_sudachidict_to_mozcdic.rb.
+  mozcdic-ut-sudachidict-*.txt had not been built properly.
+
+- Update jawiki-articles.
+- Update jinmei-ut.
+
+2022-09-04
+- Update jawiki-articles.
+- Update jinmei-ut.
+
+2022-07-23
+- Update jawiki-articles.
+- Update jinmei-ut.
+
+2022-06-23
+- Update jawiki-articles.
+- Update jinmei-ut.
+
+2022-05-25
+- Update jawiki-articles.
+- Update jinmei-ut.
+
+2022-04-21
+- Update jawiki-articles.
+- Update jinmei-ut.
+
+- Update PKGBUILD.
+  ソースに日付を付けるようにした。
+  ソースが更新されても mozc_version_template.bzl が更新されないことがあるので。
+  旧: mozc-2.28.4702.102.tar.bz2
+  新: mozc-2.28.4702.102.20220418.tar.bz2
+
+  バイナリパッケージの命名規則を変更した。
+  旧: fcitx5-mozc-ut-version.utdicdate
+  新: fcitx5-mozc-ut-version.srcdate
+
+  mozc-ut-common を fcitx5-mozc-ut に統合した。
+  AUR パッケージの形式に合わせないと警告が出るので。
+
+2022-04-03
+- Update jawiki-articles.
+- Update jinmei-ut.
+
+2022-03-05
+- Update jawiki-articles.
+- Update jinmei-ut.
+- Modify PKGBUILD.
+
+2022-02-16
+- Update build scripts.
+- Modify PKGBUILD.
+- Update jinmei-ut.
+
+2022-02-06
+- Change URL of jawiki-latest-pages-articles.xml.bz2.
+- Change URL of jawiki-latest-all-titles-in-ns0.gz.
+
+- Update PKGBUILD to support the changes
+  https://github.com/fcitx/mozc/commit/4d2e3bd
+  https://github.com/google/mozc/issues/544#issuecomment-1025122998
+
+- Update jawiki-articles.
+- Update jinmei-ut.
+
+2022-01-12
+- Update jawiki-articles.
+- Update jinmei-ut.
+
+2021-12-26
+- Update sudachidict.
+- Update jawiki-articles.
+- Update jinmei-ut.
+
+2021-12-05
+- Update jawiki-articles.
+- Update jinmei-ut.
+
+2021-11-21
+- Mozc辞書と「読み+表記」が重複していてもIDが重複していなければ収録することにした。
+  辞書サイズが大きくなるが、Mozc辞書の人名はマイナーなものが上位に来ることがあるので。
+
+- Change URL of SKK-JISYO.L.
+
+- Update jawiki-articles.
+- Update jinmei-ut.
+
+2021-10-31
+- Update jawiki-articles.
+- Update jinmei-ut.
+
+2021-10-09
+- Update PKGBUILD.
+  Switched to Bazel. (Thanks Nocifer!)
+  https://aur.archlinux.org/packages/mozc-ut-common/
+  https://aur.archlinux.org/packages/fcitx5-mozc-ut/
+
+  New Mozc targets are supported by Bazel only.
+  https://github.com/google/mozc/blob/master/docs/build_mozc_in_docker.md#differences-between-bazel-build-and-gyp-build
+
+- Move fcitx4-mozc files to _obsolete.
+  I couldn't build fcitx4-mozc with Bazel.
+
+- Update get_mozc_git.rb.
+  Change source URL to https://github.com/fcitx/mozc.git
+
+- mozc-*.tar.bz2 に src/third_party/ を含めるようにした。
+  サイズは大きくなるが外部からパッケージを取得する必要がなくなるので、
+  そのままビルドできる。PKGBUILD もシンプルになった。
+
+- Make a LICENSE file automatically.
+
+- Update jawiki-articles.
+- Update jinmei-ut.
+
+2021-09-25
+- Fix make-dictionaries.sh.
+  辞書作成前に既存ファイルを削除する際、mozcdic.txt を残すようにした。
+  最新版の mozc-*.tar.bz2 が存在する場合は mozcdic.txt を再作成しないので、
+  残しておかないと2回目以降の辞書作成でエラーが出る。
+
+- Update remove_unnecessary_entries.rb.
+  「99」までではなく「100」までの数字を収録対象にした。「100均」など。
+
+- Fix alt-cannadic.
+  読みの「う゛」を「ゔ」に置き換えた。
+  alt-cannadic のバージョンは固定なので、wget のオプションを nc に変更した。
+
+- Fix skkdic.
+  読みの「う゛」を「ゔ」に置き換えた。
+
+- jinmei-ut.txt の量を減らした。
+  jawiki-articles などでカバーできる。
+
+2021-09-23
+- jawiki-articles を修正。
+  読みの取捨を共通コードに任せすぎて、ひらがな以外の読みを取得した場合でも
+  それ以上の探索をしなくなっていた。
+
+- 読みがひらがな以外を含む場合は、各辞書の変換コードで省くようにした。
+  エントリの取捨を共通コードに任せすぎて、各辞書単体が見づらくなっていた。
+
+- 最新版の mozc-*.tar.bz2 が mozc/ に存在する場合は再度作成しないようにした。
+  再度作ると sha256sum が変わるので、mozc-*.tar.bz2 の差し替えが必要になる。
+
+2021-09-22
+- Mozc本体とSudachiDictのファイル取得方法を変更した。
+  mozc_version_template.bzl や History ページから最新版のバージョン名を取得して、
+  手元のファイルと比較するようにした。
+  wget だけだと常に新規取得になり、毎回450MBダウンロードすることになる。
+
+- リリースファイルの作成に必要な作業を自動化した。
+  make-dictionaries.sh を実行すると、
+    最新の Mozc を取得してバージョン名付きの mozc-*.tar.bz2 を作成する。
+    README.md に書かれている date: を更新する。
+    README.md と PKGBUILD に書かれているバージョン名を更新する。
+    PKGBUILD に書かれている mozc-*.tar.bz2 の sha256sum を更新する。
+    mozcdic-ut-*.tar.bz2 を作成する。
+
+- 読みと表記を取捨するコードを独立させた。
+  重複行を削除してソートするところまでは各辞書の変換コードで行い、
+  それ以上の取捨は別コードで行うことにした。
+  共通部分を独立させることで各辞書の変換コードがシンプルになった。
+  これに伴いほとんどの ruby コードを更新した。
+
+- Mozc公式辞書と「読み+表記」が重複しているエントリを収録から外した。
+  従来は品詞が違っていれば「読み+表記」が重複していても収録していた。
+
+- edict2 辞書の英訳候補を収録から外した。
+  「もんすたーぺあれんつ」で「over-demanding parents」を出すのは過剰に感じた。
+
+- 「ゔぁゔぃゔゔぇゔぉ」の読みから「ばびぶべぼ」を作るのをやめた。
+  「ぼーぼわーる」で「ボーヴォワール」を出すのは過剰に感じた。
+  Google翻訳のオンライン日本語入力で「ぼーぼわーる」と入力した場合も
+  「ボーボワール」しか出ない。
+  https://translate.google.co.jp/?sl=ja&tl=en
+  Google翻訳では「0 / 5000」の右の「あ」をクリックすると日本語入力できる。
+
+- Change names of ruby files.
+  ruby のメソッド名をファイル名にした。
+  結果としてファイル名の "-" を "_" に置き換えた。
+  メソッド名では "-" を使えない。
+
+- 辞書生成中に表示するメッセージを増やした。
+
+- Wikipediaのダンプファイルの取得元を your.org ミラーに変更した。
+  ミラーサイト一覧
+  https://dumps.wikimedia.org/mirrors.html
+
+- Update README.md.
+  See this page for the latest information.
+  http://linuxplayers.g1.xrea.com/mozc-ut.html
+
+2021-09-07
+- Update build scripts.
+  いったんすべての辞書ファイルを作成し、結合する段階で辞書を選択するようにした。
+  edict を長らく作成していなくて、URL が変更されていることに気づかなかったので。
+
+- Update README.md.
+
+2021-09-06
+- remove nicoime.
+  ニコニコ大百科IME辞書をMozc用に変換するコードを削除。
+  「ニコニコ大百科」利用規約第6条（抜粋）:
+  複数の「ニコニコ大百科記事」を編集著作物として利用すること、
+  その他複数の「ニコニコ大百科記事」の集合であることに基づき利用する行為はできません
+  https://dic.nicovideo.jp/d/html/tos/
+
+- Update jawiki-articles (20210901).
+- Update jinmei-ut.
+
+2021-08-22
+- Update jawiki-articles (20210820).
+- Update jinmei-ut.
+
+2021-07-25
+- Update jawiki-articles (20210720).
+- Update jinmei-ut.
+
+2021-06-27
+- Update fcitx5-mozc-*.patch.
+- Update jawiki-articles (20210620).
+- Update jinmei-ut.
+
+2021-06-03
+- パッケージのバージョン名を「$UTDICDATE.$REVISION」から「$UTDICDATE」のみに変更。
+  改訂版を出す場合は「UTDICDATE="20210524.1"」のようにする。
+- Update abseil-cpp in PKGBUILD.
+- Update jawiki-articles (20210601).
+- Update jinmei-ut.
+
+2021-05-24
+- Update get-entries-from-jawiki-articles.rb.
+  Parallelのプロセス数を「物理コア数 - 1」にした。
+  その他調整。
+
+- Update fcitx5-mozc-icons to simplify installation.
+  cp -r ${srcdir}/fcitx5-mozc-icons-${_iconver}/* ${pkgdir}/usr/share/icons/
+
+- remove gtk2 from makedepends in PKGBUILD.
+  add "enable_gtk_renderer==0" to PKGBUILD.
+
+- Update jawiki-articles (20210520).
+- Update jinmei-ut.
+
+2021-04-21
+- Update jawiki-articles (20210420).
+- Update jinmei-ut.
+
+2021-03-29
+- Update get-entries-from-jawiki-articles.rb.
+  Parallelによる処理を追加。
+
+- Update fcitx5/fcitx patches.
+- Update jinmei-ut.
+
+2021-03-22
+- Update jawiki-articles (20210320).
+- Update jinmei-ut.
+- filter-ut.txt の \Z の位置を間違えていたので修正。
+
+2021-02-22
+- Add sudachidict (disabled).
+- neologd辞書の表記でコストがマイナスのものを追加した。
+- 英数字のみの表記でウィキペディアの見出しにあるものを追加した。
+- Update jawiki-articles (20210220).
+- Update jinmei-ut.
+
+2021-01-23
+- Update jawiki-articles (20210121).
+- Update jinmei-ut.
+
+2020-12-29
+- Update jawiki-articles (20201221).
+- Update jinmei-ut.
+- Update README.md (change Mozc URL).
+- Test with ruby 3.0.0p0.
+- I uploaded fcitx5-mozc-ut-*.PKGBUILD.
+  https://osdn.net/users/utuhiro/pf/utuhiro/files/
+
+2020-11-29
+- Update jawiki-articles (20201121).
+- Update jinmei-ut.
+- Update fcitx-mozc-icons.tar.gz.
+
+2020-11-10
+- Update jawiki-articles and jinmei-ut.
+- Comment out my zipcode dictionary.
+  Use official mozc's zipcode dictionary.
+- Update build scripts.
+
+2020-09-24
+- Update neologd, jawiki-articles and jinmei-ut.
+
+2020-08-30
+- Update neologd, jawiki-articles and jinmei-ut.
+- Rename filter-neologd-entries.rb to filter-entries.rb.
+- Update filter-entries.rb.
+
+2020-08-21
+- Update neologd, jawiki-articles, jinmei-ut and zipcode.
+
+2020-07-18
+- Update get-entries-from-jawiki-articles.rb.
+- Update mozcdic-neologd.txt.
+
+2020-07-04
+- Reduce and update jinmei-ut.txt.
+- Update jawiki-articles.
+
+2020-06-24
+- Update extract-new-entries.rb.
+- Update apply-jawiki-costs.rb.
+
+2020-06-22
+- Add jawiki-articles.
+  It's a dictionary generated from Japanese Wikipedia.
+- Update count-jawiki-titles.rb.
+  It reads jawiki-latest-all-titles-in-ns0.gz directly.
+- Update filter-ut.txt.
+- 「読み+表記」が公式辞書と重複しているものを除外した。
+  以前は「読み+表記」が重複していても品詞が違っていれば収録していた。
+  それだとjawiki-articlesとneologdで重複するエントリが多くなりすぎる。
+
+2020-06-11
+- First release.
+- Update most scripts.
+- Update documents.
+- Add entries to jinmei-ut.txt.
+
+
+# ==============================================================================
+# mozcdic-neologd-ut
+# ==============================================================================
+
+2020-06-03
+- Fix convert-neologd-format-to-mozc-format.rb.
+- Move PKGBUILD to https://osdn.net/users/utuhiro/pf/utuhiro/files/
+
+2020-05-25
+- Use debian patches in PKGBUILD.
+- Update mecab-user-dict-seed.
+
+2020-05-20
+- Update mecab-user-dict-seed.
+
+2020-03-18
+- Update build scripts.
+  文字コード変換のメソッドを kconv から encode に変更した。
+  修正した KEN_ALL.CSV を SJIS に戻して出力せず、UTF-8 で出力するようにした。
+- Update mecab-user-dict-seed.
+
+2020-02-06
+- Fix costs with "jawiki-latest-all-titles-in-ns0".
+  neologd の表記を日本語版Wikipediaの見出し語リスト内で検索して、
+  ヒット数に応じてコスト値を修正した。
+  見出し語リストには間違った表記も捨て見出しとして収録されているので完全ではないが、
+  "三浦大知" が "三浦大地" より優先されるようになる。
+  見出し語リストに含まれていない表記はコスト値を8000台にした。
+  コスト値が6000台だと「ねがいがいつかかなう」が「願いが一花カナウ」になる。
+
+- mozc のエントリと読み+表記が同じであっても、左文脈IDが異なれば収録するようにした。
+  「名探偵コナン」「深浦康市」を1語として変換できるようになる。
+
+- 「・」「=」が含まれるエントリの収録基準を緩和した。
+  読みの文字数より表記の文字数が多いエントリは削除していたが、
+  「あんはさうぇい アン・ハサウェイ」のようなエントリを収録するようにした。
+
+- 地名辞書に全角英数が含まれていたので半角英数に修正。
+- mecab-user-dict-seed.*.csv.xz を同梱しないようにした。
+  自分で辞書を作成する場合は make-release-tarball.sh の "NEOLOGDDATE" "NEOLOGDURL" を
+  最新のものに変更してください。
+- Update mecab-user-dict-seed.
+
+2020-01-15
+- I don't provide "mozc + additional dictionaries" tarballs anymore.
+  The upstream mozc is not maintained, so packagers need to apply patches.
+  I release mozcdic-neologd-ut as additional text files.
+  See mozcdic-neologd-ut-*/README.md for installation.
+  Arch Linux users can install mozc-neologd-ut easily with my PKGBUILD.
+
+- Change src dir structures.
+- Update build scripts.
+- Update PKGBUILD and README.md.
+
+2020-01-13
+- I updated PKGBUILD for python3 support, and I removed python2 from makedepends.
+  https://github.com/google/mozc/issues/462#issuecomment-573220288
+    mozc-2.23.2815.102-python-3.patch
+- Add Debian patches
+  https://salsa.debian.org/debian/mozc/tree/master/debian/patches
+    debian_patches_Fix-build-with-gcc8.patch
+    debian_patches_add_support_new_japanese_era.patch
+- Add chimei/generate-zipcode-*.rb
+  I wrote them instead of "gen_zip_code_seed.py".
+
+- Update mecab-user-dict-seed.
+
+2020-01-03
+- Update mecab-user-dict-seed.
+
+2019-11-29
+- Update mecab-user-dict-seed.
+
+2019-10-28
+- Update mecab-user-dict-seed.
+
+2019-09-13
+- Update mecab-user-dict-seed.
+
+2019-08-08
+- Update mecab-user-dict-seed.
+- 一部の組織を収録するようにした。
+  「京アニ」が収録対象外になっていたので。
+
+2019-06-10
+- Update mecab-user-dict-seed.
+
+2019-04-25
+- Add patches/add-new-japanese-era.patch.
+  "きょう" => "令和元年5月1日"
+  "ことし" => "令和元年"
+  "れいわ" => "㋿"（"令和"の合字）
+    Use this font to show the character properly.
+    https://github.com/googlefonts/noto-cjk/blob/master/NotoSansCJK-Regular.ttc
+
+- Update mecab-user-dict-seed.
+
+2019-04-16
+- Update mecab-user-dict-seed.
+
+2019-04-03
+- Update mecab-user-dict-seed.
+
+2019-02-08
+- Update mecab-user-dict-seed.
+
+2018-11-30
+- Update mecab-user-dict-seed.
+
+2018-10-09
+- Update mecab-user-dict-seed.
+
+2018-09-04
+- Update mecab-user-dict-seed.
+
+2018-07-22
+- Update mecab-user-dict-seed.
+
+2018-06-04
+- mozcエントリと読みが同じで表記が異なるutエントリを収録するときのコスト計算を修正。
+  「鈴木奈々」より「杉木奈々」が優先されていた。
+- 人名のコスト計算を変更。
+- 辞書生成スクリプトのファイル名を変更。
+- 公式辞書には filter-mozc.txt を当てないようにした。別のフィルタが入ったようなので。
+  neologd に対しては filter-mozc.txt の適用を継続。
+- Update mecab-user-dict-seed.
+- Add a patch for gcc-8.1.
+  https://github.com/google/mozc/issues/441#issue-321728877
+
+2018-03-07
+- dependency change: use Qt5.
+- Update mozc version to 2.23.2815.102.
+- Update fcitx-mozc.
+  See fcitx-mozc/README.md
+  https://github.com/fcitx/fcitx/issues/403
+- Update mecab-user-dict-seed version to 20180301.
+
+2018-01-03
+- mozc-2.23.2785.102 に追従。
+- mecab-user-dict-seed を最新版に差し替え。
+
+2017-10-07
+- neologdエントリがmozcエントリと同じ読みを持つ場合、双方のコストを比較するようにした。
+  mozcdic-ut2で追加辞書のコストをかなり上げたにもかかわらず、
+  「幾つかの」が「いくつかの」より優先されることがあったので。
+
+- mozc公式辞書のエントリをフィルタリングするようにした。
+  - src/filter-mozc.txt に含まれる表記を除外する。
+    /\A似非/ のような正規表現も使用可能。
+  - 「殆ど　ほとんど」のようにタブ区切りで2つの単語が並んでいる場合は、
+  前者の表記から後者の表記を生成して追加する。
+  追加した表記はもとの表記より優先度を高めにする。
+    mozcの辞書には「殆どxx」という表記はあるのに、
+    「ほとんどxx」という表記はないことが多く、
+    文章が硬く見えるので。
+
+- 郵便番号辞書を生成するときにmozc公式辞書に追記しない形にした。
+  mozc公式辞書は後で重複チェックの処理が入るので、
+  郵便番号辞書があると重複チェックに時間がかかる。
+  郵便番号辞書は他のエントリとかぶることがないので、
+  重複チェックの必要はない。
+
+2017-10-04
+- mecab-user-dict-seed を最新版に差し替え。
+- 収録する表記の最大文字数を20に減らした（以前は24）。
+- 数字を含む表記を削除した。
+  「712円」「青森県道39号」「第1231話」などキリがないので。
+- 「カブシキガイシャ」などの煩雑なエントリを削除した。
+  src/get-neologd-entries.rb を参照。
+
+2017-10-02
+- mecab-user-dict-seed を最新版に差し替え。
+- ソースのコメントを整理。
+
+2017-05-29
+- mecab-user-dict-seed を最新版に差し替え。
+
+2017-03-20
+- mecab-user-dict-seed を最新版に差し替え。
+
+2017-01-16
+- mecab-user-dict-seed を最新版に差し替え。
+
+2016-12-15
+- mozc-2.20.2677.102 に追従。
+- fcitx-mozc-2.18.2612.102.1 に追従。
+- mecab-user-dict-seed を最新版に差し替え。
+
+2016-11-21
+- mozc-2.19.2663.102 に追従。
+- mecab-user-dict-seed を最新版に差し替え。
+
+2016-11-15
+- mecab-user-dict-seed を最新版に差し替え。
+
+2016-10-24
+- mecab-user-dict-seed を最新版に差し替え。
+
+2016-10-20
+- mecab-user-dict-seed を最新版に差し替え。
+- 人名を一括変換しにくいので品詞idを「名詞,一般,*,*,*,*,*」のidに統一した。
+
+2016-10-17
+- 辞書生成を高速化。
+  正規表現を配列から毎回整形して作らずにあらかじめ作っておく。
+  カタカナをひらがなに変換する処理はtrではなくnkfで行う。
+  全角英数・全角記号を半角に変換する処理はtrではなくnkfで行う。
+- filter.txtの正規表現エントリを // で囲むようにした。
+- Change url in pkgbuild.
+
+- mecab-user-dict-seed を最新版に差し替え。
+
+2016-10-13
+- Change the directory structure and file names.
+- mecab-user-dict-seed を最新版に差し替え。
+- コスト計算を一部簡略化した。
+
+2016-09-05
+- Update get-latest-mozc.sh
+- Update generate-mozc-tarball.rb
+  keep original documents and the directory structure.
+
+- mecab-user-dict-seed を最新版に差し替え。
+
+2016-08-15
+- Update generate-mozc-tarball.rb
+- mecab-user-dict-seed を最新版に差し替え。
+
+2016-06-27
+- Update get-latest-mozc.sh
+
+- mecab-user-dict-seed を最新版に差し替え。
+
+2016-05-24
+- Update get-latest-mozc.sh
+  simplified.
+
+- mecab-user-dict-seed を最新版に差し替え。
+
+2016-04-19
+- mecab-user-dict-seed を最新版に差し替え。
+
+2016-03-18
+- 「都道府県+市+町域」のエントリを削除した。
+  辞書データが膨らみすぎるので。
+
+- mecab-user-dict-seed を最新版に差し替え。
+
+2016-03-03
+- 地名生成コードを更新。
+  - 町域の数字の読みがなを改善。
+
+- mecab-user-dict-seed を最新版に差し替え。
+
+2016-02-29
+- 辞書生成コードを更新。
+  - 同じ読みの人名が続いたときは辞書に多く含まれる表記を優先する。
+    冠番組を持つタレントなどが優先される。
+    (例) 中井正広, 中居正広, 仲居正広, 中井正広のブラックバラエティ, 
+    中居正広のボクらはみんな生きている, 中居正広のミになる図書館
+    この場合は出現数の多い「中居正広」の表記を優先する。
+
+  - 品詞をIDに変換する処理にバグがあったので修正。
+    高速化するために導入した処理だったが、
+    バグがあった上に直してtimeを測ってみると速くなっていなかった。
+    高速化のために条件を加えるとその処理に時間がかかって、
+    差し引きゼロになってしまうことがある。
+
+  - 単語の収録範囲を広げた。
+    「16文字以内の読みを持つ単語」から
+    「16文字以内の表記を持つ単語」に緩和した。
+    あまり文字数を増やすとサジェストウィンドウが大きくなるので注意。
+
+  - neologdの住所エントリを使わないようにした。
+    住所エントリは郵便番号データから自前で作成する。
+    neologdでは自動作成された(?)短縮エントリが多く、辞書が肥大するので。
+    (例) 徳島県春日町,トクシマケンカスガチョウ
+    正式な住所は「徳島県徳島市春日町」
+
+    最新の郵便番号データを使うと最新の住所を入力できるし、
+    巨大な住所エントリを分離することで辞書生成が多少速くなる。
+
+- 郵便番号データ関連のコードを更新。
+  - 町域の読みにある数字をカタカナに変換。
+    (例)「3ジョウ」を「サンジョウ」に。
+
+  - 地名生成のためのコードを整理。
+
+- フィルタを更新。
+- mecab-user-dict-seed を最新版に差し替え。
+
+2016-02-26
+- 辞書生成コードを更新。
+  fix-jinmei.rb を実行した後のコストがマイナスにならないようコスト計算を変更。
+
+- フィルタを更新。
+- mecab-user-dict-seed を最新版に差し替え。
+
+2016-01-25
+- 辞書生成コードを整理。
+- 辞書生成を少し高速化。
+
+- 人名の判定を変えた。
+  fix-jinmei.rb
+  同じ読みのエントリが続いたときに片方が人名で片方がそれ以外の場合、
+  人名の表記を優先する。
+  人名だと判定されなかったエントリは品詞を人名に変え、優先度を下げる。
+
+- フィルタを更新。
+- mecab-user-dict-seed を最新版に差し替え。
+
+2016-01-21
+- フィルタを更新。
+- mecab-user-dict-seed を最新版に差し替え。
+
+2016-01-18
+- 辞書生成スクリプトを更新。
+- フィルタを更新。
+- mecab-user-dict-seed を最新版に差し替え。
+
+2016-01-15
+- 正規表現でフィルタリングできるようにした。
+  正規表現の場合は頭に / を付ける。
+  多用すると辞書生成が遅くなる。
+
+2016-01-14
+- First release.
+
+
+# ==============================================================================
+# mozcdic-ut2
+# ==============================================================================
+
+2017-10-08
+- utエントリがmozcエントリと同じ読みを持つ場合、双方のコストを比較するようにした。
+  utエントリのコストは大きめにしているが、
+  それでも「幾つかの」が「いくつかの」より優先されてしまうので。
+
+- mozc公式辞書のエントリをフィルタリングするようにした。
+  - src/filter-mozc.txt に含まれる表記を除外する。
+    /\A似非/ のような正規表現も使用可能。
+  - 「殆ど　ほとんど」のようにタブ区切りで2つの単語が並んでいる場合は、
+  前者の表記から後者の表記を生成して追加する。
+  追加した表記はもとの表記より優先度を高めにする。
+    mozcの辞書には「殆どxx」という表記はあるのに
+    「ほとんどxx」という表記はないことが多く、
+    文章が硬く見えるので。
+
+- 郵便番号データから生成した地名のコストを一律 9000 にした。
+- 駅名のコストを一律 9000 にした。
+  大量のヒット数を取得するのは時間がかかるし、
+  大量のヒット数からコストを計算するのも時間がかかるので。
+  他の辞書のヒット数を取得する際に
+  地名辞書/駅名辞書のエントリをスキップできるように、
+  ヒット数を 0 にした地名辞書/駅名辞書を置いている。
+
+- コストを計算するときにヒット数が10000以上のエントリを除外するようにした。
+  上位のヒット数は桁違いに多いので、
+  残していると下位のエントリの優劣がつきにくくなる。
+
+- 郵便番号辞書を生成するときにmozc公式辞書に追記しない形にした。
+  mozc公式辞書は後で重複チェックの処理が入るので、
+  郵便番号辞書があると重複チェックに時間がかかる。
+  郵便番号辞書は他のエントリとかぶることがないので、
+  重複チェックの必要はない。
+
+2017-10-05
+- 人名用のスクリプトを修正。
+- 駅名のヒット数を修正。
+- 地名のヒット数を修正。
+- その他辞書生成用のスクリプトを変更。
+  ヒット数を記したファイルの拡張子は .hits 、
+  コスト数を記したファイルの拡張子は .costs
+  に変更した。
+  2つを混同するとコストの計算がずれるので。
+
+2017-10-04
+- neologd辞書を追加。
+- 駅名辞書が漏れていたので修正。
+
+2017-10-02
+- 2017年9月22日時点の jawiki-latest-pages-articles.xml からヒット数を取り直した。
+
+- ヒット数を取得するツールを改訂した。
+  jawikiの記事をテキストに変換する際にテーブルを含めるようにした。
+    これによりメンバー表の中の人名がヒットするようになった。
+  mozc公式辞書に含まれる単語のヒット数は取らずに一律 0 にした。
+    ヒット数の取得にかかる時間を減らすため。
+  他に多数の変更。
+
+- 収録する表記の最大文字数を20に減らした（以前は24）。
+- 人名を更新。
+- はてなキーワードを更新。
+- edictを更新。
+- ニコニコ大百科IME辞書を更新。
+- 駅名を更新。
+
+2017-05-29
+- 人名を更新。
+- はてなキーワードを更新。
+- edictを更新。
+- ニコニコ大百科IME辞書を更新。
+- 駅名を更新。
+
+2017-03-21
+- 人名を更新。
+- はてなキーワードを更新。
+- edictを更新。
+- ニコニコ大百科IME辞書を更新。
+
+2017-01-16
+- 人名を更新。
+- はてなキーワードを更新。
+- edictを更新。
+- ニコニコ大百科IME辞書を更新。
+
+2016-12-15
+- mozc-2.20.2677.102 に追従。
+- fcitx-mozc-2.18.2612.102.1 に追従。
+- 人名を更新。
+- はてなキーワードを更新。
+- edictを更新。
+- ニコニコ大百科IME辞書を更新。
+- 駅名を更新。
+
+2016-11-21
+- mozc-2.19.2663.102 に追従。
+- 人名を更新。
+- はてなキーワードを更新。
+- edictを更新。
+- ニコニコ大百科IME辞書を更新。
+
+2016-11-15
+- 駅名をWikipediaベースに変更した。
+- 人名を更新。
+- はてなキーワードを更新。
+- edictを更新。
+- ニコニコ大百科IME辞書を更新。
+
+2016-10-24
+- EDICT2辞書の生成コードを書き直した。
+  EDICT2は読みと表記の対応が複雑すぎる。
+- カタカナ英語辞書の生成コードを書き直した。
+
+- はてなキーワードのヒット数を最新のWikipedia記事タイトルで補正。
+  「ニンテンドースイッチ」などに即応する。
+  データベースを更新してヒット数を取り直すのは負担が大きいので、
+  軽い処理を作った。
+
+- はてなキーワードをUTF-8に変換したとき、一部の漢字がコードポイントになるので修正。
+
+- はてなキーワードを更新。
+- edictを更新。
+- 人名を更新。
+- ニコニコ大百科IME辞書を更新。
+
+2016-10-20
+- upgrade-dictionary.sh を追加。
+  最新の日本語版Wikipedia記事を使ってヒット数を取り直すスクリプト。
+  ヒット数を取る前にedict/hatena/niconico/skk-jisyoも自動で最新版に更新する。
+  必要な準備についてはREADME.mdを参照。
+- upgrade-dictionary.sh のテストを兼ねてヒット数をすべて取り直した。
+
+- 読みがなに「う゛」が混じっていたので「ゔ」に修正。
+- 人名辞書の生成を高速化。
+- docsの配置を変えた。
+- カタカナ英語辞書のコストを少し小さくした。
+  コストが大きすぎて変換候補になりにくいものがあったので。
+
+- はてなキーワードを更新。
+- edictを更新。
+- 人名を更新。
+- ニコニコ大百科IME辞書を更新。
+
+2016-10-17
+- 辞書生成を高速化。
+  正規表現を配列から毎回整形して作らずにあらかじめ作っておく。
+  カタカナをひらがなに変換する処理はtrではなくnkfで行う。
+  全角英数・全角記号を半角に変換する処理はtrではなくnkfで行う。
+- filter.txtの正規表現エントリを // で囲むようにした。
+- Change url in pkgbuild.
+
+- カタカナ英語辞書の生成元をedictからedict2に変更。
+  「the plain EDICT file. PLEASE do not use this format for new applications」とあるので。
+  edict2向けに辞書生成コードを書き直した。
+
+- はてなキーワードを更新。
+- edictを更新。
+- 人名を更新。
+
+2016-10-13
+- First release.
+  mozcdic-utの入ったパーティションを壊してしまったので新たに作った。
+
+
+# ==============================================================================
+# mozcdic-ut (old)
+# ==============================================================================
+
+2016-09-05
+- Update get-latest-mozc.sh
+- Update generate-mozc-tarball.rb
+  keep original documents and the directory structure.
+
+- 人名を追加。
+- はてなキーワードを更新。
+- EDICTを更新。
+- ニコニコ大百科IME辞書を更新。
+
+2016-08-15
+- Update generate-mozc-tarball.rb
+
+- 駅名を更新。
+- 人名を追加。
+- はてなキーワードを更新。
+- EDICTを更新。
+- ニコニコ大百科IME辞書を更新。
+
+2016-06-27
+- Update get-latest-mozc.sh
+
+- 人名を追加。
+- はてなキーワードを更新。
+- EDICTを更新。
+- ニコニコ大百科IME辞書を更新。
+
+2016-05-24
+- Update get-latest-mozc.sh
+  simplified.
+
+- 駅名を更新。
+- 人名を追加。
+- はてなキーワードを更新。
+- EDICTを更新。
+- ニコニコ大百科IME辞書を更新。
+
+2016-04-19
+- 人名を追加。
+- はてなキーワードを更新。
+- EDICTを更新。
+- ニコニコ大百科IME辞書を更新。
+
+2016-03-18
+- はてなキーワードに含まれる人名をjinmei.txtを使って校正。
+  「松嶋奈々子」「明石屋さんま」のように、
+  jinmei.txtに存在しない表記のヒット数をある程度修正した。
+
+- 「都道府県+市+町域」のエントリを削除した。
+  辞書データが膨らみすぎるので。
+
+2016-03-03
+- 人名を追加。
+- はてなキーワードを更新。
+- EDICTを更新。
+- ニコニコ大百科IME辞書を更新。
+- フィルタを更新。
+
+- 辞書生成コードを大きく変更した。
+  - 生成の流れをシンプルにした。
+  - 単語フィルタはパッチ適用時に通すようにした。
+  - コードを整理した。
+
+- 郵便番号データ関連のコードを更新。
+  - 「都道府県+市+町域」のエントリを生成するようにした。
+  neologdの地名エントリの収録範囲に合わせた。
+
+  - 町域の読みにある数字をカタカナに変換。
+  (例)「3ジョウ」を「サンジョウ」に。
+
+  - コードを整理した。
+
+2016-01-25
+- 郵便番号用のコードを整理。
+- フィルタを更新。
+
+2016-01-21
+- 辞書生成コードを整理。
+  mozcdic-neologd-ut を作ったときに確認したら見づらかったので。
+
+  「ヴァヴィヴ」の読みから「ばびぶ」の読みを作るとき、
+  生成済みの辞書と重複がないかを確認しないようにした。
+  時間がかかる割に削れる量が少ないので。
+
+- はてな辞書とニコニコ辞書にmozcdic-neologd-utの単語フィルタをかけた。
+  多少の不具合は出るが、もう目で確認できる辞書サイズではないので。
+  これまでも手で調整していたが、抜けも出るし手間がかかりすぎる。
+
+- 駅名を更新。
+- 人名を追加。
+- はてなキーワードを更新。
+- EDICTを更新。
+- ニコニコ大百科IME辞書を更新。
+
+2015-11-30
+- Update get-official-mozc.sh
+- remove uim-mozc in PKGBUILD (build failure)
+
+- 駅名を更新。
+- 人名を追加。
+- はてなキーワードを更新。
+- EDICTを更新。
+- ニコニコ大百科IME辞書を更新。
+
+2015-10-02
+- Update get-official-mozc.sh
+- Update PKGBUILD to specify python2
+
+- 駅名を更新。
+- 人名を追加。
+- はてなキーワードを更新。
+- EDICTを更新。
+- ニコニコ大百科IME辞書を更新。
+
+2015-08-22
+- 人名を追加。
+- はてなキーワードを更新。
+- EDICTを更新。
+- ニコニコ大百科IME辞書を更新。
+
+2015-07-15
+- Update fcitx-mozc
+  https://code.google.com/p/fcitx/issues/detail?id=755
+  http://download.fcitx-im.org/fcitx-mozc/
+
+- Update get-official-mozc.sh
+
+- カタカナ英語辞書の収録基準を1語の英語のみにした。
+
+- 駅名を更新。
+- 人名を追加。
+- はてなキーワードを更新。
+- EDICTを更新。
+- ニコニコ大百科IME辞書を更新。
+
+2015-05-29
+- Update get-official-mozc.sh
+- remove ibus-mozc
+  https://github.com/google/mozc/issues/287
+  > we will remove the code of ibus from our repository 
+  > by the end of August 2015 at the latest.
+
+- 人名を追加。
+- はてなキーワードを更新。
+- EDICTを更新。
+- ニコニコ大百科IME辞書を更新。
+
+2015-04-04
+- 人名を追加。
+- はてなキーワードを更新。
+- EDICTを更新。
+- ニコニコ大百科IME辞書を更新。
+
+2015-02-14
+- Update fcitx-mozc
+  https://code.google.com/p/fcitx/issues/detail?id=747
+  https://code.google.com/p/mozc/issues/detail?id=285
+
+- Update PKGBUILD
+- Update get-official-mozc.sh
+
+- Change mozc-ut archive format (7z => tar.xz)
+
+- 人名を追加。
+- はてなキーワードを更新。
+- EDICTを更新。
+- ニコニコ大百科IME辞書を更新。
+- 駅名を更新。
+
+2015-01-14
+- 駅名を更新。
+- 人名を追加。
+- はてなキーワードを更新。
+- EDICTを更新。
+- ニコニコ大百科IME辞書を更新。
+
+- get-official-mozc.sh を更新。
+- PKGBUILD を更新。
+  最新のmozcに追従。
+
+2014-11-10
+- 駅名を更新。
+- 人名を追加。
+- はてなキーワードを更新。
+- EDICTを更新。
+- ニコニコ大百科IME辞書を更新。
+
+- get-official-mozc.sh を更新。
+  depot_tools を git で取るようにした。
+  .git を削除。
+
+- PKGBUILD を更新。
+  uim-mozc の取得先を変更。
+
+2014-09-29
+- 人名を追加。
+- はてなキーワードを更新。
+- EDICTを更新。
+- ニコニコ大百科IME辞書を更新。
+
+- PKGBUILD を更新。
+  fcitx-mozc を最新版に。
+- debian.old を削除。
+
+2014-07-16
+- 英和辞書を更新。
+
+2014-07-15
+- mozc-1.15.1874.102 に対応。
+  リビジョンを指定してソースを取得するようにした。
+  将来大きな変更があるとビルドに失敗するかもしれないので。
+
+  PKGBUILD を更新。ninja 追加と fcitx-mozc/*.mo の位置の修正。
+  mozc-ut の sha1sum 確認を飛ばすようにした。
+  辞書の選択を変えるたびに sha1sum を変えるのが手間なので。
+
+  sha1sum の確認をやめたので PKGBUILD を mozc-ut 本体に同梱した。
+  PKGBUILD を mozc-ut 本体に同梱すると sha1sum がずれるので、
+  今までは同梱できなかった。
+
+- 人名を大量に追加。
+- 駅名を更新。
+- はてなキーワードを更新。
+- EDICTを更新。
+- ニコニコ大百科IME辞書を更新。
+
+- 日本語WordNetから英和辞書を生成。
+  詳細は README を参照。
+  バイナリサイズが大きくなるのと英和辞書の精度- 必要性を考えて、
+  デフォルトでは無効にしている。
+
+- 追加辞書は # を外すだけで有効になるようにした。
+
+- 地名辞書の生成スクリプトを変更。
+  「川内町（宮島浜）」の場合「（宮島浜）」をカットしていたが、
+  「川内町宮島浜」と出すようにした。
+
+  町域の英数字を全角にした（日本郵便のデータ通り）。
+  縦に住所を印字する際に全角のほうが良いので。
+
+2014-06-23
+- mozc-1.15.1814.102 に対応。
+
+- Antergos Linuxでテストすることにした。
+  fcitx-mozc と mozc-ut の PKGBUILD をベースにして
+  私家版の PKGBUILD を作成。
+  パッケージの作成とインストールについては README に書いた。
+
+  debian/ は手元に環境がないので更新しない。
+  debian/ を debian.old/ にリネーム。
+
+- get-latest-mozc.sh を修正。
+  third_party/gyp を残した。Arch Linuxでのビルドに必要。  
+  .svn が残っていたので削除。
+
+- リリース前に辞書ファイルを整理するようにした。
+  重複項目がないかチェック。
+  読みやすいようにソート。
+
+- 人名を追加。
+- はてなキーワードを更新。
+- EDICTを更新。
+- ニコニコ大百科IME辞書を更新。
+
+2014-05-23
+- mozc-1.15.1785.102 に対応。
+- debian/* ファイルを改変した。
+  変更点は debian/changelog を参照。
+  テスト用なので、debian公式版が出たら差し替えます。
+- get-latest-mozc.sh を作成。
+  公式のtarballがリリースされないので。
+  sh get-latest-mozc.sh で無改変のtarballができる。
+  （ビルドに不要なファイルは削除した。）
+- README の「Generate your mozc-ut」の項を改訂。
+  手元でtarballを作成しないといけないので。
+
+- 人名を追加。
+- はてなキーワードを更新。
+- EDICTを更新。
+- ニコニコ大百科IME辞書を更新。
+
+2014-05-06
+- 人名を追加。
+- はてなキーワードを更新。
+- EDICTを更新。
+- ニコニコ大百科IME辞書を更新。
+
+- 読みがなにカタカナが混じっているものを修正。
+
+2014-03-20
+- 人名を追加。
+- はてなキーワードを更新。
+- EDICTを更新。
+- ニコニコ大百科IME辞書を更新。
+
+- debian/ を最新版に差し替えた。
+- debian/changelog を改変。
+  debianと被らないようにバージョン末尾を10にした。
+
+2014-02-05
+- 駅名を更新。
+- 人名を追加。
+- はてなキーワードを更新。
+- EDICTを更新。
+- ニコニコ大百科IME辞書を更新。
+
+- debian/ を最新版に差し替えた。
+- debian/rules を改変。
+  gypのバージョンをSaucyに合わせた。
+
+2014-01-03
+- 人名を追加。
+- はてなキーワードを更新。
+- EDICTを更新。
+- ニコニコ大百科IME辞書を更新。
+
+- 郵便番号ファイルの整形スクリプトを一時的に追加。
+  gen_zip_code_seed.py がエラーを出すが、
+  pythonは分からないのでrubyで整形した。
+
+- protobufを取得しないようにした。
+  debianのパッケージがあるので。
+
+- debian/rules を改変。
+  私の環境によるものか最後のパッケージ作成で止まるので、次の行を追加。
+  override_dh_shlibdeps:
+  dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info
+
+2013-11-09
+- debian/* ファイルを最新版に差し替えた。
+  http://packages.debian.org/ja/source/sid/mozc
+  rules の --jobs=1 は削除。
+
+2013-11-06
+- 人名を追加。
+- はてなキーワードを更新。
+- EDICTを更新。
+- ニコニコ大百科IME辞書を更新。
+
+- mozc-1.12.1599.102 に対応。
+- debian/* ファイルを差し替えた。
+  こちらで配布されているものを改変。
+  http://packages.debian.org/ja/source/sid/mozc
+
+  rules の --jobs=1 を削除。
+  uim/fcitxはmozc-1.12.1599.102だとエラーが出るのでひとまず削除。
+
+  ibus-1.4/1.5のパッケージが混在しているとビルドエラーになるので、
+  ibus-1.5系で統一しておくこと。
+  （ubuntuをアップグレードした時にibus-1.4が残るかもしれない。）
+
+2013-10-21
+- 人名を追加。
+- はてなキーワードを更新。
+- EDICTを更新。
+- ニコニコ大百科IME辞書を更新。
+
+- debian/* ファイルを差し替えた。
+  こちらで配布されているもの。
+  https://launchpad.net/~ikuya-fruitsbasket/+archive/fcitx
+  rules の --jobs=1 は削除。
+  歴代のパッケージ作成者の皆様に感謝。
+
+2013-09-02
+- edict/はてな/ニコニコのヒット数を変更。
+  中黒ありと中黒なしの表記があるときは、
+  中黒なしを優先させるようにした。
+  > +あらびあんないと  #T35  11105  アラビアン- ナイト
+  >  あらびあんないと  #T35  12339  アラビアンナイト
+  > -あらびあんないと  #T35  12339  アラビアン- ナイト
+
+- 人名を追加。
+- はてなキーワードを更新。
+- ニコニコ大百科IME辞書を更新。
+- EDICTを更新。
+
+- mozc-1.11.1522.102 に対応。
+  debian/controlを変更（依存ファイルの追加と削除）
+  debian/rulesを変更（エラーが出るので）
+
+2013-08-01
+- 人名を追加。
+- はてなキーワードを更新。
+- ニコニコ大百科IME辞書を更新。
+- EDICTを更新。
+
+- mozc-1.11.1502.102 に対応。
+
+2013-07-01
+- 人名を追加。
+- はてなキーワードを更新。
+- ニコニコ大百科IME辞書を更新。
+- EDICTを更新。
+
+- 開発用のプログラムを消してしまったので古いバックアップから復旧。
+  語彙数は問題ないが、頻度生成で過去のバグが残っているかもしれない。
+
+2013-05-20
+- 同音の人名のヒット数を再チェック。
+  検索時期や検索エンジンの違いで、
+  同じ読みのマイナーな人名が上に来ることがあったので。
+  全てはチェックできないがメジャーなものをチェックした。
+
+- 桁違いにヒット数の多い人名を再チェック。
+  多くは取得時のエラー。
+
+- カタカナ英語辞書の収録数を増やした。
+  辞書生成時の条件を追加した。
+
+- カタカナ英語辞書の優先度を下げた。
+  それでも組み合わせによっては稀に
+  「sellingカイキン」（販売解禁）のようになることがある。
+
+2013-05-16
+- EDICTからカタカナ英語辞書を生成。
+  いんたーねっと ⇨ Internet
+  Google日本語入力には同目的の辞書があるようなので、
+  試しに作ってみた。
+  不要な場合はMozcプロパティを開いて、
+  「カタカナ英語変換」のチェックを外せば候補が出なくなる。
+
+- EDICTを更新。
+  中黒付きの表記のヒット数を下げた。
+  > てすともーど  #T35  411  テスト- モード
+  > てすともーど  #T35  4117  テストモード
+  時期によってヒット数が逆転したり同じになったりするので。
+
+- 日本語WordNetから生成した英和辞書を削除。
+  個人的にあまり使わなくなったのと、
+  全角スペースの表記が出て候補ウィンドウがすっきりしないので。
+  > word n 1.ワード, 単語, 言葉, 語, 辞
+  > ｗｏｒｄ　ｎ　１．ワード，　単語，　言葉，　語，　辞
+
+- 人名を追加。
+- はてなキーワードを更新。
+- ニコニコ大百科IME辞書を更新。
+
+2013-04-12
+- Mozc-1.10.1390.2 に対応。
+- 人名を追加。
+- はてなキーワードを更新。
+
+2013-03-30
+- Mozc-1.10.1389.2 に対応。
+
+- debian/ 内の uim-mozc, fcitx-mozc, emacs-mozc を削除した。
+  テスト用なのでシンプルにした。
+
+- 人名を追加。
+- はてなキーワードを更新。
+- ニコニコ大百科IME辞書を更新。
+
+2013-03-09
+- 地名辞書に「市区町村+町域」を追加。
+  例えば「あいおいしあお」で「相生市青葉台」がサジェストされる。
+  これまでは「相生市|青葉台」しかなかったので、
+  「あいおいしあ」まで入力するとサジェストが消失するし、
+  「相生市|あおば台」のように誤変換する可能性があった。
+
+- 地名生成にバグがあったので修正。
+  "以下に掲載がない場合"を削除したつもりだったが残っていた。
+
+- wordnet/doc/Japanese WordNet/README に参考文献を追加した。
+
+- 駅名を更新。
+- ニコニコ大百科IME辞書を更新。
+- EDICTを更新。
+- 人名を追加。
+
+2013-02-26
+- 日本語WordNetから英和辞書を生成。
+  「Earth」のように大文字から入力すると
+  「earth n 1.グローブ, 世界, 地球」
+  のように語義が表示される。
+  n は名詞、v は動詞、a は形容詞、r は副詞。
+  詳細はREADMEの「■ 英和辞書」を参照。
+
+- 人名を追加。
+- はてなキーワードを更新。
+
+2013-02-05
+- 人名を追加。
+- はてなキーワードを更新。
+- ニコニコ大百科IME辞書を更新。
+- EDICTを更新。
+
+2012-12-08
+- 人名を追加。
+- はてなキーワードを更新。
+- ニコニコ大百科IME辞書を更新。
+- EDICTを更新。
+
+2012-10-20
+- EDICTを更新。
+
+- debian/rules の --jobs=1 を削除。
+  ビルドに時間がかかりすぎるので。
+
+2012-10-15
+- 内部で使っているツールをruby-1.9に対応させた。
+  ubuntuの標準rubyが1.9になったので。
+  結構変わっていて参った。
+  今後はruby-1.9を使わないと辞書の新規生成ができません。
+
+- 複数のサイトから単語のヒット数を取るようにした。
+  単一のサイトから取っているとすぐ制限に引っかかるので。
+  複数の検索エンジンを使っているので、
+  今まで以上にヒット数の整合性がなくなったかもしれない。
+
+- debian公式の debian/ ファイルを同梱した。
+  メンテナのIwamatsuさんに感謝。
+
+- protobuf を削除。
+
+- remove-ut-dictionary.sh を削除。
+  辞書ファイルの置き場所や製品名の指定場所などが
+  時々変更されるようなので。
+
+- 人名を追加。
+- はてなキーワードを更新。
+- ニコニコ大百科IME辞書を更新。
+
+2012-07-15
+- 人名を追加。
+- はてなキーワードを更新。
+- ニコニコ大百科IME辞書を更新。
+
+2012-05-29
+- 辞書の生成日を自動的にバージョン名にしないようにした。
+  独自にパッチを当てた人がバイナリを配布すると、
+  そちらの日付のほうが新しくなる場合があり、
+  それが最新版だと誤解される可能性があるので。
+
+- Ubuntu の protobuf だとエラーが出るので公式サイト推奨のprotobufを同梱した。
+
+- 人名を追加。
+- はてなキーワードを更新。
+- ニコニコ大百科IME辞書を更新。
+
+2012-04-28
+- 人名を追加。
+- はてなキーワードを更新。
+- ニコニコ大百科IME辞書を更新。
+
+- mozc-renderer パッケージを新設。
+  mozc-renderer をインストールすると新候補ウィンドウ、
+  アンインストールすると従来の候補ウィンドウになる。
+
+- 辞書の形式を変更。
+  新: 読み　品詞　ヒット数　表記
+  旧: 読み　品詞　ヒット数　頻度強制,キーボード,ハンバーグ,マヨネーズの頻度　表記
+
+  ヒット数は「キーボード」が75万件ヒットする場合の数値。
+  例えば「冷蔵庫」が400万件ヒットして「キーボード」が150万件ヒットする場合、
+  補正して200万件にする。
+
+  辞書生成のたびに計算すると時間がかかるし、
+  頻度強制などの要素は今では使っていないので、
+  シンプルにした。
+
+- UT辞書を独立したファイルにした。
+  data/dictionary/dictionary-ut.txt
+  これまではUT辞書を dictionary01.txt に結合していた。
+  これだとMozcの公式辞書に戻せない。
+  公式Mozc本来の動作を確認したい時もあるので、
+  $ ./remove-ut-dictionary.sh で
+  公式辞書＋郵便番号辞書＋debパッケージ作成スクリプト に
+  戻せるようにした。
+
+  Mozcでは品詞IDが頻繁に変わるので、
+  dictionary-ut.txt を他のバージョンで使うことはできません。
+
+- protobuf はUbuntuのパッケージを使うようにした。
+
+2012-04-03
+- はてなキーワードを更新。
+- はてなキーワードの読みがな自動生成を修正。
+  「ゐゑ」を「いえ」にしていたが、「うぃうぇ」に変更した。
+  「ゐすきー」は「いすきー」より「うぃすきー」がいいので。
+
+2012-04-02
+- 辞書生成を高速化。
+  辞書を1つ1つ確認せずに、
+  メジャー辞書とマイナー辞書の2つにまとめて
+  読みと表記をチェックするようにした。
+  メジャー辞書は読みと表記のどちらかが新規であれば収録。
+  マイナー辞書は読みと表記のどちらかが新規であっても、
+  残りの片方が公式辞書＋メジャー辞書に収録済みであれば除外する。
+
+- カタカナ英語辞書を削除した。
+  常用できるだけの質と量にするのが難しいのと、
+  個人的に英単語をひらがなから出すことがないので。
+  EDICTからの自動取得だと説明的な英訳が混じるし、
+  はてなキーワードのアルファベット表記は
+  「ろまさが　Romancing SaGa」のような省略が混じる。
+
+2012-03-31
+- 一部の一般名詞を人名扱いにしていたのを修正。
+
+- 「ゔぁ」の読みから「ば」の読みを生成するスクリプトを変更。
+  コスト計算をカタカナ英語辞書と同じにした。
+  「ば」にした時の単語が既に収録されていないかチェックするようにした。
+  生成処理を高速化した。
+
+- カタカナ英語人名辞書を作成。
+  「すぴるばーぐ」で「Spielberg」が出る。
+  EDICTには Spielberg などがない。
+
+- カタカナ英語辞書のコストを調整。
+  コストは公式辞書の同じ読みの単語を基準にして計算しているが、
+  例えば「何度」(コスト 2200) から中途半端に優先度を下げると、
+  「NAND」のほうが「難度」(コスト 5500) よりも上に来てしまう。
+  カタカナ英語辞書が前に出すぎると困るので、
+  公式辞書全体の下位10%以下に優先度を引き下げた。
+
+- 人名を追加。
+
+2012-03-30
+- カタカナ英語辞書を修正。
+  EDICT内での並びを維持するようにした。
+  そうしないと「ぶるー」と打った時に「blue」より「sad」が優先される。
+- カタカナ英語辞書の収録範囲を拡大。
+  2語までは収録することにした。
+  1語しか収録しないと、
+  「ぷらいまりーばらんす」と打った時に「primary balance」がなくて
+  「PB」だけが出るので。
+
+  「-」が含まれる単語を追加収録。
+  「plus-minus」など。
+
+2012-03-29
+- debian/* を改変した。
+  scim-mozc を削除した。
+  これは本家の方でも削除予定なので。
+
+  emacs-mozc を復活させた。
+  emacs-mozcを動かすためにはパッチが必要だが、
+  パッチを当てると全てのアプリでテスター向けの用例ウィンドウが無効になる。
+  しかし用例ウィンドウはまだ初期段階で、
+  - フォントサイズが小さい
+  - 遅延がなく即座に用例が表示されるので場合によっては邪魔
+  ということで emacs-mozc を残すことにした。
+
+- はてなダイアリーキーワードを更新。
+- ニコニコ大百科IME辞書を更新。
+
+2012-03-26
+- 用例辞書を有効にした debian/rules を追加した。
+  http://code.google.com/p/mozc/issues/detail?id=145
+  デフォルトでは無効。
+  使いたい場合は次のようにする。
+  $ rm -rf debian/
+  $ mv debian_yourei debian
+  $ debuild -b -uc -us
+
+- カタカナ英語辞書を追加。
+  EDICTからの自動生成。
+  「いべんと」で「event」が出る。
+
+- 人名の収録条件を変えた。
+  「C- クラーク」のような
+  「アルファベット- 」で始まる表記を削除。
+  日本語で「しーくらーく」のように入力することはあまりないので。
+  同様に「でぃーじぇい DJ」で始まる表記も削除。
+- 人名のアルファベットの読みをなるべく揃えた。
+- 人名の読みがなを自動チェックして修正。
+  カタカナ人名の読みを自動的に修正した。
+- 人名を追加。
+
+- コストの最小値を以前の値に戻した。
+- 読み仮名「う゛」「ヱ」の置換スクリプトを remove-rare-words に移した。
+- 駅名の全角英数を半角英数にした。
+
+2012-03-17
+- 郵便番号データから地名辞書を自動的に生成。
+  地名は変換するのが大変なので。
+  「あいづまちょう」で「逢妻町」に変換できる。
+
+- 郵便番号辞書を自動的に作成するようにした。
+  地名辞書を作るため郵便番号データをダウンロードするので、
+  そのまま利用することにした。
+
+- babibubeboの生成スクリプトを修正。
+  「べーとーべん」と入力したときに、
+  「ベートーヴェン」より「ヴェートーベン」が上に来ないように。
+  コスト的にはそのようにしたが、公式辞書の品詞設定の都合で
+  依然「ヴェートーベン」が上に来るかもしれない。
+
+- 私家版人名辞書を更新。
+  再チェックして漏れていたものを追加。
+
+- バージョン名を sed で書き換えることにした。
+
+2012-03-09
+- 私家版人名辞書を更新。
+  人名を追加するとともにマイナーだった人名のヒット数を取り直した。
+- はてなダイアリーキーワードを更新。
+- edictを更新。
+- ニコニコ大百科IME辞書を更新。
+- 駅名を追加。
+  「十三」（じゅうそう）などが抜けているようなので。
+  こちらのサイトのものを加工させて頂きました。
+  http://www5a.biglobe.ne.jp/~harako/data/station.htm
+- 辞書生成スクリプトをシンプルにした。
+- 単語コストの範囲を変更。
+  厳しく設定しすぎて出てきにくい候補があるようなので。
+
+2012-01-30
+- Bing APIが長い間バグで使えなかったので久しぶりの更新。
+  http://www.bing.com/community/developer/f/12254/t/671908.aspx
+- 私家版人名辞書を更新。
+- はてなダイアリーキーワードを更新。
+- ニコニコ大百科IME辞書を更新。
+- edictを更新。
+
+2011-11-30
+- debian/* ファイルをMozc公式サイトから取るようにした。
+  Ubuntu 11.10向けの修正が入ったので。
+- mozc-1.3.911.102 に対応。
+
+2011-11-23
+- 私家版人名辞書を更新。
+- はてなダイアリーキーワードを更新。
+- ニコニコ大百科IME辞書を更新。
+- debian/* ファイルを同梱するようにした。
+  Ubuntu 11.10向けにBuild-Dependsの改変が必要なため。
+
+2011-10-03
+- 私家版人名辞書を更新。
+- はてなダイアリーキーワードを更新。
+- ニコニコ大百科IME辞書を更新。
+
+2011-08-22
+- 私家版人名辞書を更新。
+- はてなダイアリーキーワードを更新。
+- ニコニコ大百科IME辞書を更新。
+- ニコニコ大百科IME辞書はデフォルトでは無効。
+- 郵便番号辞書生成スクリプトの位置を doc-ut/script/ に変更。
+
+2011-08-17
+- 私家版人名辞書を更新。
+- はてなダイアリーキーワードを更新。
+- ニコニコ大百科IME辞書を更新。
+- 郵便番号辞書の生成方法を変更。
+  公式版のスクリプトが修正されたので。
+- パッチを当てた mozc-ut も配布することにした。
+  辞書生成にかなり時間がかかるので。
+
+2011-08-03
+- 追加単語の頻度を全体的に下げた。
+  最高頻度を公式辞書の上位20%に設定していたが、
+  上位33%に下げた。
+  なるべく公式辞書の変換を崩さないようにするため。
+
+- カタカナ語の読みがなを自動的に修正。
+  「きゃのん => キヤノン」も「きやのん」に直してしまうが、
+  手間を省くため例外なく直す。
+
+- 「はてなダイアリーキーワード」を更新。
+- jinmei を更新。
+- 「公式辞書と表記が同じで読みが異なるもの」の取得を修正。
+  「ぬくみずよういち」が抜けていた。
+- 「公式辞書と表記が同じで読みが異なるもの」の頻度を修正。
+  「からくり　機関」などの頻度が高くなりすぎていた。
+- ひらがな以外の読みがながあったので修正。
+- EUCからUTF8への変換を修正。
+- EDICT からのエントリ取得を修正。
+- EDICT を更新。
+- EDICT の読みがなを修正。
+
+2011-07-28
+- edictから単語を控えめに追加。
+  漢字またはカタカナで出来ている単語を追加。
+  ひらがな混じりだと文章風のものがあるので削除。
+  変わった読み仮名が混じっているので、
+  公式辞書と同じ読みのものは削除。
+
+- ニコニコ大百科IME辞書から単語を控えめに追加。
+  ライセンスに不安があるのでデフォルトでは無効にしています。
+  2年近く配布されていて、
+  トラブルになってはいないようですが。
+  収録単語の条件はedictと同じ。
+
+- サンプル単語のヒット数が正常に取れていないものがあったので修正。
+- 単語選択スクリプトを修正。
+
+2011-07-27
+- 「はてなダイアリーキーワード」を更新。
+- 表記が同じで読みが異なる単語のコスト計算を変更。
+  決め打ちしていたのを公式辞書から算出するようにした。
+  とりあえずの結果としては変わりなし。
+- 一般名詞の収録範囲を修正。
+
+2011-07-26
+- 公式辞書&人名辞書と読みが同じ「はてなダイアリーキーワード」を削除。
+  当て字による中傷を減らすため。
+  前から同じような処理を配布前にやっていたので
+  結果としてはあまり変わらないが、
+  辞書生成時に公式辞書を参照して削除するようにした。
+
+- 表記が同じで読みが異なる単語を収録。
+  公式辞書と表記が同じ単語は削除してきたが、
+  公式辞書では読みを間違えて登録していたり、
+  濁音の読みが登録されていないことがあるので。
+  (例)
+  だんしだか　男子高　(「だんしこう」を追加)
+  こうはん　鋼板　(「こうばん」を追加)
+
+  この時の品詞は公式辞書のものを流用し、
+  頻度は公式辞書からざっくり計算した。
+
+2011-07-25
+- 辞書の優先順を変更。
+  mozc-official => jinmei => altcanna => hatena => skk を
+  mozc-official => altcanna => jinmei => hatena => skk に変更。
+
+  jinmei には「スピード」のようなありきたりな名詞を使った
+  グループ名などがあるので、altcanna の優先度を上げた。
+
+- 読みと表記が公式辞書と完全に一致する単語は生成した辞書から削除。
+  人名だけは残していたが削除することにした。
+
+- 公式辞書と表記もしくは読みが重なる単語でも、元データとしては残す。
+  重複する単語は配布前に削除していたが、
+  スクリプト実行時に公式辞書を参照して削除することにした。
+
+- 郵便番号辞書の生成スクリプトを付けた。
+
+- 「ゔぁゔぃゔぇゔぉゔゅゔ」の読みから「ばびべぼびゅぶ」の読みを生成。
+  「ばいおりん」で「ヴァイオリン」に変換できる。
+
+2011-07-22
+- はてなダイアリーキーワードが漏れていたので足した。
+
+2011-07-18
+- 辞書を大きく変えた。
+  全体の方針
+  手作業での単語優先度変更はなるべくしない。
+  重要な単語がいくつか削がれたとしても、
+  なるべく楽に単語選択と頻度設定ができるようにする。
+
+- 単語のヒット数をbingですべて取り直した。
+  Yahoo APIは使用制限が厳しくなったのでやめた。
+
+- 公式辞書の変換をなるべく崩さないようにする。
+  公式辞書と表記がかぶるものを
+  辞書の種類に応じて自動で削除する。
+
+- 収録基準を見なおした。
+  英数字を含む単語は私家版辞書から削除。
+  アルファベットが多いとヒット数が大きく出るし、
+  多くの場合アルファベット部分は平仮名で打たないので。
+  (「えっちでぃーどらいぶ HDドライブ」など。)
+
+- バージョン名を「Mozc-UT-**」にした。
+  非公式版であることを明確にするため。
+  バージョンは「ばーじょん」と入力して変換すると表示されます。
+
+2011-04-09
+- 私家版Anthy辞書の更新に追従。
+
+2011-03-07
+- 私家版Anthy辞書の更新に追従。
+- ベースを Mozc-1.1.626.102 に更新。
+- 人名の頻度を少し上げた。
+  1回で変換できるものを増やした。
+
+2010-12-17
+- 私家版Anthy辞書の更新に追従。
+- ベースを Mozc-1.0.558.102 に更新。
+
+2010-11-16
+- 私家版Anthy辞書の更新に追従。
+
+2010-11-15
+- 私家版Anthy辞書の更新に追従。
+- ディレクトリ名を拡張版辞書と対比しやすいように変更した。
+  mozcdic-ut-base-*/
+- 生成済み辞書の入るディレクトリ名を変更した。
+  dictionaries/
+- ドキュメントを更新した。
+- 2010-11-13 の件を解決。
+  生の品詞名をIDに自動変換することにした。
+
+2010-11-13
+- 「分か***」の動詞を追加した。
+  足りない基本単語は mozc-utwords.txt という
+  ファイルで足すことにした。
+  このファイルはBSDライセンスとする。
+  動詞はID変更への自動追従が面倒なのでどうするか。
+
+2010-11-11
+- カタカナ語を増やした。
+  gcanna.ctdのカタカナ語を増やしたことにより
+  収録範囲が広がった。
+
+2010-11-10
+- スコアが9000以上のものを削除した。
+
+2010-11-10
+- 「分か***」の動詞を追加した。
+
+2010-11-06
+- 「う゛」ではなく「ゔ」で検索するようにした。
+  Anthyの読み仮名は「う゛」、
+  Mozcの読み仮名は「ゔ」なので、
+  gcanna.ctdの読み仮名をあらかじめ「ゔ」に統一した。
+
+2010-11-05
+- 収録範囲を少し広げた。
+
+2010-11-04
+- id.def の変更に自動対応するようにした。
+- 自動で辞書を作れるようにした。
+- ディレクトリ名を変えた。
+- 収録範囲を変更した。
+  かなり大胆に削ったので調整が必要。
+
+2010-11-04
+- 収録語を追加。
+  私家版Anthy辞書に基本語の漏れが少しあったので。
+
+2010-11-03
+- 少し収録語を減らした。
+
+2010-11-03
+- 最初のリリース。
