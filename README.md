@@ -17,7 +17,7 @@ Source code: Apache License, Version 2.0
 
 ## Usage
 
-Clone necessary Mozc UT dictionaries and extract them.
+Clone the Mozc UT dictionaries and extract them.
 
 ```
 git clone https://github.com/utuhiro78/merge-ut-dictionaries.git
