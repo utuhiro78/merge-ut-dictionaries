@@ -49,7 +49,7 @@ neologd="true"
 #place_names="true"
 ```
 
-Run make.sh.
+Run make.sh. It generates a merged dictionary "mozcdic-ut.txt". The costs are modified by jawiki-latest-all-titles.
 
 ```
 sh make.sh
