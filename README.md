@@ -45,8 +45,8 @@ git clone https://github.com/utuhiro78/mozcdic-ut-jawiki.git
 git clone https://github.com/utuhiro78/mozcdic-ut-neologd.git
 git clone https://github.com/utuhiro78/mozcdic-ut-personal-names.git
 git clone https://github.com/utuhiro78/mozcdic-ut-place-names.git
-git clone https://github.com/utuhiro78/mozcdic-ut-skk-jisyo.git
 git clone https://github.com/utuhiro78/mozcdic-ut-sudachidict.git
+git clone https://github.com/utuhiro78/mozcdic-ut-skk-jisyo.git
 
 cp mozcdic-ut-*/mozcdic-ut-*.txt.tar.bz2 .
 
@@ -67,6 +67,7 @@ If you need only mozcdic-ut-neologd, edit the lines as follows:
 neologd="true"
 #personal_names="true"
 #place_names="true"
+#skk_jisyo="true"
 #sudachidict="true"
 ```
 
