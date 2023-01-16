@@ -59,6 +59,7 @@ mousepad make.sh
 If you need only mozcdic-ut-neologd, edit the lines as follows:
 
 ```
+#edict="true"
 #jawiki="true"
 neologd="true"
 #personal_names="true"
