@@ -3,6 +3,7 @@
 # Author: UTUMI Hirosi (utuhiro78 at yahoo dot co dot jp)
 # License: Apache License, Version 2.0
 
+edict="true"
 jawiki="true"
 neologd="true"
 personal_names="true"
@@ -10,6 +11,10 @@ place_names="true"
 sudachidict="true"
 
 rm -f mozcdic-ut.txt
+
+if [[ $edict = "true" ]]; then
+cat mozcdic-ut-edict2.txt >> mozcdic-ut.txt
+fi
 
 if [[ $jawiki = "true" ]]; then
 cat mozcdic-ut-jawiki.txt >> mozcdic-ut.txt
@@ -38,5 +43,5 @@ ruby apply_cost.rb mozcdic-ut.txt
 
 mv mozcdic-ut.txt ../
 
-rm -rf merge-ut-dictionaries-release/
-rsync -a ../* merge-ut-dictionaries-release --exclude=jawiki-* --exclude=mozcdic-*
+rm -rf ../../merge-ut-dictionaries-release/
+rsync -a ../* ../../merge-ut-dictionaries-release --exclude=jawiki-* --exclude=mozcdic-*

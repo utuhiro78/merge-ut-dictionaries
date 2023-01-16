@@ -9,6 +9,8 @@ Merge UT Dictionaries merges multiple Mozc UT dictionaries into one and modify t
 
 Mozc UT dictionaries contain the following dictionaries:
 
+- [mozcdic-ut-edict2](https://github.com/utuhiro78/mozcdic-ut-edict2)
+
 - [mozcdic-ut-jawiki](https://github.com/utuhiro78/mozcdic-ut-jawiki)
 
 - [mozcdic-ut-neologd](https://github.com/utuhiro78/mozcdic-ut-neologd)
@@ -36,6 +38,7 @@ git clone https://github.com/utuhiro78/merge-ut-dictionaries.git
 
 cd merge-ut-dictionaries/src/
 
+git clone https://github.com/utuhiro78/mozcdic-ut-edict2.git
 git clone https://github.com/utuhiro78/mozcdic-ut-jawiki.git
 git clone https://github.com/utuhiro78/mozcdic-ut-neologd.git
 git clone https://github.com/utuhiro78/mozcdic-ut-personal-names.git
