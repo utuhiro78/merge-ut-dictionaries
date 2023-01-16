@@ -8,6 +8,7 @@ jawiki="true"
 neologd="true"
 personal_names="true"
 place_names="true"
+skk_jisyo="true"
 sudachidict="true"
 
 rm -f mozcdic-ut.txt
@@ -30,6 +31,10 @@ fi
 
 if [[ $place_names = "true" ]]; then
 cat mozcdic-ut-place-names.txt >> mozcdic-ut.txt
+fi
+
+if [[ $skk_jisyo = "true" ]]; then
+cat mozcdic-ut-skk-jisyo.txt >> mozcdic-ut.txt
 fi
 
 if [[ $sudachidict = "true" ]]; then
