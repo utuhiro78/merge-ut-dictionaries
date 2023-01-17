@@ -86,7 +86,6 @@ sh make.sh
 It generates a merged dictionary "mozcdic-ut.txt". The costs are modified by jawiki-latest-all-titles.
 
 ```
-cd ..
 ls mozcdic-ut.txt
 ```
 
@@ -95,12 +94,11 @@ ls mozcdic-ut.txt
 ### Arch Linux
 
 ```
-cd src/
 ruby get_latest_mozc.rb 
 
 rm -rf tmp_mozc
 mkdir tmp_mozc
-cp {fcitx5-mozc-ut.PKGBUILD,mozc-2.*.tar.bz2,../mozcdic-ut.txt} tmp_mozc/
+cp {fcitx5-mozc-ut.PKGBUILD,mozc-2.*.tar.bz2,mozcdic-ut.txt} tmp_mozc/
 
 cd tmp_mozc/
 makepkg -is -p fcitx5-mozc-ut.PKGBUILD
@@ -116,7 +114,7 @@ ruby get_latest_mozc.rb
 
 rm -rf tmp_mozc
 mkdir tmp_mozc
-cp {mozc-2.*.tar.bz2,../mozcdic-ut.txt} tmp_mozc/
+cp {mozc-2.*.tar.bz2,mozcdic-ut.txt} tmp_mozc/
 
 cd tmp_mozc/
 tar xf mozc-2.*.tar.bz2
