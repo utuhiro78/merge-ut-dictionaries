@@ -27,13 +27,15 @@ lines.length.times do |i|
 	lines[i] = lines[i].split("_(")[-1]
 
 	# 表記が1文字の場合はスキップ
-	if lines[1] == nil
+	if lines[i][1] == nil
 		next
 	end
 
 	# "_" を " " に置き換える
 	# THE_BEATLES
-	l2[p] = lines[i].gsub("_", " ")
+	lines[i] = lines[i].gsub("_", " ")
+
+	l2[p] = lines[i]
 	p = p + 1
 end
 
