@@ -65,32 +65,66 @@ Comment out unnecessary UT dictionaries in make.sh.
 mousepad make.sh
 ```
 
-If you need only mozcdic-ut-neologd, edit the lines as follows:
+Default settings:
 
 ```
 #edict="true"
-#jawiki="true"
+jawiki="true"
 neologd="true"
-#personal_names="true"
-#place_names="true"
+personal_names="true"
+place_names="true"
 #skk_jisyo="true"
 #sudachidict="true"
 ```
 
-Run make.sh. It generates a merged dictionary "mozcdic-ut.txt". The costs are modified by jawiki-latest-all-titles.
+Run make.sh.
 
 ```
 sh make.sh
 ```
 
-Add mozcdic-ut.txt to dictionary00.txt and build Mozc as usual.
+It generates a merged dictionary "mozcdic-ut.txt". The costs are modified by jawiki-latest-all-titles.
 
 ```
 cd ..
 ls mozcdic-ut.txt
-
-cat ../mozc-master/src/data/dictionary_oss/dictionary00.txt mozcdic-ut.txt > dictionary00.txt.new
-mv dictionary00.txt.new ../mozc-master/src/data/dictionary_oss/dictionary00.txt
 ```
+
+## Building Mozc
+
+### Arch Linux
+
+```
+cd src/
+ruby get_latest_mozc.rb 
+
+rm -rf tmp_mozc
+mkdir tmp_mozc
+cp {fcitx5-mozc-ut.PKGBUILD,mozc-2.*.tar.bz2,../mozcdic-ut.txt} tmp_mozc/
+
+cd tmp_mozc/
+makepkg -is -p fcitx5-mozc-ut.PKGBUILD
+```
+
+### Other distributions
+
+Add mozcdic-ut.txt to dictionary00.txt.
+
+```
+cd src/
+ruby get_latest_mozc.rb 
+
+rm -rf tmp_mozc
+mkdir tmp_mozc
+cp {mozc-2.*.tar.bz2,../mozcdic-ut.txt} tmp_mozc/
+
+cd tmp_mozc/
+tar xf mozc-2.*.tar.bz2
+
+cat mozc-2.*/src/data/dictionary_oss/dictionary00.txt mozcdic-ut.txt > dictionary00.txt.new
+mv dictionary00.txt.new mozc-2.*/src/data/dictionary_oss/dictionary00.txt
+```
+
+Build Mozc as usual.
 
 [HOME](http://linuxplayers.g1.xrea.com/mozc-ut.html)

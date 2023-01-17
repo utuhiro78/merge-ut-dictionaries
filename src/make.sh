@@ -3,13 +3,13 @@
 # Author: UTUMI Hirosi (utuhiro78 at yahoo dot co dot jp)
 # License: Apache License, Version 2.0
 
-edict="true"
+#edict="true"
 jawiki="true"
 neologd="true"
 personal_names="true"
 place_names="true"
-skk_jisyo="true"
-sudachidict="true"
+#skk_jisyo="true"
+#sudachidict="true"
 
 rm -f mozcdic-ut.txt
 
@@ -49,4 +49,4 @@ ruby apply_word_hits.rb mozcdic-ut.txt
 mv mozcdic-ut.txt ../
 
 rm -rf ../../merge-ut-dictionaries-release/
-rsync -a ../* ../../merge-ut-dictionaries-release --exclude=jawiki-* --exclude=mozcdic-*
+rsync -a ../* ../../merge-ut-dictionaries-release --exclude=jawiki-* --exclude=mozc-2.* --exclude=mozcdic-* --exclude=tmp_mozc --exclude=fcitx5-mozc*
