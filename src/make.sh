@@ -43,8 +43,8 @@ fi
 
 ruby remove_duplicate_ut_entries.rb mozcdic-ut.txt
 
-ruby generate_cost.rb
-ruby apply_cost.rb mozcdic-ut.txt
+ruby count_word_hits.rb
+ruby apply_word_hits.rb mozcdic-ut.txt
 
 mv mozcdic-ut.txt ../
 
