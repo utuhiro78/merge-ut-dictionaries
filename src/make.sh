@@ -49,4 +49,4 @@ ruby apply_word_hits.rb mozcdic-ut.txt
 mv mozcdic-ut.txt ../
 
 rm -rf ../../merge-ut-dictionaries-release/
-rsync -a ../* ../../merge-ut-dictionaries-release --exclude=jawiki-* --exclude=mozc-2.* --exclude=mozcdic-* --exclude=tmp_mozc --exclude=fcitx5-mozc*
+rsync -a ../* ../../merge-ut-dictionaries-release --exclude=jawiki-* --exclude=mozc-2.* --exclude=mozcdic-* --exclude=tmp_mozc --exclude=fcitx5-mozc-ut-2.*
