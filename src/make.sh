@@ -3,6 +3,7 @@
 # Author: UTUMI Hirosi (utuhiro78 at yahoo dot co dot jp)
 # License: Apache License, Version 2.0
 
+#alt_cannadic="true"
 #edict="true"
 jawiki="true"
 neologd="true"
@@ -12,6 +13,10 @@ place_names="true"
 #sudachidict="true"
 
 rm -f mozcdic-ut.txt
+
+if [[ $alt_cannadic = "true" ]]; then
+cat mozcdic-ut-alt-cannadic.txt >> mozcdic-ut.txt
+fi
 
 if [[ $edict = "true" ]]; then
 cat mozcdic-ut-edict2.txt >> mozcdic-ut.txt

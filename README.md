@@ -9,6 +9,8 @@ Merge UT Dictionaries merges multiple Mozc UT dictionaries into one and modify t
 
 Mozc UT dictionaries contain the following dictionaries:
 
+- [mozcdic-ut-alt-cannadic](https://github.com/utuhiro78/mozcdic-ut-alt-cannadic)
+
 - [mozcdic-ut-edict2](https://github.com/utuhiro78/mozcdic-ut-edict2)
 
 - [mozcdic-ut-jawiki](https://github.com/utuhiro78/mozcdic-ut-jawiki)
@@ -46,6 +48,7 @@ git clone https://github.com/utuhiro78/merge-ut-dictionaries.git
 
 cd merge-ut-dictionaries/src/
 
+git clone https://github.com/utuhiro78/mozcdic-ut-alt-cannadic.git
 git clone https://github.com/utuhiro78/mozcdic-ut-edict2.git
 git clone https://github.com/utuhiro78/mozcdic-ut-jawiki.git
 git clone https://github.com/utuhiro78/mozcdic-ut-neologd.git
@@ -68,6 +71,7 @@ mousepad make.sh
 Default settings:
 
 ```
+#alt_cannadic="true"
 #edict="true"
 jawiki="true"
 neologd="true"
