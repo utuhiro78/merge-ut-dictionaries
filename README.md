@@ -25,7 +25,7 @@ Mozc UT dictionaries contain the following dictionaries:
 
 - [mozcdic-ut-sudachidict](https://github.com/utuhiro78/mozcdic-ut-sudachidict)
 
-Please give them a [GitHub Star](https://docs.github.com/ja/get-started/exploring-projects-on-github/saving-repositories-with-stars):
+### Please give them a [GitHub Star](https://docs.github.com/ja/get-started/exploring-projects-on-github/saving-repositories-with-stars).
 
 Mozc: [1678 Stars](https://github.com/google/mozc)
 Fcitx5: [895 Stars](https://github.com/fcitx/fcitx5)
