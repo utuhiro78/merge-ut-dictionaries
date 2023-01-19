@@ -9,7 +9,9 @@ Merge UT Dictionaries merges multiple Mozc UT dictionaries into one and modify t
 
 Mozc UT dictionaries contain the following dictionaries:
 
-### Recommended dictionaries
+- [mozcdic-ut-alt-cannadic](https://github.com/utuhiro78/mozcdic-ut-alt-cannadic)
+
+- [mozcdic-ut-edict2](https://github.com/utuhiro78/mozcdic-ut-edict2)
 
 - [mozcdic-ut-jawiki](https://github.com/utuhiro78/mozcdic-ut-jawiki)
 
@@ -19,17 +21,11 @@ Mozc UT dictionaries contain the following dictionaries:
 
 - [mozcdic-ut-place-names](https://github.com/utuhiro78/mozcdic-ut-place-names)
 
-Except for mozcdic-ut-jawiki, the costs for words are not modified by jawiki-latest-all-titles. If you use the dictionaries as they are, the conversion accuracy might be getting worse.
-
-### Optional dictionaries
-
-- [mozcdic-ut-alt-cannadic](https://github.com/utuhiro78/mozcdic-ut-alt-cannadic)
-
-- [mozcdic-ut-edict2](https://github.com/utuhiro78/mozcdic-ut-edict2)
-
 - [mozcdic-ut-skk-jisyo](https://github.com/utuhiro78/mozcdic-ut-skk-jisyo)
 
 - [mozcdic-ut-sudachidict](https://github.com/utuhiro78/mozcdic-ut-sudachidict)
+
+Except for mozcdic-ut-jawiki, the costs for words are not modified by jawiki-latest-all-titles. If you use the dictionaries as they are, the conversion accuracy might be getting worse.
 
 ### Press the Star button on GitHub.
 
