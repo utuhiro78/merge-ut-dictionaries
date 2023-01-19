@@ -25,7 +25,7 @@ Mozc UT dictionaries contain the following dictionaries:
 
 - [mozcdic-ut-sudachidict](https://github.com/utuhiro78/mozcdic-ut-sudachidict)
 
-Except for mozcdic-ut-jawiki, the costs for words are not modified by jawiki-latest-all-titles. If you use the dictionaries as they are, the conversion accuracy might be getting worse. This tool modifies the costs for words.
+Except for mozcdic-ut-jawiki, the costs for words are not modified by jawiki-latest-all-titles. If you use the dictionaries as they are, the conversion accuracy might be getting worse.
 
 ### Press the Star button on GitHub.
 
