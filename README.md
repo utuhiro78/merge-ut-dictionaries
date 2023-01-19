@@ -27,11 +27,15 @@ Mozc UT dictionaries contain the following dictionaries:
 
 ### Press the Star button on GitHub.
 
+They need more Stars.
+
 Mozc: [1678 Stars](https://github.com/google/mozc)
 
 Fcitx5: [895 Stars](https://github.com/fcitx/fcitx5)
 
-Fcitx5-mozc: [33 Stars](https://github.com/fcitx/mozc)
+Fcitx5-Mozc: [33 Stars](https://github.com/fcitx/mozc)
+
+> Starring a repository also shows appreciation to the repository maintainer for their work. - [GitHub Docs](https://docs.github.com/en/get-started/exploring-projects-on-github/saving-repositories-with-stars)
 
 > リポジトリに Star を付けるということは、リポジトリメンテナに対してその作業についての感謝を示すことでもあります。- [GitHub Docs](https://docs.github.com/ja/get-started/exploring-projects-on-github/saving-repositories-with-stars)
 
