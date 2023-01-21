@@ -109,36 +109,11 @@ ls mozcdic-ut.txt
 
 ## Building Mozc
 
-### Arch Linux
-
-```
-ruby get_latest_mozc.rb 
-
-rm -rf tmp_mozc
-mkdir tmp_mozc
-cp {fcitx5-mozc-ut.PKGBUILD,mozc-2.*.tar.bz2,mozcdic-ut.txt} tmp_mozc/
-
-cd tmp_mozc/
-makepkg -is -p fcitx5-mozc-ut.PKGBUILD
-```
-
-### Other distributions
-
 Add mozcdic-ut.txt to dictionary00.txt.
 
 ```
-cd src/
-ruby get_latest_mozc.rb 
-
-rm -rf tmp_mozc
-mkdir tmp_mozc
-cp {mozc-2.*.tar.bz2,mozcdic-ut.txt} tmp_mozc/
-
-cd tmp_mozc/
-tar xf mozc-2.*.tar.bz2
-
-cat mozc-2.*/src/data/dictionary_oss/dictionary00.txt mozcdic-ut.txt > dictionary00.txt.new
-mv dictionary00.txt.new mozc-2.*/src/data/dictionary_oss/dictionary00.txt
+cat ../../mozc-master/src/data/dictionary_oss/dictionary00.txt mozcdic-ut.txt > dictionary00.txt.new
+mv dictionary00.txt.new ../../mozc-master/src/data/dictionary_oss/dictionary00.txt
 ```
 
 Build Mozc as usual.
