@@ -107,8 +107,6 @@ It generates a merged dictionary "mozcdic-ut.txt".
 ls mozcdic-ut.txt
 ```
 
-## Building Mozc
-
 Add mozcdic-ut.txt to dictionary00.txt.
 
 ```
