@@ -107,11 +107,17 @@ It generates a merged dictionary "mozcdic-ut.txt".
 ls mozcdic-ut.txt
 ```
 
+Get the latest Mozc.
+
+```
+git clone --depth 1 --recursive --shallow-submodules https://github.com/google/mozc.git
+```
+
 Add mozcdic-ut.txt to dictionary00.txt.
 
 ```
-cat ../../mozc-master/src/data/dictionary_oss/dictionary00.txt mozcdic-ut.txt > dictionary00.txt.new
-mv dictionary00.txt.new ../../mozc-master/src/data/dictionary_oss/dictionary00.txt
+cat mozc/src/data/dictionary_oss/dictionary00.txt mozcdic-ut.txt > dictionary00.txt.new
+mv dictionary00.txt.new mozc/src/data/dictionary_oss/dictionary00.txt
 ```
 
 Build Mozc as usual.
