@@ -78,10 +78,6 @@ for f in mozcdic-ut-*.txt.tar.bz2; do tar xf "$f"; done
 
 Comment out unnecessary UT dictionaries in make.sh.
 
-```
-mousepad make.sh
-```
-
 Default settings:
 
 ```
@@ -95,31 +91,17 @@ place_names="true"
 #sudachidict="true"
 ```
 
-Run make.sh.
+Generate mozcdic-ut.txt.
 
 ```
 sh make.sh
 ```
 
-It generates a merged dictionary "mozcdic-ut.txt".
+Add mozcdic-ut.txt to dictionary00.txt and build Mozc as usual.
 
 ```
-ls mozcdic-ut.txt
+cat ../../mozc-master/src/data/dictionary_oss/dictionary00.txt mozcdic-ut.txt > dictionary00.txt.new
+mv dictionary00.txt.new ../../mozc-master/src/data/dictionary_oss/dictionary00.txt
 ```
-
-Clone the latest Mozc.
-
-```
-git clone --depth 1 --recursive --shallow-submodules https://github.com/google/mozc.git
-```
-
-Add mozcdic-ut.txt to Mozc's dictionary00.txt.
-
-```
-cat mozc/src/data/dictionary_oss/dictionary00.txt mozcdic-ut.txt > dictionary00.txt.new
-mv dictionary00.txt.new mozc/src/data/dictionary_oss/dictionary00.txt
-```
-
-Build Mozc as usual.
 
 [HOME](http://linuxplayers.g1.xrea.com/mozc-ut.html)
