@@ -100,8 +100,7 @@ sh make.sh
 Add mozcdic-ut.txt to dictionary00.txt and build Mozc as usual.
 
 ```
-cat ../../mozc-master/src/data/dictionary_oss/dictionary00.txt mozcdic-ut.txt > dictionary00.txt.new
-mv dictionary00.txt.new ../../mozc-master/src/data/dictionary_oss/dictionary00.txt
+cat mozcdic-ut.txt >> ../../mozc-master/src/data/dictionary_oss/dictionary00.txt
 ```
 
 [HOME](http://linuxplayers.g1.xrea.com/mozc-ut.html)
