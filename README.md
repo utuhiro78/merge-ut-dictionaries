@@ -88,4 +88,13 @@ Add mozcdic-ut.txt to dictionary00.txt and build Mozc as usual.
 cat mozcdic-ut.txt >> ../../mozc-master/src/data/dictionary_oss/dictionary00.txt
 ```
 
+## Building Fcitx5-Mozc on Arch Linux
+
+```
+mv mozcdic-ut.txt PKGBUILD/
+cd PKGBUILD/
+ruby get_fcitx5_mozc.rb
+makepkg -is -p fcitx5-mozc-ut.PKGBUILD
+```
+
 [HOME](http://linuxplayers.g1.xrea.com/mozc-ut.html)
