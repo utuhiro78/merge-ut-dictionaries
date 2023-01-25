@@ -55,25 +55,10 @@ Source code: Apache License, Version 2.0
 
 ## Usage
 
-Clone the Mozc UT dictionaries and extract them.
-
 ```
 git clone https://github.com/utuhiro78/merge-ut-dictionaries.git
 
 cd merge-ut-dictionaries/src/
-
-git clone https://github.com/utuhiro78/mozcdic-ut-alt-cannadic.git
-git clone https://github.com/utuhiro78/mozcdic-ut-edict2.git
-git clone https://github.com/utuhiro78/mozcdic-ut-jawiki.git
-git clone https://github.com/utuhiro78/mozcdic-ut-neologd.git
-git clone https://github.com/utuhiro78/mozcdic-ut-personal-names.git
-git clone https://github.com/utuhiro78/mozcdic-ut-place-names.git
-git clone https://github.com/utuhiro78/mozcdic-ut-skk-jisyo.git
-git clone https://github.com/utuhiro78/mozcdic-ut-sudachidict.git
-
-cp mozcdic-ut-*/mozcdic-ut-*.txt.tar.bz2 .
-
-for f in mozcdic-ut-*.txt.tar.bz2; do tar xf "$f"; done
 ```
 
 Comment out unnecessary UT dictionaries in make.sh.
