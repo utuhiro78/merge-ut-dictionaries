@@ -13,43 +13,53 @@ place_names="true"
 #sudachidict="true"
 
 rm -f mozcdic-ut.txt
+rm -rf mozcdic-ut-*
 
 if [[ $alt_cannadic = "true" ]]; then
-cat mozcdic-ut-alt-cannadic.txt >> mozcdic-ut.txt
+git clone --depth 1 https://github.com/utuhiro78/mozcdic-ut-alt-cannadic.git
 fi
 
 if [[ $edict = "true" ]]; then
-cat mozcdic-ut-edict2.txt >> mozcdic-ut.txt
+git clone --depth 1 https://github.com/utuhiro78/mozcdic-ut-edict2.git
 fi
 
 if [[ $jawiki = "true" ]]; then
-cat mozcdic-ut-jawiki.txt >> mozcdic-ut.txt
+git clone --depth 1 https://github.com/utuhiro78/mozcdic-ut-jawiki.git
 fi
 
 if [[ $neologd = "true" ]]; then
-cat mozcdic-ut-neologd.txt >> mozcdic-ut.txt
+git clone --depth 1 https://github.com/utuhiro78/mozcdic-ut-neologd.git
 fi
 
 if [[ $personal_names = "true" ]]; then
-cat mozcdic-ut-personal-names.txt >> mozcdic-ut.txt
+git clone --depth 1 https://github.com/utuhiro78/mozcdic-ut-personal-names.git
 fi
 
 if [[ $place_names = "true" ]]; then
-cat mozcdic-ut-place-names.txt >> mozcdic-ut.txt
+git clone --depth 1 https://github.com/utuhiro78/mozcdic-ut-place-names.git
 fi
 
 if [[ $skk_jisyo = "true" ]]; then
-cat mozcdic-ut-skk-jisyo.txt >> mozcdic-ut.txt
+git clone --depth 1 https://github.com/utuhiro78/mozcdic-ut-skk-jisyo.git
 fi
 
 if [[ $sudachidict = "true" ]]; then
-cat mozcdic-ut-sudachidict.txt >> mozcdic-ut.txt
+git clone --depth 1 https://github.com/utuhiro78/mozcdic-ut-sudachidict.git
 fi
 
+# UT辞書を展開して結合
+mv mozcdic-ut-*/mozcdic-ut-*.txt.tar.bz2 .
+for f in mozcdic-ut-*.txt.tar.bz2; do tar xf "$f"; done
+
+cat mozcdic-ut-*.txt > mozcdic-ut.txt
+
+# mozcdic-ut.txt の重複エントリを削除
 ruby remove_duplicate_ut_entries.rb mozcdic-ut.txt
 
+# mozcdic-ut.txt の単語コストを変更
 ruby count_word_hits.rb
 ruby apply_word_hits.rb mozcdic-ut.txt
 
+# リリース用のファイルを作成
 rm -rf ../../merge-ut-dictionaries-release/
 rsync -a ../* ../../merge-ut-dictionaries-release --exclude=jawiki-* --exclude=mozc-2.* --exclude=mozcdic-* --exclude=tmp_mozc --exclude=fcitx5-mozc-ut-2.*

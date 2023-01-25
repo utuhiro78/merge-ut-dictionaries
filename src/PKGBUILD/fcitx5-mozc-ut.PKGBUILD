@@ -6,7 +6,7 @@
 ## The UT dictionary's project page: http://linuxplayers.g1.xrea.com/mozc-ut.html
 
 ## Helpful internal stuff
-_mozcver=2.28.4990.102.20230123
+_mozcver=2.28.4990.102.20230124
 _pkgver=${_mozcver}
 
 pkgname=fcitx5-mozc-ut
