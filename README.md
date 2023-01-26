@@ -76,6 +76,8 @@ place_names="true"
 #sudachidict="true"
 ```
 
+If you have newer mozcdic-ut-jawiki.txt.tar.bz2, put it to src/ and comment out "jawiki". Do the same for other dictionaries.
+
 Generate mozcdic-ut.txt.
 
 ```
