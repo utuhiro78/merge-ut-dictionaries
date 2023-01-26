@@ -96,6 +96,8 @@ cat mozcdic-ut.txt >> ../../mozc-master/src/data/dictionary_oss/dictionary00.txt
 mv mozcdic-ut.txt PKGBUILD/
 cd PKGBUILD/
 ruby get_fcitx5_mozc.rb
+
+rm -rf ~/.cache/bazel/
 makepkg -is -p fcitx5-mozc-ut.PKGBUILD
 ```
 
