@@ -27,8 +27,8 @@ date = date.gsub("-", "")
 mozcver = version + "102." + date
 mozcdir = "mozc-" + version + "102." + date
 
-if FileTest.exist?(mozcdir + ".tar.bz2") == true
-	puts mozcdir + ".tar.bz2 is up to date."
+if FileTest.exist?(mozcdir + ".tar.zst") == true
+	puts mozcdir + ".tar.zst is up to date."
 	exit
 end
 
@@ -40,7 +40,7 @@ end
 `mv mozc #{mozcdir}`
 
 # Mozc のアーカイブを作成
-`tar -cjf #{mozcdir}.tar.bz2 #{mozcdir}`
+`tar --zstd -cf #{mozcdir}.tar.zst #{mozcdir}`
 `rm -rf #{mozcdir}`
 
 # PKGBUILD を更新

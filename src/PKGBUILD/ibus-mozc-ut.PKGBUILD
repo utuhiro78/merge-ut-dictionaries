@@ -15,7 +15,7 @@ pkgver=${_pkgver}
 pkgrel=1
 url='https://github.com/google/mozc'
 makedepends=('bazel' 'ibus' 'python' 'qt5-base')
-source=(mozc-${_mozcver}.tar.bz2
+source=(mozc-${_mozcver}.tar.zst
         mozcdic-ut.txt)
 sha256sums=('SKIP'
             'SKIP')
