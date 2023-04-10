@@ -68,16 +68,16 @@ lines.length.times do |i|
 		next
 	end
 
-	# jawiki に存在しない表記はコストを 9000 にする
+	# jawiki に存在しない表記はコストを 9000 台にする
 	if s1[0] != s2[0]
-		s1[4] = "9000"
+		s1[4] = (9000 + (s1[4] / 20)).to_s
 		lines[i] = s1.join("	")
 		next
 	end
 
-	# jawiki でのヒット数が 1 の表記はコストを 8000 にする
+	# jawiki でのヒット数が 1 の表記はコストを 8000 台にする
 	if s2[4] == 1
-		s1[4] = "8000"
+		s1[4] = (8000 + (s1[4] / 20)).to_s
 		lines[i] = s1.join("	")
 		next
 	end
