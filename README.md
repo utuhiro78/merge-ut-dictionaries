@@ -7,33 +7,18 @@ date: 2023-01-15
 
 Merge UT Dictionaries merges multiple Mozc UT dictionaries into one and modify the costs for words.
 
-Mozc UT dictionaries contain the following dictionaries:
-
-- [mozcdic-ut-alt-cannadic](https://github.com/utuhiro78/mozcdic-ut-alt-cannadic)
-
-- [mozcdic-ut-edict2](https://github.com/utuhiro78/mozcdic-ut-edict2)
-
-- [mozcdic-ut-jawiki](https://github.com/utuhiro78/mozcdic-ut-jawiki)
-
-- [mozcdic-ut-neologd](https://github.com/utuhiro78/mozcdic-ut-neologd)
-
-- [mozcdic-ut-personal-names](https://github.com/utuhiro78/mozcdic-ut-personal-names)
-
-- [mozcdic-ut-place-names](https://github.com/utuhiro78/mozcdic-ut-place-names)
-
-- [mozcdic-ut-skk-jisyo](https://github.com/utuhiro78/mozcdic-ut-skk-jisyo)
-
-- [mozcdic-ut-sudachidict](https://github.com/utuhiro78/mozcdic-ut-sudachidict)
-
-### Press the Star button on GitHub.
+## Press the Star button on GitHub
 
 They need more Stars.
 
-Mozc: [1678 Stars](https://github.com/google/mozc)
+Mozc: [1870 Stars](https://github.com/google/mozc)
 
-Fcitx5: [895 Stars](https://github.com/fcitx/fcitx5)
+Fcitx5: [1064 Stars](https://github.com/fcitx/fcitx5)
 
-Fcitx5-Mozc: [33 Stars](https://github.com/fcitx/mozc)
+Fcitx5-Mozc: [76 Stars](https://github.com/fcitx/mozc)
+
+
+merge-ut-dictionaries: [36 Stars](https://github.com/utuhiro78/merge-ut-dictionaries)
 
 > Starring a repository also shows appreciation to the repository maintainer for their work. - [GitHub Docs](https://docs.github.com/en/get-started/exploring-projects-on-github/saving-repositories-with-stars)
 
@@ -100,5 +85,26 @@ ruby get_fcitx5_mozc.rb
 rm -rf ~/.cache/bazel/
 makepkg -is -p fcitx5-mozc-ut.PKGBUILD
 ```
+
+## Dictionaries
+
+Mozc UT dictionaries contain the following dictionaries:
+
+- [mozcdic-ut-alt-cannadic](https://github.com/utuhiro78/mozcdic-ut-alt-cannadic)
+
+- [mozcdic-ut-edict2](https://github.com/utuhiro78/mozcdic-ut-edict2)
+
+- [mozcdic-ut-jawiki](https://github.com/utuhiro78/mozcdic-ut-jawiki)
+
+- [mozcdic-ut-neologd](https://github.com/utuhiro78/mozcdic-ut-neologd)
+
+- [mozcdic-ut-personal-names](https://github.com/utuhiro78/mozcdic-ut-personal-names)
+
+- [mozcdic-ut-place-names](https://github.com/utuhiro78/mozcdic-ut-place-names)
+
+- [mozcdic-ut-skk-jisyo](https://github.com/utuhiro78/mozcdic-ut-skk-jisyo)
+
+- [mozcdic-ut-sudachidict](https://github.com/utuhiro78/mozcdic-ut-sudachidict)
+
 
 [HOME](http://linuxplayers.g1.xrea.com/mozc-ut.html)
