@@ -38,7 +38,7 @@ merge-ut-dictionaries: [36 Stars](https://github.com/utuhiro78/merge-ut-dictiona
 
 - Source code: Apache License, Version 2.0
 
-## Usage
+## Build
 
 ```
 git clone https://github.com/utuhiro78/merge-ut-dictionaries.git
@@ -75,7 +75,7 @@ Add mozcdic-ut.txt to dictionary00.txt and build Mozc as usual.
 cat mozcdic-ut.txt >> ../../mozc-master/src/data/dictionary_oss/dictionary00.txt
 ```
 
-## Building Fcitx5-Mozc on Arch Linux
+## Build fcitx5-mozc on Arch Linux
 
 ```
 mv mozcdic-ut.txt PKGBUILD/
