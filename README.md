@@ -11,11 +11,11 @@ Merge UT Dictionaries merges multiple Mozc UT dictionaries into one and modify t
 
 They need more Stars.
 
-Mozc: [1870 Stars](https://github.com/google/mozc)
+mozc: [1870 Stars](https://github.com/google/mozc)
 
-Fcitx5: [1064 Stars](https://github.com/fcitx/fcitx5)
+fcitx5: [1064 Stars](https://github.com/fcitx/fcitx5)
 
-Fcitx5-Mozc: [76 Stars](https://github.com/fcitx/mozc)
+fcitx5-mozc: [76 Stars](https://github.com/fcitx/mozc)
 
 
 merge-ut-dictionaries: [36 Stars](https://github.com/utuhiro78/merge-ut-dictionaries)
