@@ -1,8 +1,3 @@
----
-title: Merge UT Dictionaries
-date: 2023-01-15
----
-
 ## Overview
 
 Merge UT Dictionaries merges multiple Mozc UT dictionaries into one and modify the costs for words.
