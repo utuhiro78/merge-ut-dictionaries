@@ -53,7 +53,7 @@ place_names="true"
 #sudachidict="true"
 ```
 
-If you already have the latest mozcdic-ut-jawiki.txt.tar.bz2, put it to merge-ut-dictionaries/src/ and comment out "jawiki". Do the same for other dictionaries.
+If you already have the latest jawiki, put it to src/ and comment out ```jawiki="true"```. Do the same for other dictionaries.
 
 Generate mozcdic-ut.txt.
 
