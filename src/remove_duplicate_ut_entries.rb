@@ -25,22 +25,29 @@ file = File.new(filename, "r")
 	lines = file.read.split("\n")
 file.close
 
-lines = lines.sort
-
 dicfile = File.new(dicname, "w")
+
+lines.length.times do |i|
+	lines[i] = lines[i].split("	")
+
+	# IDを最新のものに変更
+	lines[i][1..2] = [id_mozc, id_mozc]
+
+	lines[i] = lines[i].join("	")
+end
+
+lines = lines.sort
 
 lines.length.times do |i|
 	s1 = lines[i].split("	")
 	s2 = lines[i - 1].split("	")
 
-	# UT辞書内で重複するエントリをコスト順にスキップ
+	# UT辞書内で重複するエントリのうち、コスト値の大きいものをスキップ
 	# あいおい	1847	1847	9000	相生
-	if s1[0] + " " + s1[-1] == s2[0] + " " + s2[-1]
+	if s1[0] == s2[0] && 
+	s1[-1] == s2[-1]
 		next
 	end
-
-	# IDを最新のものに変更
-	s1[1..2] = [id_mozc, id_mozc]
 
 	dicfile.puts s1.join("	")
 end
