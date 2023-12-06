@@ -28,11 +28,12 @@ file.close
 dicfile = File.new(dicname, "w")
 
 lines.length.times do |i|
-	lines[i] = lines[i].split("	")
+	s1 = lines[i].split("	")
 
 	# IDを最新のものに変更
-	lines[i][1..2] = [id_mozc, id_mozc]
+	s1[1..2] = [id_mozc, id_mozc]
 
+	lines[i] = [s1[0], s1[4], s1[3], s1[1],s1[2]]
 	lines[i] = lines[i].join("	")
 end
 
@@ -44,11 +45,11 @@ lines.length.times do |i|
 
 	# UT辞書内で重複するエントリのうち、コスト値の大きいものをスキップ
 	# あいおい	1847	1847	9000	相生
-	if s1[0] == s2[0] && 
-	s1[-1] == s2[-1]
+	if s1[0..1] == s2[0..1]
 		next
 	end
 
+	s1 = [s1[0], s1[3], s1[4], s1[2], s1[1]]
 	dicfile.puts s1.join("	")
 end
 
