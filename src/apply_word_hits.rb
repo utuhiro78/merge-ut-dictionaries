@@ -27,13 +27,13 @@ file = File.new(filename, "r")
 	lines = lines + file.read.split("\n")
 file.close
 
-# jawiki_hits の下に mozcdic-ut が来るよう並べ替える
+# 表記順に並べ替える
 lines.length.times do |i|
 	# jawiki_hits	0	0	34	中居正広
 	# なかいまさひろ	1847	1847	6477	中居正広
 
-	s = lines[i].split("	")
-	lines[i] = s[-1] + "	" + s[0..3].join("	")
+	s1 = lines[i].split("	")
+	lines[i] = s1[-1] + "	" + s1[0..3].join("	")
 
 	# 中居正広	jawiki_hits	0	0	34
 	# 中居正広	なかいまさひろ	1847	1847	6477
@@ -51,10 +51,10 @@ lines.length.times do |i|
 	if s1[1] == "jawiki_hits"
 		s2 = s1
 
-		# jawiki_hits の行は後で削除できるよう nil にする
+		# jawiki_hits の行は後で削除するので nil にする
 		lines[i] = nil
 
-		# jawiki のヒット数を最大 30 にする
+		# ヒット数を最大 30 にする
 		if s2[4] > 30
 			s2[4] = 30
 		end
@@ -62,27 +62,27 @@ lines.length.times do |i|
 		next
 	end
 
-	# jawiki に存在しないかつ英数字のみの表記はスキップ
+	# jawiki に存在しない表記で、英数字のみのものは収録しない
 	if s1[0] != s2[0] && s1[0].length == s1[0].bytesize
 		lines[i] = nil
 		next
 	end
 
-	# jawiki に存在しない表記はコストを 9000 台にする
-	if s1[0] != s2[0]
+	# jawiki に存在しない表記と、存在するが英数字のみの表記は、コストを 9000 台にする
+	if s1[0] != s2[0] || s1[0].length == s1[0].bytesize
 		s1[4] = (9000 + (s1[4] / 20)).to_s
 		lines[i] = s1.join("	")
 		next
 	end
 
-	# jawiki でのヒット数が 1 の表記はコストを 8000 台にする
+	# jawiki のヒット数が 1 の表記はコストを 8000 台にする
 	if s2[4] == 1
 		s1[4] = (8000 + (s1[4] / 20)).to_s
 		lines[i] = s1.join("	")
 		next
 	end
 
-	# jawiki でのヒット数が 2 以上の表記はコストを 7000 台にする
+	# jawiki のヒット数が 2 以上の表記はコストを 7000 台にする
 	s1[4] = (8000 - (s2[4] * 10)).to_s
 	lines[i] = s1.join("	")
 end
