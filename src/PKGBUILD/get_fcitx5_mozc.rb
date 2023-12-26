@@ -23,28 +23,26 @@ date = lines.split('<relative-time datetime="')[1]
 date = date[0..9]
 date = date.gsub("-", "")
 
-# 最新の Mozc アーカイブが存在する場合は終了
+# Mozc のアーカイブが古い場合は取得
 mozcver = version + "102." + date
 mozcdir = "mozc-" + version + "102." + date
 
-if FileTest.exist?(mozcdir + ".tar.zst") == true
-	puts mozcdir + ".tar.zst is up to date."
-	exit
+if FileTest.exist?(mozcdir + ".tar.zst") == false
+	`rm -rf mozc`
+	`git clone --depth 1 --recursive --shallow-submodules https://github.com/fcitx/mozc.git`
+	`rm -rf mozc/.git/`
+	`mv mozc #{mozcdir}`
+else
+	puts mozcdir + " is up to date."
+	`tar xf #{mozcdir}.tar.zst`
 end
 
-# Mozc を取得
-`rm -rf mozc`
-`git clone --depth 1 --recursive --shallow-submodules https://github.com/fcitx/mozc.git`
-`rm -rf mozc/.git/`
-
-# Fcitx-mozc を取得
+# Fcitx-mozc はパッチが更新されているかもしれないので常に取得
 `wget -N https://github.com/fcitx/mozc/archive/refs/heads/fcitx.zip -O mozc-fcitx.zip`
-`7z x mozc-fcitx.zip mozc-fcitx/src/unix`
-`rm -rf mozc/src/unix`
-`mv mozc-fcitx/src/unix mozc/src/`
+`unzip -q mozc-fcitx.zip mozc-fcitx/src/unix/*`
+`rm -rf #{mozcdir}/src/unix`
+`mv mozc-fcitx/src/unix #{mozcdir}/src/`
 `rm -rf mozc-fcitx`
-
-`mv mozc #{mozcdir}`
 
 # Mozc のアーカイブを作成
 `tar --zstd -cf #{mozcdir}.tar.zst #{mozcdir}`
