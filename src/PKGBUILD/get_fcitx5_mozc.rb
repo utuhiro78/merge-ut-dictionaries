@@ -37,7 +37,7 @@ else
 	`tar xf #{mozcdir}.tar.zst`
 end
 
-# Fcitx-mozc はパッチが更新されているかもしれないので常に取得
+# Fcitx-mozc のソースはサイズが小さいので、日付を確認せず常に取得
 `wget -N https://github.com/fcitx/mozc/archive/refs/heads/fcitx.zip -O mozc-fcitx.zip`
 `unzip -q mozc-fcitx.zip mozc-fcitx/src/unix/*`
 `rm -rf #{mozcdir}/src/unix`
