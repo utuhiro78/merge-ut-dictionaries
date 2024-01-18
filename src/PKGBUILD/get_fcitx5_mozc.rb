@@ -18,8 +18,8 @@ version = version + lines.split('BUILD_OSS = ')[1][0..3] + '.'
 uri = URI.parse("https://github.com/google/mozc/commits/master/")
 lines = uri.read.to_s
 
-# <relative-time datetime="2023-01-16T12:00:11Z"
-date = lines.split('<relative-time datetime="')[1]
+# "committedDate":"2024-01-16T06:05:57.000Z"
+date = lines.split('"committedDate":"')[1]
 date = date[0..9]
 date = date.gsub("-", "")
 
