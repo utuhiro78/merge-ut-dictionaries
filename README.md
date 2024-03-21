@@ -46,11 +46,11 @@ Default settings:
 #alt_cannadic="true"
 #edict="true"
 jawiki="true"
-neologd="true"
+#neologd="true"
 personal_names="true"
 place_names="true"
 #skk_jisyo="true"
-#sudachidict="true"
+sudachidict="true"
 ```
 
 If you already have the latest jawiki, put it to src/ and comment out ```jawiki="true"```. Do the same for other dictionaries.
