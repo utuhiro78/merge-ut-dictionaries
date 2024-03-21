@@ -6,11 +6,11 @@
 #alt_cannadic="true"
 #edict="true"
 jawiki="true"
-neologd="true"
+#neologd="true"
 personal_names="true"
 place_names="true"
 #skk_jisyo="true"
-#sudachidict="true"
+sudachidict="true"
 
 rm -f mozcdic-ut.txt
 rm -rf mozcdic-ut-*/{*,.git}
