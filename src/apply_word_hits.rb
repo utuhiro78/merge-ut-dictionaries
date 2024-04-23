@@ -30,13 +30,13 @@ file.close
 # 表記順に並べ替える
 lines.length.times do |i|
 	# jawiki_hits	0	0	34	中居正広
-	# なかいまさひろ	1847	1847	6477	中居正広
+	# なかいまさひろ	1843	1843	6477	中居正広
 
 	s1 = lines[i].split("	")
 	lines[i] = s1[-1] + "	" + s1[0..3].join("	")
 
 	# 中居正広	jawiki_hits	0	0	34
-	# 中居正広	なかいまさひろ	1847	1847	6477
+	# 中居正広	なかいまさひろ	1843	1843	6477
 end
 
 lines = lines.sort
@@ -91,12 +91,12 @@ lines = lines.compact
 
 # Mozc 形式の並びに戻す
 lines.length.times do |i|
-	# 中居正広	なかいまさひろ	1847	1847	6477
+	# 中居正広	なかいまさひろ	1843	1843	6477
 
 	s = lines[i].split("	")
 	lines[i] = s[1..-1].join("	") + "	" + s[0]
 
-	# なかいまさひろ	1847	1847	6477	中居正広
+	# なかいまさひろ	1843	1843	6477	中居正広
 end
 
 lines = lines.sort
