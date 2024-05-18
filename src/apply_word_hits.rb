@@ -18,12 +18,12 @@ dicname = filename
 
 # jawiki_hits を読み込む
 # jawiki_hits	0	0	34	中居正広
-file = File.new("jawiki-latest-all-titles-in-ns0.hits", "r")
+file = File.new("jawiki-latest-all-titles-in-ns0.hits", "r", encoding: "UTF-8")
 	lines = file.read.split("\n")
 file.close
 
 # mozcdic-ut を jawiki_hits に追加
-file = File.new(filename, "r")
+file = File.new(filename, "r", encoding: "UTF-8")
 	lines = lines + file.read.split("\n")
 file.close
 

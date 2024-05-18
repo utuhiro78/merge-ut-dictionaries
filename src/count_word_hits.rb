@@ -12,7 +12,7 @@ require 'zlib'
 filename = "jawiki-latest-all-titles-in-ns0.gz"
 dicname = "jawiki-latest-all-titles-in-ns0.hits"
 
-gz = Zlib::GzipReader.open(filename)
+gz = Zlib::GzipReader.open(filename, encoding: "UTF-8")
 	lines = gz.read.split("\n")
 gz.close
 

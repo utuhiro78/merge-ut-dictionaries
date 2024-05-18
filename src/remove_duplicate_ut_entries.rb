@@ -21,7 +21,7 @@ id_mozc = id_mozc.split("\n")[-1]
 filename = ARGV[0]
 dicname = filename
 
-file = File.new(filename, "r")
+file = File.new(filename, "r", encoding: "UTF-8")
 	lines = file.read.split("\n")
 file.close
 
@@ -38,7 +38,7 @@ end
 
 lines = lines.sort
 
-dicfile = File.new(dicname, "w")
+dicfile = File.new(dicname, "w", encoding: "UTF-8")
 
 lines.length.times do |i|
 	s1 = lines[i].split("	")
