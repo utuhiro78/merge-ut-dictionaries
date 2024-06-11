@@ -6,7 +6,7 @@
 
 require 'zlib'
 
-# jawiki-itles を取得
+# jawiki-latest-all-titles を取得
 `wget -N https://dumps.wikimedia.org/jawiki/latest/jawiki-latest-all-titles-in-ns0.gz`
 
 filename = "jawiki-latest-all-titles-in-ns0.gz"
