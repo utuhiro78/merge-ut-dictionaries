@@ -14,7 +14,7 @@ arch=('i686' 'x86_64')
 pkgver=${_pkgver}
 pkgrel=1
 url='https://github.com/fcitx/mozc'
-makedepends=('bazel' 'fcitx5' 'jdk-openjdk' 'python' 'qt6-base')
+makedepends=('bazel' 'fcitx5' 'python' 'qt6-base')
 source=(mozc-${_mozcver}.tar.zst
         mozcdic-ut.txt)
 sha256sums=('SKIP'
