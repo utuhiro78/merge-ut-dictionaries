@@ -21,6 +21,7 @@ id_mozc = id_mozc.split(" 名詞,一般,")[0].split("\n")[-1]
 
 file = open(filename, "r")
 lines = file.read().splitlines()
+file.close()
 
 for i in range(len(lines)):
 	s1 = lines[i].split()
@@ -33,8 +34,7 @@ for i in range(len(lines)):
 	lines[i] = "\t".join(s1[0:5])
 
 lines.sort()
-
-dicfile = open(filename, "w")
+l2 = []
 
 for i in range(len(lines)):
 	s1 = lines[i].split("\t")
@@ -51,5 +51,11 @@ for i in range(len(lines)):
 	# Mozc 形式の並びに戻す
 	s1.insert(5, s1[1])
 	s1.pop(1)
+	l2.append("\t".join(s1))
 
-	dicfile.write("\t".join(s1) + "\n")
+lines = l2
+l2 = []
+
+dicfile = open(filename, "w")
+dicfile.write("\n".join(lines))
+dicfile.close()
