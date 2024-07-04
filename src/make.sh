@@ -13,7 +13,7 @@ place_names="true"
 sudachidict="true"
 
 rm -f mozcdic-ut.txt
-rm -rf mozcdic-ut-*/{*,.git}
+rm -rf mozcdic-ut-*/
 
 if [[ $alt_cannadic = "true" ]]; then
 git clone --depth 1 https://github.com/utuhiro78/mozcdic-ut-alt-cannadic.git
@@ -54,8 +54,8 @@ for f in mozcdic-ut-*.txt.tar.bz2; do tar xf "$f"; done
 cat mozcdic-ut-*.txt > mozcdic-ut.txt
 
 # mozcdic-ut.txt の重複エントリを削除
-ruby remove_duplicate_ut_entries.rb mozcdic-ut.txt
+python remove_duplicate_ut_entries.py mozcdic-ut.txt
 
 # mozcdic-ut.txt の単語コストを変更
-ruby count_word_hits.rb
-ruby apply_word_hits.rb mozcdic-ut.txt
+python count_word_hits.py
+python apply_word_hits.py mozcdic-ut.txt
