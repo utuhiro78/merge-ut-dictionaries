@@ -72,7 +72,7 @@ sh make.sh
 mv mozcdic-ut.txt PKGBUILD/
 
 cd PKGBUILD/
-ruby get_fcitx5_mozc.rb
+python get_fcitx5_mozc.py
 
 rm -rf ~/.cache/bazel/
 makepkg -is -p fcitx5-mozc-ut.PKGBUILD
