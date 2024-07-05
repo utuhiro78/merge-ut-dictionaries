@@ -41,7 +41,7 @@ if not os.path.exists(mozcdir + ".tar.zst"):
 		shutil.rmtree('mozc')
 
 	subprocess.run(['git', 'clone', '--depth', '1', '--recursive', '--shallow-submodules', 'https://github.com/fcitx/mozc.git'], check=True)
-	shutil.rmtree('mozc/.git/')
+	shutil.rmtree('mozc/.git')
 	os.rename('mozc', mozcdir)
 else:
 	print(mozcdir + " is up to date.")
