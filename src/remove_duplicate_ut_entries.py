@@ -13,13 +13,14 @@ if len(sys.argv) == 1:
 
 filename = sys.argv[1]
 
+# Mozc の一般名詞のID
 url = "https://raw.githubusercontent.com/google/mozc/master/src/data/dictionary_oss/id.def"
 response = urllib.request.urlopen(url)
 
 id_mozc = response.read().decode()
 id_mozc = id_mozc.split(" 名詞,一般,")[0].split("\n")[-1]
 
-file = open(filename, "r")
+file = open(filename, "r", encoding="utf-8")
 lines = file.read().splitlines()
 file.close()
 
@@ -56,6 +57,6 @@ for i in range(len(lines)):
 lines = l2
 l2 = []
 
-dicfile = open(filename, "w")
+dicfile = open(filename, "w", encoding="utf-8")
 dicfile.write("\n".join(lines))
 dicfile.close()

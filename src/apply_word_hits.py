@@ -12,12 +12,12 @@ dicname = filename
 
 # jawiki_hits を読み込む
 # jawiki_hits	0	0	34	中居正広
-file = open("jawiki-latest-all-titles-in-ns0.hits", "r")
+file = open("jawiki-latest-all-titles-in-ns0.hits", "r", encoding="utf-8")
 lines = file.read().splitlines()
 file.close
 
 # mozcdic-ut を jawiki_hits に追加
-file = open(filename, "r")
+file = open(filename, "r", encoding="utf-8")
 lines = lines + file.read().splitlines()
 file.close
 
@@ -87,7 +87,7 @@ for i in range(len(lines)):
 
 lines.sort()
 
-dicfile = open(dicname, "w")
+dicfile = open(dicname, "w", encoding="utf-8")
 dicfile.write("\n".join(lines))
 # cat で結合するときのために最後は改行する
 dicfile.write("\n")
