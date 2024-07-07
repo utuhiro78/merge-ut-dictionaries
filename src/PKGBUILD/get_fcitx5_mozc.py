@@ -24,8 +24,8 @@ version = version + s + '.102.'
 
 # Mozc の最終コミット日を取得
 url = "https://github.com/google/mozc/commits/master/"
-response = urllib.request.urlopen(url)
-lines = response.read().decode()
+with urllib.request.urlopen(url) as response:
+	lines = response.read().decode()
 
 # "committedDate":"2024-01-16T06:05:57.000Z"
 date = lines.split('"committedDate":"')[1]
@@ -58,10 +58,10 @@ subprocess.run(['tar', '--zstd', '-cf', '{}.tar.zst'.format(mozcdir), '{}'.forma
 shutil.rmtree(mozcdir)
 
 # PKGBUILD を更新
-f = open("fcitx5-mozc-ut.PKGBUILD", "r")
-lines = f.read()
+with open("fcitx5-mozc-ut.PKGBUILD", "r") as file:
+	lines = file.read()
 
 lines = re.sub('_mozcver=.*\n', '_mozcver={}\n'.format(mozcver), lines)
 
-dicfile = open("fcitx5-mozc-ut.PKGBUILD", "w")
-dicfile.write(lines)
+with open("fcitx5-mozc-ut.PKGBUILD", "w") as dicfile:
+	dicfile.write(lines)
