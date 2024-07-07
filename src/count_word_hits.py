@@ -13,9 +13,8 @@ subprocess.run(['wget', '-N', 'https://dumps.wikimedia.org/jawiki/latest/jawiki-
 filename = "jawiki-latest-all-titles-in-ns0.gz"
 dicname = "jawiki-latest-all-titles-in-ns0.hits"
 
-file = gzip.open(filename, "rt", encoding="utf-8")
-lines = file.read().splitlines()
-file.close
+with gzip.open(filename, "rt", encoding="utf-8") as file:
+	lines = file.read().splitlines()
 
 l2 = []
 
@@ -51,6 +50,5 @@ for i in range(len(lines)):
 lines = l2
 l2 = []
 
-dicfile = open(dicname, "w", encoding="utf-8")
-dicfile.write("\n".join(lines))
-dicfile.close
+with open(dicname, "w", encoding="utf-8") as dicfile:
+	dicfile.write("\n".join(lines))
