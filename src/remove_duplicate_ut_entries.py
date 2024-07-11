@@ -24,37 +24,35 @@ with open(filename, "r", encoding="utf-8") as file:
 	lines = file.read().splitlines()
 
 for i in range(len(lines)):
-	s1 = lines[i].split()
+	entry1 = lines[i].split("\t")
 
 	# IDを最新のものに変更
-	s1[1:3] = [id_mozc, id_mozc]
+	entry1[1:3] = [id_mozc, id_mozc]
 
 	# 読みと表記を先頭にする
-	s1.insert(1, s1[4])
-	lines[i] = "\t".join(s1[0:5])
+	entry1.insert(1, entry1[4])
+	lines[i] = "\t".join(entry1[:5])
 
 lines.sort()
 l2 = []
 
 for i in range(len(lines)):
-	s1 = lines[i].split("\t")
+	entry1 = lines[i].split("\t")
+	entry2 = lines[i - 1].split("\t")
 
-	if i > 0:
-		s2 = lines[i - 1].split("\t")
-
-		# 「読み + 表記」が重複するエントリのうち、コストの大きいものをスキップ
-		# あいおい	相生	1843	1843	8200
-		# あいおい	相生	1843	1843	8400
-		if s1[:2] == s2[:2]:
-			continue
+	# [読み, 表記] が重複するエントリのうち、コストの大きいものをスキップ
+	# あいおい	相生	1843	1843	8200
+	# あいおい	相生	1843	1843	8400
+	if entry1[:2] == entry2[:2]:
+		continue
 
 	# Mozc 形式の並びに戻す
-	s1.insert(5, s1[1])
-	s1.pop(1)
-	l2.append("\t".join(s1))
+	entry1.append(entry1[1])
+	entry1.pop(1)
+	l2.append("\t".join(entry1) + "\n")
 
 lines = l2
 l2 = []
 
 with open(filename, "w", encoding="utf-8") as dicfile:
-	dicfile.write("\n".join(lines))
+	dicfile.writelines(lines)

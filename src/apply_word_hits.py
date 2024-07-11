@@ -23,54 +23,56 @@ for i in range(len(lines)):
 	# jawiki_hits	0	0	34	中居正広
 	# なかいまさひろ	1843	1843	6477	中居正広
 
-	s1 = lines[i].split("\t")
-	s1.insert(0, s1[4])
-	lines[i] = "\t".join(s1[0:5])
+	entry1 = lines[i].split("\t")
+	entry1.insert(0, entry1[4])
+	lines[i] = "\t".join(entry1[0:5])
 
 	# 中居正広	jawiki_hits	0	0	34
 	# 中居正広	なかいまさひろ	1843	1843	6477
 
 lines.sort()
-s2 = []
+entry2 = []
 
 for i in range(len(lines)):
 	# 中居正広	jawiki_hits	0	0	34
 
-	s1 = lines[i].split("\t")
-	s1[4] = int(s1[4])
+	entry1 = lines[i].split("\t")
+	entry1[4] = int(entry1[4])
 
-	if s1[1] == "jawiki_hits":
-		s2 = s1
+	if entry1[1] == "jawiki_hits":
+		entry2 = entry1
 
 		# jawiki_hits の行は後で削除するので None にする
 		lines[i] = None
 
 		# ヒット数を最大 30 にする
-		if s2[4] > 30:
-			s2[4] = 30
+		if entry2[4] > 30:
+			entry2[4] = 30
 
 		continue
 
 	# jawiki に存在しない表記で、英数字のみのものは収録しない
-	if s1[0] != s2[0] and len(s1[0]) == len(s1[0].encode()):
+	if entry1[0] != entry2[0] and \
+	len(entry1[0]) == len(entry1[0].encode()):
 		lines[i] = None
 		continue
 
 	# jawiki に存在しない表記と、存在するが英数字のみの表記は、コストを 9000 台にする
-	if s1[0] != s2[0] or len(s1[0]) == len(s1[0].encode()):
-		s1[4] = str(9000 + (s1[4] // 20))
-		lines[i] = "\t".join(s1)
+	if entry1[0] != entry2[0] or \
+	len(entry1[0]) == len(entry1[0].encode()):
+		entry1[4] = str(9000 + (entry1[4] // 20))
+		lines[i] = "\t".join(entry1)
 		continue
 
 	# jawiki のヒット数が 1 の表記はコストを 8000 台にする
-	if s2[4] == 1:
-		s1[4] = str(8000 + (s1[4] // 20))
-		lines[i] = "\t".join(s1)
+	if entry2[4] == 1:
+		entry1[4] = str(8000 + (entry1[4] // 20))
+		lines[i] = "\t".join(entry1)
 		continue
 
 	# jawiki のヒット数が 2 以上の表記はコストを 7000 台にする
-	s1[4] = str(8000 - (s2[4] * 10))
-	lines[i] = "\t".join(s1)
+	entry1[4] = str(8000 - (entry2[4] * 10))
+	lines[i] = "\t".join(entry1)
 
 lines = [line for line in lines if line is not None]
 
@@ -78,13 +80,11 @@ lines = [line for line in lines if line is not None]
 for i in range(len(lines)):
 	# 中居正広	なかいまさひろ	1843	1843	6477
 
-	s = lines[i].split("\t")
-	s.insert(5, s[0])
-	lines[i] = "\t".join(s[1:])
+	entry1 = lines[i].split("\t")
+	entry1.append(entry1[0])
+	lines[i] = "\t".join(entry1[1:]) + "\n"
 
 lines.sort()
 
 with open(filename, "w", encoding="utf-8") as dicfile:
-	dicfile.write("\n".join(lines))
-	# cat で結合するときのために最後は改行する
-	dicfile.write("\n")
+	dicfile.writelines(lines)
