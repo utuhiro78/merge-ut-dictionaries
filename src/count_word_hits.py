@@ -45,6 +45,7 @@ for i in range(len(lines)):
 	while i + c < len(lines) and lines[i + c].startswith(lines[i]):
 		c = c + 1
 
+	# "jawiki_hits" の部分は jawiki の見出しになり得ない表記にする
 	l2.append("jawiki_hits\t0\t0\t" + str(c) + "\t" + lines[i])
 
 lines = l2

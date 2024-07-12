@@ -23,56 +23,53 @@ for i in range(len(lines)):
 	# jawiki_hits	0	0	34	中居正広
 	# なかいまさひろ	1843	1843	6477	中居正広
 
-	entry1 = lines[i].split("\t")
-	entry1.insert(0, entry1[4])
-	lines[i] = "\t".join(entry1[0:5])
-
-	# 中居正広	jawiki_hits	0	0	34
-	# 中居正広	なかいまさひろ	1843	1843	6477
+	entry = lines[i].split("\t")
+	entry.insert(0, entry[4])
+	lines[i] = "\t".join(entry[0:5])
 
 lines.sort()
-entry2 = []
 
 for i in range(len(lines)):
 	# 中居正広	jawiki_hits	0	0	34
+	# 中居正広	なかいまさひろ	1843	1843	6477
 
-	entry1 = lines[i].split("\t")
-	entry1[4] = int(entry1[4])
+	entry = lines[i].split("\t")
+	entry[4] = int(entry[4])
 
-	if entry1[1] == "jawiki_hits":
-		entry2 = entry1
+	if entry[1] == "jawiki_hits":
+		entry_wiki = entry
 
-		# jawiki_hits の行は後で削除するので None にする
+		# jawiki_hits の行は None にして、後で削除
 		lines[i] = None
 
 		# ヒット数を最大 30 にする
-		if entry2[4] > 30:
-			entry2[4] = 30
+		if entry_wiki[4] > 30:
+			entry_wiki[4] = 30
 
 		continue
 
-	# jawiki に存在しない表記で、英数字のみのものは収録しない
-	if entry1[0] != entry2[0] and \
-	len(entry1[0]) == len(entry1[0].encode()):
+	# jawiki に存在しない表記で、英数字のみのものはスキップ
+	if entry[0] != entry_wiki[0] and \
+	len(entry[0]) == len(entry[0].encode()):
 		lines[i] = None
 		continue
 
 	# jawiki に存在しない表記と、存在するが英数字のみの表記は、コストを 9000 台にする
-	if entry1[0] != entry2[0] or \
-	len(entry1[0]) == len(entry1[0].encode()):
-		entry1[4] = str(9000 + (entry1[4] // 20))
-		lines[i] = "\t".join(entry1)
+	if entry[0] != entry_wiki[0] or \
+	len(entry[0]) == len(entry[0].encode()):
+		entry[4] = str(9000 + (entry[4] // 20))
+		lines[i] = "\t".join(entry)
 		continue
 
 	# jawiki のヒット数が 1 の表記はコストを 8000 台にする
-	if entry2[4] == 1:
-		entry1[4] = str(8000 + (entry1[4] // 20))
-		lines[i] = "\t".join(entry1)
+	if entry_wiki[4] == 1:
+		entry[4] = str(8000 + (entry[4] // 20))
+		lines[i] = "\t".join(entry)
 		continue
 
 	# jawiki のヒット数が 2 以上の表記はコストを 7000 台にする
-	entry1[4] = str(8000 - (entry2[4] * 10))
-	lines[i] = "\t".join(entry1)
+	entry[4] = str(8000 - (entry_wiki[4] * 10))
+	lines[i] = "\t".join(entry)
 
 lines = [line for line in lines if line is not None]
 
@@ -80,9 +77,9 @@ lines = [line for line in lines if line is not None]
 for i in range(len(lines)):
 	# 中居正広	なかいまさひろ	1843	1843	6477
 
-	entry1 = lines[i].split("\t")
-	entry1.append(entry1[0])
-	lines[i] = "\t".join(entry1[1:]) + "\n"
+	entry = lines[i].split("\t")
+	entry.append(entry[0])
+	lines[i] = "\t".join(entry[1:]) + "\n"
 
 lines.sort()
 
