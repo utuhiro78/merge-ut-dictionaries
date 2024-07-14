@@ -8,9 +8,9 @@ They need more Stars.
 
 mozc: [1930 Stars](https://github.com/google/mozc)
 
-fcitx5: [1129 Stars](https://github.com/fcitx/fcitx5)
-
 fcitx5-mozc: [82 Stars](https://github.com/fcitx/mozc)
+
+fcitx5-hazkey: [10 Stars](https://github.com/7ka-Hiira/fcitx5-hazkey)
 
 merge-ut-dictionaries: [40 Stars](https://github.com/utuhiro78/merge-ut-dictionaries)
 
