@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
 # coding: utf-8
 
 # Author: UTUMI Hirosi (utuhiro78 at yahoo dot co dot jp)
