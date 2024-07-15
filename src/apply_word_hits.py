@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+# Author: UTUMI Hirosi (utuhiro78 at yahoo dot co dot jp)
+# License: Apache License, Version 2.0
+
 import sys
 
 if len(sys.argv) == 1:
