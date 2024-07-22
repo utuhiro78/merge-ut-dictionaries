@@ -15,12 +15,12 @@ url = "https://raw.githubusercontent.com/google/mozc/master/src/data/version/moz
 with urllib.request.urlopen(url) as response:
 	lines = response.read().decode()
 
-s = lines.split('MAJOR = ')[1].split('\n')[0]
-version = s + '.'
-s = lines.split('MINOR = ')[1].split('\n')[0]
-version = version + s + '.'
-s = lines.split('BUILD_OSS = ')[1].split('\n')[0]
-version = version + s + '.102.'
+entry = lines.split('MAJOR = ')[1].split('\n')[0]
+version = entry + '.'
+entry = lines.split('MINOR = ')[1].split('\n')[0]
+version += entry + '.'
+entry = lines.split('BUILD_OSS = ')[1].split('\n')[0]
+version += entry + '.102.'
 
 # Mozc の最終コミット日を取得
 url = "https://github.com/google/mozc/commits/master/"
