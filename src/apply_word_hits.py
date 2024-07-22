@@ -10,7 +10,7 @@ if len(sys.argv) == 1:
 	print("Usage: python script.py [FILE]")
 	sys.exit()
 
-filename = sys.argv[1]
+file_name = sys.argv[1]
 
 # jawiki_hits を読み込む
 # jawiki_hits	0	0	34	中居正広
@@ -18,7 +18,7 @@ with open("jawiki-latest-all-titles-in-ns0.hits", "r", encoding="utf-8") as file
 	lines = file.read().splitlines()
 
 # mozcdic-ut を jawiki_hits に追加
-with open(filename, "r", encoding="utf-8") as file:
+with open(file_name, "r", encoding="utf-8") as file:
 	lines = lines + file.read().splitlines()
 
 # 表記順に並べ替える
@@ -86,5 +86,5 @@ for i in range(len(lines)):
 
 lines.sort()
 
-with open(filename, "w", encoding="utf-8") as dicfile:
-	dicfile.writelines(lines)
+with open(file_name, "w", encoding="utf-8") as dict_file:
+	dict_file.writelines(lines)
