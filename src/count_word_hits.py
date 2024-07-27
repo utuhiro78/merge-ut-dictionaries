@@ -14,41 +14,41 @@ file_name = "jawiki-latest-all-titles-in-ns0.gz"
 dict_name = "jawiki-latest-all-titles-in-ns0.hits"
 
 with gzip.open(file_name, "rt", encoding="utf-8") as file:
-	lines = file.read().splitlines()
+    lines = file.read().splitlines()
 
 l2 = []
 
 for i in range(len(lines)):
-	# "BEST_(三浦大知のアルバム)" を
-	# "三浦大知のアルバム)" に変更。
-	# 「三浦大知」を前方一致検索できるようにする
-	lines[i] = lines[i].split("_(")[-1]
+    # "BEST_(三浦大知のアルバム)" を
+    # "三浦大知のアルバム)" に変更。
+    # 「三浦大知」を前方一致検索できるようにする
+    lines[i] = lines[i].split("_(")[-1]
 
-	# 表記が1文字の場合はスキップ
-	if len(lines[i]) <= 1:
-		continue
+    # 表記が1文字の場合はスキップ
+    if len(lines[i]) <= 1:
+        continue
 
-	# "_" を " " に置き換える
-	# THE_BEATLES
-	lines[i] = lines[i].replace("_", " ")
+    # "_" を " " に置き換える
+    # THE_BEATLES
+    lines[i] = lines[i].replace("_", " ")
 
-	l2.append(lines[i])
+    l2.append(lines[i])
 
 lines = sorted(list(set(l2)))
 l2 = []
 
 for i in range(len(lines)):
-	c = 1
+    c = 1
 
-	# 前方一致するエントリがなくなるまでカウント
-	while i + c < len(lines) and lines[i + c].startswith(lines[i]):
-		c = c + 1
+    # 前方一致するエントリがなくなるまでカウント
+    while i + c < len(lines) and lines[i + c].startswith(lines[i]):
+        c = c + 1
 
-	# "jawiki_hits" の部分は jawiki の見出しになり得ない表記にする
-	l2.append("jawiki_hits\t0\t0\t" + str(c) + "\t" + lines[i])
+    # "jawiki_hits" の部分は jawiki の見出しになり得ない表記にする
+    l2.append("jawiki_hits\t0\t0\t" + str(c) + "\t" + lines[i])
 
 lines = l2
 l2 = []
 
 with open(dict_name, "w", encoding="utf-8") as dict_file:
-	dict_file.write("\n".join(lines))
+    dict_file.write("\n".join(lines))
