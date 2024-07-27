@@ -13,7 +13,7 @@ import urllib.request
 # Mozc のバージョンを取得
 url = "https://raw.githubusercontent.com/google/mozc/master/src/data/version/mozc_version_template.bzl"
 with urllib.request.urlopen(url) as response:
-	lines = response.read().decode()
+    lines = response.read().decode()
 
 entry = lines.split('MAJOR = ')[1].split('\n')[0]
 version = entry + '.'
@@ -25,7 +25,7 @@ version += entry + '.102.'
 # Mozc の最終コミット日を取得
 url = "https://github.com/google/mozc/commits/master/"
 with urllib.request.urlopen(url) as response:
-	lines = response.read().decode()
+    lines = response.read().decode()
 
 # "committedDate":"2024-01-16T06:05:57.000Z"
 date = lines.split('"committedDate":"')[1]
@@ -37,15 +37,15 @@ mozcver = version + date
 mozcdir = "mozc-" + mozcver
 
 if not os.path.exists(mozcdir + ".tar.zst"):
-	if os.path.exists("mozc"):
-		shutil.rmtree('mozc')
+    if os.path.exists("mozc"):
+        shutil.rmtree('mozc')
 
-	subprocess.run(['git', 'clone', '--depth', '1', '--recursive', '--shallow-submodules', 'https://github.com/fcitx/mozc.git'], check=True)
-	shutil.rmtree('mozc/.git')
-	os.rename('mozc', mozcdir)
+    subprocess.run(['git', 'clone', '--depth', '1', '--recursive', '--shallow-submodules', 'https://github.com/fcitx/mozc.git'], check=True)
+    shutil.rmtree('mozc/.git')
+    os.rename('mozc', mozcdir)
 else:
-	print(mozcdir + " is up to date.")
-	subprocess.run(['tar', 'xf', '{}.tar.zst'.format(mozcdir)], check=True)
+    print(mozcdir + " is up to date.")
+    subprocess.run(['tar', 'xf', '{}.tar.zst'.format(mozcdir)], check=True)
 
 subprocess.run(['wget', '-N', 'https://github.com/fcitx/mozc/archive/refs/heads/fcitx.zip'], check=True)
 subprocess.run(['unzip', '-q', 'fcitx.zip', 'mozc-fcitx/src/unix/*'], check=True)
@@ -59,9 +59,9 @@ shutil.rmtree(mozcdir)
 
 # PKGBUILD を更新
 with open("fcitx5-mozc-ut.PKGBUILD", "r") as file:
-	lines = file.read()
+    lines = file.read()
 
 lines = re.sub('_mozcver=.*\n', '_mozcver={}\n'.format(mozcver), lines)
 
 with open("fcitx5-mozc-ut.PKGBUILD", "w") as dicfile:
-	dicfile.write(lines)
+    dicfile.write(lines)
