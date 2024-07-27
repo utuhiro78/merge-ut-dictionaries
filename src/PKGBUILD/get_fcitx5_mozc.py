@@ -63,5 +63,5 @@ with open("fcitx5-mozc-ut.PKGBUILD", "r") as file:
 
 lines = re.sub('_mozcver=.*\n', '_mozcver={}\n'.format(mozcver), lines)
 
-with open("fcitx5-mozc-ut.PKGBUILD", "w") as dicfile:
-    dicfile.write(lines)
+with open("fcitx5-mozc-ut.PKGBUILD", "w") as file:
+    file.write(lines)
