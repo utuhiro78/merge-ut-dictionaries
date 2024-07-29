@@ -53,13 +53,13 @@ for line in lines:
         continue
 
     # jawiki に存在しない英数字のみの表記はスキップ
-    # jawiki のヒット数が 1 以上の英数字のみの表記はコストを 9000 台にする
+    # それ以外の英数字のみの表記はコストを 9000 台にする
     if len(line[0]) == len(line[0].encode()):
         if line[0] != line_wiki[0]:
             continue
         else:
             line[4] = str(9000 + (line[4] // 20))
-    # jawiki に存在しない英数字以外を含む表記はコストを 9000 台にする
+    # jawiki に存在しない表記はコストを 9000 台にする
     elif line[0] != line_wiki[0]:
         line[4] = str(9000 + (line[4] // 20))
     # jawiki のヒット数が 1 の表記はコストを 8000 台にする
