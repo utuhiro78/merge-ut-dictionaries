@@ -5,6 +5,7 @@
 # License: Apache License, Version 2.0
 
 import sys
+from unicodedata import normalize
 
 if len(sys.argv) == 1:
     print("Usage: python script.py [FILE]")
@@ -26,65 +27,54 @@ for i in range(len(lines)):
     # jawiki_hits    0    0    34    中居正広
     # なかいまさひろ    1843    1843    6477    中居正広
 
-    entry = lines[i].split("\t")
-    entry.insert(0, entry[4])
-    lines[i] = "\t".join(entry[0:5])
+    lines[i] = lines[i].split("\t")
+
+    # 表記を正規化
+    lines[i][4] = normalize("NFKC", lines[i][4])
+
+    lines[i].insert(0, lines[i][4])
+    lines[i] = lines[i][0:5]
 
 lines.sort()
+l2 = []
 
-for i in range(len(lines)):
+for line in lines:
     # 中居正広    jawiki_hits    0    0    34
     # 中居正広    なかいまさひろ    1843    1843    6477
+    line[4] = int(line[4])
 
-    entry = lines[i].split("\t")
-    entry[4] = int(entry[4])
+    if line[1] == "jawiki_hits":
+        line_wiki = line
 
-    if entry[1] == "jawiki_hits":
-        entry_wiki = entry
-
-        # jawiki_hits の行は None にして、後で削除
-        lines[i] = None
-
-        # ヒット数を最大 30 にする
-        if entry_wiki[4] > 30:
-            entry_wiki[4] = 30
+        # jawiki のヒット数を最大 30 にする
+        if line_wiki[4] > 30:
+            line_wiki[4] = 30
 
         continue
 
-    # jawiki に存在しない表記で、英数字のみのものはスキップ
-    if entry[0] != entry_wiki[0] and \
-            len(entry[0]) == len(entry[0].encode()):
-        lines[i] = None
-        continue
-
-    # jawiki に存在しない表記と、存在するが英数字のみの表記は、コストを 9000 台にする
-    if entry[0] != entry_wiki[0] or \
-            len(entry[0]) == len(entry[0].encode()):
-        entry[4] = str(9000 + (entry[4] // 20))
-        lines[i] = "\t".join(entry)
-        continue
-
+    # jawiki に存在しない英数字のみの表記はスキップ
+    # jawiki のヒット数が 1 以上の英数字のみの表記はコストを 9000 台にする
+    if len(line[0]) == len(line[0].encode()):
+        if line[0] != line_wiki[0]:
+            continue
+        else:
+            line[4] = str(9000 + (line[4] // 20))
+    # jawiki に存在しない英数字以外を含む表記はコストを 9000 台にする
+    elif line[0] != line_wiki[0]:
+        line[4] = str(9000 + (line[4] // 20))
     # jawiki のヒット数が 1 の表記はコストを 8000 台にする
-    if entry_wiki[4] == 1:
-        entry[4] = str(8000 + (entry[4] // 20))
-        lines[i] = "\t".join(entry)
-        continue
-
+    elif line_wiki[4] == 1:
+        line[4] = str(8000 + (line[4] // 20))
     # jawiki のヒット数が 2 以上の表記はコストを 7000 台にする
-    entry[4] = str(8000 - (entry_wiki[4] * 10))
-    lines[i] = "\t".join(entry)
+    else:
+        line[4] = str(8000 - (line_wiki[4] * 10))
 
-lines = [line for line in lines if line is not None]
+    line.append(line[0])
+    line = line[1:]
+    l2.append(line)
 
-# Mozc 形式の並びに戻す
-for i in range(len(lines)):
-    # 中居正広    なかいまさひろ    1843    1843    6477
-
-    entry = lines[i].split("\t")
-    entry.append(entry[0])
-    lines[i] = "\t".join(entry[1:]) + "\n"
-
-lines.sort()
+lines = sorted(l2)
 
 with open(file_name, "w", encoding="utf-8") as dict_file:
-    dict_file.writelines(lines)
+    for line in lines:
+        dict_file.write("\t".join(line) + "\n")
