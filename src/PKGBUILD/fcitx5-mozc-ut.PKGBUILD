@@ -6,7 +6,7 @@
 ## The UT dictionary's project page: http://linuxplayers.g1.xrea.com/mozc-ut.html
 
 ## Helpful internal stuff
-_mozcver=2.30.5490.102.20240624
+_mozcver=2.30.5544.102.20240826
 _pkgver=${_mozcver}
 
 pkgname=fcitx5-mozc-ut
@@ -16,8 +16,10 @@ pkgrel=1
 url='https://github.com/fcitx/mozc'
 makedepends=('bazel' 'fcitx5' 'python' 'qt6-base')
 source=(mozc-${_mozcver}.tar.zst
-        mozcdic-ut.txt)
+        mozcdic-ut.txt
+        MODULE.bazel.diff)
 sha256sums=('SKIP'
+            'SKIP'
             'SKIP')
 
 prepare() {
@@ -25,6 +27,10 @@ prepare() {
 
     # Add the UT dictionary
     cat ${srcdir}/mozcdic-ut.txt >> data/dictionary_oss/dictionary00.txt
+
+    # Fix build
+    # https://github.com/fcitx/mozc/pull/63
+    patch < ../../MODULE.bazel.diff
 }
 
 build() {
