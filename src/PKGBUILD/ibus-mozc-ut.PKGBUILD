@@ -6,7 +6,7 @@
 ## The UT dictionary's project page: http://linuxplayers.g1.xrea.com/mozc-ut.html
 
 ## Helpful internal stuff
-_mozcver=2.30.5544.102.20240828
+_mozcver=2.30.5544.102.20240909
 _pkgver=${_mozcver}
 
 pkgname=ibus-mozc-ut
