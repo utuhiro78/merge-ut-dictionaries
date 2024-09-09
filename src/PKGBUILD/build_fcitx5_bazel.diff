@@ -1,8 +1,0 @@
---- build_fcitx5_bazel	2024-08-26 14:24:27.000000000 +0900
-+++ build_fcitx5_bazel.new	2024-08-28 23:22:23.588595485 +0900
-@@ -2,4 +2,4 @@
- 
- _BUILD_TARGETS="${_BUILD_TARGETS:-unix/fcitx5:fcitx5-mozc.so server:mozc_server gui/tool:mozc_tool}"
- 
--bazel build -c opt --copt=-fPIC  --config oss_linux "$@" $_BUILD_TARGETS
-+bazel build --config release_build --copt=-fPIC  --config oss_linux "$@" $_BUILD_TARGETS
