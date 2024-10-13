@@ -1,6 +1,6 @@
 ## Overview
 
-Mozc UT dictionaries are additional dictionaries for Mozc.
+Merge multiple Mozc UT dictionaries into one and modify the costs.
 
 ## Press the Star button on GitHub
 
