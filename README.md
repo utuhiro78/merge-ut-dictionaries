@@ -64,22 +64,6 @@ cat mozcdic-ut.txt >> ../../mozc-master/src/data/dictionary_oss/dictionary00.txt
 
 Build Mozc as usual.
 
-## Build fcitx5-mozc on Arch Linux
-
-```
-git clone https://github.com/utuhiro78/merge-ut-dictionaries.git
-
-cd merge-ut-dictionaries/src/
-sh make.sh
-mv mozcdic-ut.txt PKGBUILD/
-
-cd PKGBUILD/
-python generate-mozc-archive.py
-
-rm -rf ~/.cache/bazel/
-makepkg -is -p fcitx5-mozc-ut.PKGBUILD
-```
-
 ## Dictionaries
 
 Mozc UT dictionaries contain the following dictionaries:
