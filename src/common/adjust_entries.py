@@ -12,7 +12,7 @@ from unicodedata import normalize
 args = sys.argv[1:]
 
 if not args:
-    print('Usage: python script.py [FILE]')
+    print('No file specified.')
     sys.exit()
 
 file_name = args[0]
