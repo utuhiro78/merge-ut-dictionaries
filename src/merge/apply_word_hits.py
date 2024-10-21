@@ -8,7 +8,7 @@ import sys
 from unicodedata import normalize
 
 if len(sys.argv) == 1:
-    print('Usage: python script.py [FILE]')
+    print('No file specified.')
     sys.exit()
 
 file = sys.argv[1]

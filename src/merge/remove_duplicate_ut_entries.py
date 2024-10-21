@@ -8,7 +8,7 @@ import urllib.request
 import sys
 
 if len(sys.argv) == 1:
-    print('Usage: python script.py [FILE]')
+    print('No file specified.')
     exit()
 
 file_name = sys.argv[1]
