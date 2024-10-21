@@ -11,7 +11,7 @@ import sys
 args = sys.argv[1:]
 
 if not args:
-    print('Usage: python script.py [FILE]')
+    print('No file specified.')
     exit()
 
 file_name = args[0]
@@ -21,14 +21,14 @@ file_name = args[0]
 with open(file_name, 'r', encoding='utf-8') as file:
     lines = file.read().splitlines()
 
-# 単語フィルタを読み込む
+# 単語リストを読み込む
 dir_python = os.path.dirname(__file__)
 
 with open(f'{dir_python}/unsuitable_words.txt', 'r', encoding='utf-8') as file:
     unsuitables = file.read().splitlines()
 
 for i in range(len(unsuitables)):
-    # エントリが正規表現になっているときは正規表現を作る
+    # 単語が正規表現の場合は re.compile() を使用する
     #     /^バカ/
     if unsuitables[i][0] == '/':
         unsuitables[i] = re.compile(unsuitables[i][1:-1])
