@@ -4,6 +4,7 @@
 # Author: UTUMI Hirosi (utuhiro78 at yahoo dot co dot jp)
 # License: Apache License, Version 2.0
 
+import os
 import re
 import sys
 
@@ -16,12 +17,14 @@ if not args:
 file_name = args[0]
 
 # Mozc 形式の辞書を読み込む
-# なかいまさひろ    1917    1917    6477    中居正広
+#     なかいまさひろ    1917    1917    6477    中居正広
 with open(file_name, 'r', encoding='utf-8') as file:
     lines = file.read().splitlines()
 
 # 単語フィルタを読み込む
-with open('../common/unsuitable_words.txt', 'r', encoding='utf-8') as file:
+dir_python = os.path.dirname(__file__)
+
+with open(f'{dir_python}/unsuitable_words.txt', 'r', encoding='utf-8') as file:
     unsuitables = file.read().splitlines()
 
 for i in range(len(unsuitables)):
