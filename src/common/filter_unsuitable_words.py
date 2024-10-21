@@ -29,7 +29,7 @@ with open(f'{dir_python}/unsuitable_words.txt', 'r', encoding='utf-8') as file:
 
 for i in range(len(unsuitables)):
     # エントリが正規表現になっているときは正規表現を作る
-    # /^バカ/
+    #     /^バカ/
     if unsuitables[i][0] == '/':
         unsuitables[i] = re.compile(unsuitables[i][1:-1])
 
