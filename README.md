@@ -36,13 +36,15 @@ merge-ut-dictionaries: [40 Stars](https://github.com/utuhiro78/merge-ut-dictiona
 
 ```
 git clone https://github.com/utuhiro78/merge-ut-dictionaries.git
-
-cd merge-ut-dictionaries/src/merge/
 ```
 
 ## Configure
 
-Comment out unnecessary UT dictionaries in make.sh.
+```
+cd merge-ut-dictionaries/src/merge/
+```
+
+Comment out unnecessary dictionaries in make.sh.
 
 Default settings:
 
@@ -57,17 +59,6 @@ place_names="true"
 sudachidict="true"
 ```
 
-### Option: Generate UT dictionaries by yourself
-
-```
-cd ../place-names/
-sh make.sh
-```
-
-It generates the latest place-names dictionary to ../merge/.
-Comment out place_names="true" to avoid overwriting your dictionary.
-Do the same for other dictionaries.
-
 ## Build
 
 ```
@@ -76,6 +67,20 @@ cat mozcdic-ut.txt >> ../../../mozc-master/src/data/dictionary_oss/dictionary00.
 ```
 
 Build Mozc as usual.
+
+## Option: Generate the UT dictionaries by yourself
+
+```
+cd ../place-names/
+sh make.sh
+cd ../merge/
+```
+
+It generates the latest place-names dictionary to ```merge/```.
+
+Comment out ```place_names="true"``` in ```merge/make.sh``` to avoid overwriting your dictionary.
+
+Do the same for other dictionaries.
 
 ## Dictionaries
 
