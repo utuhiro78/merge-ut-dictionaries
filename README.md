@@ -68,12 +68,11 @@ cat mozcdic-ut.txt >> ../../../mozc-master/src/data/dictionary_oss/dictionary00.
 
 Build Mozc as usual.
 
-## Option: Generate the UT dictionaries by yourself
+## Option: Generate the latest UT dictionaries
 
 ```
 cd ../place-names/
 sh make.sh
-cd ../merge/
 ```
 
 It generates the latest place-names dictionary to ```merge/```.
