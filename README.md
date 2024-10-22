@@ -10,10 +10,6 @@ mozc: [1930 Stars](https://github.com/google/mozc)
 
 fcitx5-mozc: [82 Stars](https://github.com/fcitx/mozc)
 
-AzooKeyKanaKanjiConverter: [44 Stars](https://github.com/ensan-hcl/AzooKeyKanaKanjiConverter)
-
-fcitx5-hazkey: [10 Stars](https://github.com/7ka-Hiira/fcitx5-hazkey)
-
 merge-ut-dictionaries: [40 Stars](https://github.com/utuhiro78/merge-ut-dictionaries)
 
 > Starring a repository also shows appreciation to the repository maintainer for their work. - [GitHub Docs](https://docs.github.com/en/get-started/exploring-projects-on-github/saving-repositories-with-stars)
