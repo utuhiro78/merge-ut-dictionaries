@@ -16,17 +16,9 @@ from unicodedata import normalize
 
 
 def generate_jawiki_ut(article):
-    # ==============================================================================
     # Wikipediaの記事の例
-    # ==============================================================================
-
-    #  xml:space="preserve">
-    # <title>あいの里公園駅</title>
-    # '''あいの里公園駅'''（あいのさとこうえんえき）は、
-
-    # ==============================================================================
-    # タイトルから表記を作る
-    # ==============================================================================
+    #     <title>あいの里公園駅</title>
+    #     '''あいの里公園駅'''（あいのさとこうえんえき）は、
 
     article = article.split('</title>')
 
@@ -47,7 +39,7 @@ def generate_jawiki_ut(article):
     hyouki = hyouki.split(' (')[0]
 
     # 表記にスペースがある場合はスキップ
-    #     記事のスペースを削除してから「表記(読み」を検索するので、残してもマッチしない
+    #     記事のスペースを削除したのち「表記(読み」を検索するので、残してもマッチしない
     # 表記が26文字以上の場合はスキップ。候補ウィンドウが大きくなりすぎる
     # 内部用のページをスキップ
     if ' ' in hyouki or \
@@ -83,16 +75,13 @@ def generate_jawiki_ut(article):
             fcntl.flock(dict_file, fcntl.LOCK_UN)
         return
 
-    # ==============================================================================
-    # 記事の量を減らす
-    # ==============================================================================
-
     # テンプレート末尾と記事本文の間に改行を入れる
     lines = article.replace("}}'''", "}}\n'''")
     lines = lines.splitlines()
 
     entry = []
 
+    # 記事の量を減らす
     for line in lines:
         # 収録語は「'''盛夏'''（せいか）」が最小なので、12文字以下の行はスキップ
         # テンプレートをスキップ
@@ -112,10 +101,7 @@ def generate_jawiki_ut(article):
     lines = entry
     entry = ''
 
-    # ==============================================================================
     # 記事から読みを作る
-    # ==============================================================================
-
     for line in lines:
         # 全角英数を半角に変換
         line = normalize('NFKC', line)
@@ -204,7 +190,7 @@ def main():
 
     # Mozc の一般名詞のIDを取得
     url = 'https://raw.githubusercontent.com/' + \
-            'google/mozc/master/src/data/dictionary_oss/id.def'
+        'google/mozc/master/src/data/dictionary_oss/id.def'
 
     with urllib.request.urlopen(url) as response:
         id_mozc = response.read().decode()
@@ -243,6 +229,7 @@ def main():
 
             with Pool(processes=core_num) as pool:
                 pool.map(generate_jawiki_ut, articles)
+
             pool.join()
 
     with open(dict_name, 'r', encoding='utf-8') as file:
