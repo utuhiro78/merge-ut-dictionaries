@@ -27,11 +27,11 @@ for i in range(len(lines)):
     yomi = entry[0]
     hyouki = entry[4]
 
-    # 表記の全角英数を半角に変換
-    hyouki = normalize('NFKC', hyouki)
-
     # 表記の「~」を「〜」に置き換える
     hyouki = hyouki.replace('~', '〜')
+
+    # 表記の全角英数を半角に変換
+    hyouki = normalize('NFKC', hyouki)
 
     # 表記の最初が空白の場合は取る
     if hyouki[0] == ' ':

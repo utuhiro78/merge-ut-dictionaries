@@ -53,9 +53,5 @@ for f in mozcdic-ut-*.txt.tar.bz2; do tar xf "$f"; done
 
 cat mozcdic-ut-*.txt > mozcdic-ut.txt
 
-# mozcdic-ut.txt の重複エントリを削除
-python remove_duplicate_ut_entries.py mozcdic-ut.txt
-
-# mozcdic-ut.txt の単語コストを変更
-python count_word_hits.py
-python apply_word_hits.py mozcdic-ut.txt
+# IDを更新、重複エントリを削除、コストを調整
+python merge-ut-dictionaries.py mozcdic-ut.txt
