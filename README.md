@@ -46,7 +46,7 @@ Default settings:
 
 ```
 #alt_cannadic="true"
-#edict="true"
+#edict2="true"
 jawiki="true"
 #neologd="true"
 personal_names="true"
@@ -66,16 +66,7 @@ Build Mozc as usual.
 
 ## Option: Generate the latest UT dictionaries
 
-```
-cd ../place-names/
-sh make.sh
-```
-
-It generates the latest place-names dictionary to ```merge/```.
-
-Comment out ```place_names="true"``` in ```merge/make.sh``` to avoid overwriting your dictionary.
-
-Do the same for other dictionaries.
+Uncomment ```#generate_latest="true"``` in src/merge/make.sh.
 
 ## Dictionaries
 
