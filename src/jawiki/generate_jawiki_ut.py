@@ -5,7 +5,6 @@
 # License: Apache License, Version 2.0
 
 import bz2
-import fcntl
 import html
 import jaconv
 import re
@@ -44,7 +43,6 @@ def generate_jawiki_ut(article):
     # 内部用のページをスキップ
     if ' ' in hyouki or \
             len(hyouki) > 25 or \
-            '(曖昧さ回避)' in hyouki or \
             'Wikipedia:' in hyouki or \
             'ファイル:' in hyouki or \
             'Portal:' in hyouki or \
@@ -67,13 +65,8 @@ def generate_jawiki_ut(article):
         yomi = jaconv.kata2hira(hyouki_strip)
         yomi = yomi.translate(str.maketrans('ゐゑ', 'いえ'))
 
-        entry = [yomi, id_mozc, id_mozc, '8000', hyouki]
-
-        with open(dict_name, 'a', encoding='utf-8') as dict_file:
-            fcntl.flock(dict_file, fcntl.LOCK_EX)
-            dict_file.write('\t'.join(entry) + '\n')
-            fcntl.flock(dict_file, fcntl.LOCK_UN)
-        return
+        entry = [yomi, hyouki]
+        return (entry)
 
     # テンプレート末尾と記事本文の間に改行を入れる
     lines = article.replace("}}'''", "}}\n'''")
@@ -110,9 +103,8 @@ def generate_jawiki_ut(article):
         line = html.unescape(line)
 
         # '{{.*?}}' を削除
-        #     '''皆藤 愛子'''{{efn2|一部のプロフィールが
-        #     「皆'''籐'''（たけかんむり）」となっている}}
-        #     （かいとう あいこ、[[1984年]]
+        #     '''皆藤 愛子'''{{efn2|一部のプロフィールが「皆'''籐'''
+        #     （たけかんむり）」となっている}}（かいとう あいこ、
         if '{{' in line:
             line = re.sub(r'{{.*?}}', '', line)
 
@@ -173,21 +165,11 @@ def generate_jawiki_ut(article):
         if yomi != ''.join(re.findall('[ぁ-ゔー]', yomi)):
             continue
 
-        entry = [yomi, id_mozc, id_mozc, '8000', hyouki]
-
-        with open(dict_name, 'a', encoding='utf-8') as dict_file:
-            fcntl.flock(dict_file, fcntl.LOCK_EX)
-            dict_file.write('\t'.join(entry) + '\n')
-            fcntl.flock(dict_file, fcntl.LOCK_UN)
-        return
+        entry = [yomi, hyouki]
+        return (entry)
 
 
 def main():
-    global dict_name
-    global id_mozc
-
-    dict_name = 'mozcdic-ut-jawiki.txt'
-
     # Mozc の一般名詞のIDを取得
     url = 'https://raw.githubusercontent.com/' + \
         'google/mozc/master/src/data/dictionary_oss/id.def'
@@ -201,12 +183,10 @@ def main():
         ['wget', '-N', 'https://dumps.wikimedia.org/jawiki/latest/' +
             'jawiki-latest-pages-articles-multistream.xml.bz2'])
 
-    with open(dict_name, 'w', encoding='utf-8') as dict_file:
-        dict_file.write('')
-
     article_fragment = ''
     cache_size = 200 * 1024 * 1024
     core_num = cpu_count()
+    dict_ut = []
 
     with bz2.open(
         'jawiki-latest-pages-articles-multistream.xml.bz2', 'rt',
@@ -227,19 +207,23 @@ def main():
             # 記事の断片を削除
             articles = articles[0:-1]
 
-            with Pool(processes=core_num) as pool:
-                pool.map(generate_jawiki_ut, articles)
+            with Pool(processes=core_num) as p:
+                dict_ut += p.map(generate_jawiki_ut, articles)
 
-            pool.join()
+    l2 = []
 
-    with open(dict_name, 'r', encoding='utf-8') as file:
-        lines = file.readlines()
+    for line in dict_ut:
+        if line is None:
+            continue
+
+        line = [line[0], id_mozc, id_mozc, '8000', line[1]]
+        l2.append('\t'.join(line) + '\n')
 
     # 重複する行を削除
-    lines = sorted(list(set(lines)))
+    dict_ut = sorted(list(set(l2)))
 
-    with open(dict_name, 'w', encoding='utf-8') as file:
-        file.writelines(lines)
+    with open('mozcdic-ut-jawiki.txt', 'w', encoding='utf-8') as file:
+        file.writelines(dict_ut)
 
 
 if __name__ == '__main__':
