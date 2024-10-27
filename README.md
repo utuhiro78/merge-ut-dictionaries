@@ -31,7 +31,7 @@ merge-ut-dictionaries: [40 Stars](https://github.com/utuhiro78/merge-ut-dictiona
 ## Download
 
 ```
-git clone https://github.com/utuhiro78/merge-ut-dictionaries.git
+git clone --depth 1 https://github.com/utuhiro78/merge-ut-dictionaries.git
 ```
 
 ## Configure
