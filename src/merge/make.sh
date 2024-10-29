@@ -7,12 +7,12 @@
 #edict2="true"
 jawiki="true"
 #neologd="true"
-#personal_names="true"
-#place_names="true"
+personal_names="true"
+place_names="true"
 #skk_jisyo="true"
-#sudachidict="true"
+sudachidict="true"
 
-generate_latest="true"
+#generate_latest="true"
 
 rm -rf mozcdic-ut*
 
