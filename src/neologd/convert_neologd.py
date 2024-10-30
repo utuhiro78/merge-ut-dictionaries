@@ -39,14 +39,12 @@ id_mozc = id_mozc.split(' 名詞,一般,')[0].split('\n')[-1]
 l2 = []
 
 for i in range(len(lines)):
+    # https://taku910.github.io/mecab/dic.html
     # 表層形,左文脈ID,右文脈ID,コスト,品詞1,品詞2,品詞3,品詞4,品詞5,品詞6,
     # 原形,読み,発音
 
-    # little glee monster,1289,1289,2098,名詞,固有名詞,人名,一般,*,*,
-    # Little Glee Monster,リトルグリーモンスター,リトルグリーモンスター
-
-    # リトルグリーモンスター,1288,1288,-1677,名詞,固有名詞,一般,*,*,*,
-    # Little Glee Monster,リトルグリーモンスター,リトルグリーモンスター
+    # ihi corporation,1292,1292,5893,名詞,固有名詞,組織,*,*,*,
+    # IHI,アイエイチアイ,アイエイチアイ
 
     entry = lines[i].split(',')
 
@@ -59,20 +57,12 @@ for i in range(len(lines)):
 
     # 読みが2文字以下の場合はスキップ
     # 表記が1文字以下の場合はスキップ
-    # 表記が26文字以上の場合はスキップ。候補ウィンドウが大きくなりすぎる
-    # 表記が英数字のみの場合はスキップ
-    # 表記と entry[0] が異なる場合はスキップ
     # 名詞以外の場合はスキップ
-    # 地名をスキップ。地名は郵便番号ファイルから生成する
-    # 名をスキップ
+    # 地名の場合はスキップ。地名は郵便番号データから作成する
     if len(yomi) < 3 or \
             len(hyouki) < 2 or \
-            len(hyouki) > 25 or \
-            len(hyouki) == len(hyouki.encode()) or \
-            hyouki != entry[0] or \
             entry[4] != '名詞' or \
-            entry[6] == '地域' or \
-            entry[7] == '名':
+            entry[6] == '地域':
         continue
 
     # 読みのカタカナをひらがなに変換
