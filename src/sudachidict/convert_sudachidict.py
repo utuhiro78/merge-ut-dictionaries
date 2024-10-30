@@ -49,13 +49,9 @@ for i in range(len(lines)):
     # 見出し (解析結果表示用),品詞1,品詞2,品詞3,品詞4,品詞 (活用型),品詞 (活用形),
     # 読み,正規化表記,辞書形ID,分割タイプ,A単位分割情報,B単位分割情報,※未使用
 
-    # little glee monster,4785,4785,5000,
-    # Little Glee Monster,名詞,固有名詞,一般,*,*,*,
-    # リトルグリーモンスター,Little Glee Monster,*,A,*,*,*,*
-
-    # アイアンマイケル,5144,4788,9652,
-    # アイアンマイケル,名詞,固有名詞,人名,一般,*,*,
-    # アイアンマイケル,アイアン・マイケル,*,C,*,*,*,*
+    # ihi corporation,4785,4785,5000,
+    # ihi corporation,名詞,固有名詞,一般,*,*,*,
+    # アイエイチアイ,IHI,*,A,*,*,*,*
 
     entry = lines[i].split(',')
 
@@ -63,25 +59,17 @@ for i in range(len(lines)):
     yomi = entry[11].replace('=', '')
     yomi = yomi.replace('・', '')
 
-    # 「見出し (解析結果表示用)」を表記にする
-    hyouki = entry[4]
+    # 「正規化表記」を表記にする
+    hyouki = entry[12]
 
     # 読みが2文字以下の場合はスキップ
     # 表記が1文字以下の場合はスキップ
-    # 表記が26文字以上の場合はスキップ。候補ウィンドウが大きくなりすぎる
-    # 表記が英数字のみの場合はスキップ
-    # 表記と entry[0] が異なる場合はスキップ
     # 名詞以外の場合はスキップ
-    # 地名をスキップ。地名は郵便番号ファイルから生成する
-    # 名をスキップ
+    # 地名の場合はスキップ。地名は郵便番号データから作成する
     if len(yomi) < 3 or \
             len(hyouki) < 2 or \
-            len(hyouki) > 25 or \
-            len(hyouki) == len(hyouki.encode()) or \
-            hyouki != entry[0] or \
             entry[5] != '名詞' or \
-            entry[7] == '地名' or \
-            entry[8] == '名':
+            entry[7] == '地名':
         continue
 
     # 読みのカタカナをひらがなに変換
