@@ -3,16 +3,16 @@
 # Author: UTUMI Hirosi (utuhiro78 at yahoo dot co dot jp)
 # License: Apache License, Version 2.0
 
-alt_cannadic="true"
-edict2="true"
+#alt_cannadic="true"
+#edict2="true"
 jawiki="true"
-neologd="true"
-#personal_names="true"
+#neologd="true"
+personal_names="true"
 place_names="true"
-skk_jisyo="true"
+#skk_jisyo="true"
 sudachidict="true"
 
-generate_latest="true"
+#generate_latest="true"
 
 rm -rf mozcdic-ut*
 
