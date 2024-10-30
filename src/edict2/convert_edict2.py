@@ -24,7 +24,6 @@ with urllib.request.urlopen(url) as response:
 
 id_mozc = id_mozc.split(' 名詞,一般,')[0].split('\n')[-1]
 
-dict_name = 'mozcdic-ut-edict2.txt'
 l2 = []
 
 for i in range(len(lines)):
@@ -72,6 +71,7 @@ for i in range(len(lines)):
     l2.append('\t'.join(entry) + '\n')
 
 lines = sorted(set(l2))
+dict_name = 'mozcdic-ut-edict2.txt'
 
-with open(dict_name, 'w', encoding='utf-8') as dict_file:
-    dict_file.writelines(lines)
+with open(dict_name, 'w', encoding='utf-8') as file:
+    file.writelines(lines)

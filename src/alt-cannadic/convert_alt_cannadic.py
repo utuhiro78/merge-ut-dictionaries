@@ -17,7 +17,7 @@ with tarfile.open('alt-cannadic-110208.tar.bz2') as tar:
     file = tar.extractfile('alt-cannadic-110208/gcanna.ctd')
     lines = file.read().decode('euc_jp')
     file = tar.extractfile('alt-cannadic-110208/g_fname.ctd')
-    lines = lines + file.read().decode('euc_jp')
+    lines += file.read().decode('euc_jp')
 
 lines = lines.splitlines()
 
@@ -30,7 +30,6 @@ with urllib.request.urlopen(url) as response:
 
 id_mozc = id_mozc.split(' 名詞,一般,')[0].split('\n')[-1]
 
-dict_name = 'mozcdic-ut-alt-cannadic.txt'
 l2 = []
 
 for line in lines:
@@ -95,10 +94,10 @@ for i in range(len(lines)):
     entry = lines[i].copy()
     entry.append(entry[1])
     entry.pop(1)
-    l2.append(entry)
+    l2.append('\t'.join(entry) + '\n')
 
 lines = l2
+dict_name = 'mozcdic-ut-alt-cannadic.txt'
 
-with open(dict_name, 'w', encoding='utf-8') as dict_file:
-    for line in lines:
-        dict_file.write('\t'.join(line) + '\n')
+with open(dict_name, 'w', encoding='utf-8') as file:
+    file.writelines(lines)

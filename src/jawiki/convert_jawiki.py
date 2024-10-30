@@ -222,7 +222,9 @@ def main():
     # 重複する行を削除
     dict_ut = sorted(list(set(l2)))
 
-    with open('mozcdic-ut-jawiki.txt', 'w', encoding='utf-8') as file:
+    dict_name = 'mozcdic-ut-jawiki.txt'
+
+    with open(dict_name, 'w', encoding='utf-8') as file:
         file.writelines(dict_ut)
 
 

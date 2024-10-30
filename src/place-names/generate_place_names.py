@@ -133,8 +133,9 @@ def generate_place_names(lines):
         l2.append('\t'.join(mozc_ent) + '\n')
 
     lines = sorted(set(l2))
+    dict_name = 'mozcdic-ut-place-names.txt'
 
-    with open('mozcdic-ut-place-names.txt', 'w', encoding='utf-8') as file:
+    with open(dict_name, 'w', encoding='utf-8') as file:
         file.writelines(lines)
 
 

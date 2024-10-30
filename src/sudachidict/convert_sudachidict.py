@@ -23,14 +23,12 @@ with ZipFile('small_lex.zip') as zip_ref:
         lines = file.read().decode()
 with ZipFile('core_lex.zip') as zip_ref:
     with zip_ref.open('core_lex.csv') as file:
-        lines = lines + file.read().decode()
+        lines += file.read().decode()
 with ZipFile('notcore_lex.zip') as zip_ref:
     with zip_ref.open('notcore_lex.csv') as file:
-        lines = lines + file.read().decode()
+        lines += file.read().decode()
 
 lines = lines.splitlines()
-
-dict_name = 'mozcdic-ut-sudachidict.txt'
 
 # Mozc の一般名詞のIDを取得
 url = 'https://raw.githubusercontent.com/' + \
@@ -112,6 +110,7 @@ for i in range(len(lines)):
     l2.append('\t'.join(entry1) + '\n')
 
 lines = l2
+dict_name = 'mozcdic-ut-sudachidict.txt'
 
-with open(dict_name, 'w', encoding='utf-8') as dict_file:
-    dict_file.writelines(lines)
+with open(dict_name, 'w', encoding='utf-8') as file:
+    file.writelines(lines)
