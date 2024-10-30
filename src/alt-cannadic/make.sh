@@ -5,5 +5,5 @@
 
 python convert_alt_cannadic.py
 
-tar cjf mozcdic-ut-alt-cannadic.txt.tar.bz2 mozcdic-ut-alt-cannadic.txt
+bzip2 -k mozcdic-ut-*.txt
 mv mozcdic-ut-*.txt* ../merge/

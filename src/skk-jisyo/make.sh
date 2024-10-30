@@ -5,5 +5,5 @@
 
 python convert_skk_jisyo.py
 
-tar cjf mozcdic-ut-skk-jisyo.txt.tar.bz2 mozcdic-ut-skk-jisyo.txt
+bzip2 -k mozcdic-ut-*.txt
 mv mozcdic-ut-*.txt* ../merge/

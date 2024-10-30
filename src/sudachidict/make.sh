@@ -7,5 +7,5 @@ python convert_sudachidict.py
 python ../common/adjust_entries.py mozcdic-ut-sudachidict.txt
 python ../common/filter_unsuitable_words.py mozcdic-ut-sudachidict.txt
 
-tar cjf mozcdic-ut-sudachidict.txt.tar.bz2 mozcdic-ut-sudachidict.txt
+bzip2 -k mozcdic-ut-*.txt
 mv mozcdic-ut-*.txt* ../merge/

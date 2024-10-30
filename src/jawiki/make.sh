@@ -7,5 +7,5 @@ python convert_jawiki.py
 python ../common/adjust_entries.py mozcdic-ut-jawiki.txt
 python ../common/filter_unsuitable_words.py mozcdic-ut-jawiki.txt
 
-tar cjf mozcdic-ut-jawiki.txt.tar.bz2 mozcdic-ut-jawiki.txt
+bzip2 -k mozcdic-ut-*.txt
 mv mozcdic-ut-*.txt* ../merge/

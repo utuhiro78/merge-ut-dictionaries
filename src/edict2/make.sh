@@ -6,5 +6,5 @@
 python convert_edict2.py
 python ../common/adjust_entries.py mozcdic-ut-edict2.txt
 
-tar cjf mozcdic-ut-edict2.txt.tar.bz2 mozcdic-ut-edict2.txt
+bzip2 -k mozcdic-ut-*.txt
 mv mozcdic-ut-*.txt* ../merge/

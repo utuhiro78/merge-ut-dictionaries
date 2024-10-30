@@ -5,5 +5,5 @@
 
 python generate_place_names.py
 
-tar cjf mozcdic-ut-place-names.txt.tar.bz2 mozcdic-ut-place-names.txt
+bzip2 -k mozcdic-ut-*.txt
 mv mozcdic-ut-*.txt* ../merge/
