@@ -21,30 +21,28 @@ file_name = args[0]
 with open(file_name, 'r', encoding='utf-8') as file:
     lines = file.read().splitlines()
 
-# 単語リストを読み込む
+# NGリストを読み込む
 dir_python = os.path.dirname(__file__)
 
 with open(f'{dir_python}/unsuitable_words.txt', 'r', encoding='utf-8') as file:
     unsuitables = file.read().splitlines()
 
 for i in range(len(unsuitables)):
-    # 単語が正規表現の場合は re.compile() を使用する
-    #     /^バカ/
     if unsuitables[i][0] == '/':
-        unsuitables[i] = re.compile(unsuitables[i][1:-1])
+        unsuitables[i] = re.compile(unsuitables[i][1:])
 
 with open(file_name, 'w', encoding='utf-8') as dict_file:
     for line in lines:
-        entry = line.split('\t')
+        hyouki = line.split('\t')[4]
 
         for unsuitable in unsuitables:
-            if isinstance(unsuitable, str) and unsuitable in entry[4]:
-                entry[4] = None
-                break
-            elif isinstance(unsuitable, re.Pattern) and \
-                    re.match(unsuitable, entry[4]):
-                entry[4] = None
+            if type(unsuitable) is re.Pattern:
+                if re.match(unsuitable, hyouki) is not None:
+                    hyouki = None
+                    break
+            elif unsuitable in hyouki:
+                hyouki = None
                 break
 
-        if entry[4] is not None:
-            dict_file.write('\t'.join(entry) + '\n')
+        if hyouki is not None:
+            dict_file.write(line + '\n')

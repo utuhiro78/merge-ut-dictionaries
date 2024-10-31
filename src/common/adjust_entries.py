@@ -37,16 +37,12 @@ for i in range(len(lines)):
     if hyouki[0] == ' ':
         hyouki = hyouki[1:]
 
-    # 表記の最後が「。」の場合は取る
-    #     「あなた。」という表記があると「あなた。の」になって不自然
-    if hyouki[-1] == '。':
-        hyouki = hyouki[:-1]
-
     # 表記の全角カンマを半角に変換
     hyouki = hyouki.replace('，', ', ')
 
     # 表記の最後が空白の場合は取る（全角カンマが「, 」に変換されている）
-    if hyouki.endswith(' '):
+    # 表記の最後が「。」の場合は取る
+    if hyouki[-1] == ' ' or hyouki[-1] == '。':
         hyouki = hyouki[:-1]
 
     # 読みにならない文字「 !?」などを削除したhyouki_stripを作る
@@ -75,12 +71,15 @@ for i in range(len(lines)):
             '\\u' in hyouki:
         continue
 
-    # hyouki_stripの数字をつなげると101以上になる場合はスキップ
-    #     「国道120号」「3月26日」はスキップ。「100円ショップ」は残す
-    n = re.sub(r'\D', '', hyouki_strip)
+    # hyouki_stripに数字が3個以上ある場合はスキップ
+    # ただし「100円ショップ」は残す
+    n = re.findall(r'\d+', hyouki)
 
-    if n != '' and int(n) > 100:
-        continue
+    if n != []:
+        n = int(''.join(n))
+
+        if n > 100:
+            continue
 
     entry[0] = yomi
     entry[4] = hyouki
