@@ -58,7 +58,7 @@ def fix_ken_all():
         # 町域の読みの () を取る
         #     'ハラ(ゴクラクザカ)','原(極楽坂)' を
         #     'ハラゴクラクザカ','原(極楽坂)' にする。
-        #     表記の () は取らない。「原極楽坂」だと読みにくいので。
+        #     表記の () は取らない。「原極楽坂」だと読みにくいので
         entry[5] = entry[5].replace('(', '').replace(')', '')
 
         l2.append(','.join(entry))
@@ -80,13 +80,16 @@ def generate_place_names(lines):
     d1 = ['', 'いち', 'に', 'さん', 'よん', 'ご', 'ろく', 'なな', 'はち', 'きゅう']
 
     # 数字の10から59までの読みを作成
+    #     サッポロシヒガシクキタ51ジョウヒガシ
     d2 = ['じゅう', 'にじゅう', 'さんじゅう', 'よんじゅう', 'ごじゅう']
 
-    for p in range(5):
-        # append していくので range(len(d1)) にはしない
-        for q in range(10):
-            d1.append(d2[p] + d1[q])
+    yomi_num = []
 
+    for p in d2:
+        for q in d1:
+            yomi_num.append(p + q)
+
+    yomi_num = d1 + yomi_num
     l2 = []
 
     for i in range(len(lines)):
@@ -114,7 +117,7 @@ def generate_place_names(lines):
         # 町の読みの半角数字が60未満の場合はひらがなに変換
         #     さっぽろしひがしくきた51じょうひがし
         if c != '' and 0 < int(c) < 60:
-            entry[5] = entry[5].replace(c, d1[int(c)])
+            entry[5] = entry[5].replace(c, yomi_num[int(c)])
 
         # 町の読みがひらがな以外を含む場合はスキップ
         #     OAPたわー
