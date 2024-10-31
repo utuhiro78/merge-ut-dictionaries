@@ -50,7 +50,7 @@ def remove_duplicates(file_name):
         entry.append(entry[1])
         entry.pop(1)
 
-        l2.append('\t'.join(entry))
+        l2.append(entry)
 
     return (l2)
 
@@ -95,18 +95,13 @@ def count_word_hits():
             c = c + 1
 
         entry = ['jawiki_hits', '0', '0', str(c), lines[i]]
-        l2.append('\t'.join(entry))
+        l2.append(entry)
 
     return (l2)
 
 
-def apply_word_hits(args):
-    file_name = args[0]
-    lines = args[1]
-
+def apply_word_hits(lines):
     for i in range(len(lines)):
-        lines[i] = lines[i].split('\t')
-
         # 表記の「~」を「〜」に置き換える
         lines[i][4] = lines[i][4].replace('~', '〜')
 
@@ -154,13 +149,10 @@ def apply_word_hits(args):
         # Mozc 辞書の並びに戻す
         line.append(line[0])
         line = line[1:]
-        l2.append(line)
+        l2.append('\t'.join(line) + '\n')
 
-    lines = sorted(l2)
-
-    with open(file_name, 'w', encoding='utf-8') as file:
-        for line in lines:
-            file.write('\t'.join(line) + '\n')
+    l2.sort()
+    return (l2)
 
 
 def main():
@@ -172,9 +164,10 @@ def main():
 
     lines = remove_duplicates(file_name)
     lines += count_word_hits()
+    lines = apply_word_hits(lines)
 
-    args = [file_name, lines]
-    apply_word_hits(args)
+    with open(file_name, 'w', encoding='utf-8') as file:
+        file.writelines(lines)
 
 
 if __name__ == '__main__':
