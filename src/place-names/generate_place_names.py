@@ -67,15 +67,6 @@ def fix_ken_all():
 
 
 def generate_place_names(lines):
-    # Mozc の一般名詞のIDを取得
-    url = 'https://raw.githubusercontent.com/' + \
-            'google/mozc/master/src/data/dictionary_oss/id.def'
-
-    with urllib.request.urlopen(url) as response:
-        id_mozc = response.read().decode()
-
-    id_mozc = id_mozc.split(' 名詞,一般,')[0].split('\n')[-1]
-
     # 数字の1から9までの読みを作成
     d1 = ['', 'いち', 'に', 'さん', 'よん', 'ご', 'ろく', 'なな', 'はち', 'きゅう']
 
@@ -108,7 +99,7 @@ def generate_place_names(lines):
         entry[5] = entry[5].replace('・', '')
 
         # 市を出力
-        mozc_ent = [entry[4], id_mozc, id_mozc, '9000', entry[7]]
+        mozc_ent = [entry[4], '0000', '0000', '9000', entry[7]]
         l2.append('\t'.join(mozc_ent) + '\n')
 
         # 町の読みが半角数字を含むか確認
@@ -127,12 +118,12 @@ def generate_place_names(lines):
             continue
 
         # 町を出力
-        mozc_ent = [entry[5], id_mozc, id_mozc, '9000', entry[8]]
+        mozc_ent = [entry[5], '0000', '0000', '9000', entry[8]]
         l2.append('\t'.join(mozc_ent) + '\n')
 
         # 市+町を出力
         mozc_ent = [
-            entry[4] + entry[5], id_mozc, id_mozc, '9000', entry[7] + entry[8]]
+            entry[4] + entry[5], '0000', '0000', '9000', entry[7] + entry[8]]
         l2.append('\t'.join(mozc_ent) + '\n')
 
     lines = sorted(set(l2))

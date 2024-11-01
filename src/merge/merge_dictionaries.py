@@ -11,7 +11,7 @@ import urllib.request
 from unicodedata import normalize
 
 
-def remove_duplicates(file_name):
+def get_id_mozc():
     # Mozc の一般名詞のIDを取得
     url = 'https://raw.githubusercontent.com/' + \
             'google/mozc/master/src/data/dictionary_oss/id.def'
@@ -20,6 +20,11 @@ def remove_duplicates(file_name):
         id_mozc = response.read().decode()
 
     id_mozc = id_mozc.split(' 名詞,一般,')[0].split('\n')[-1]
+    return (id_mozc)
+
+
+def remove_duplicates(file_name):
+    id_mozc = get_id_mozc()
 
     with open(file_name, 'r', encoding='utf-8') as file:
         lines = file.read().splitlines()
@@ -27,7 +32,7 @@ def remove_duplicates(file_name):
     for i in range(len(lines)):
         entry = lines[i].split('\t')
 
-        # IDを最新のものに更新
+        # IDを更新
         entry[1:3] = [id_mozc, id_mozc]
 
         # 並び順を [読み, 表記, ID, ID, コスト] にする
@@ -46,7 +51,7 @@ def remove_duplicates(file_name):
 
         entry = lines[i].copy()
 
-        # Mozc の並びに戻す
+        # Mozc 辞書の並びに戻す
         entry.append(entry[1])
         entry.pop(1)
 

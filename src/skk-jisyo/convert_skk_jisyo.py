@@ -14,15 +14,6 @@ urllib.request.urlretrieve(
 with gzip.open('SKK-JISYO.L.gz', 'rt', encoding='EUC-JP') as file:
     lines = file.read().splitlines()
 
-# Mozc の一般名詞のIDを取得
-url = 'https://raw.githubusercontent.com/' + \
-        'google/mozc/master/src/data/dictionary_oss/id.def'
-
-with urllib.request.urlopen(url) as response:
-    id_mozc = response.read().decode()
-
-id_mozc = id_mozc.split(' 名詞,一般,')[0].split('\n')[-1]
-
 l2 = []
 
 for i in range(len(lines)):
@@ -59,7 +50,7 @@ for i in range(len(lines)):
         # 2個目以降の表記のコストを上げる
         cost = 8000 + (10 * c)
 
-        entry = [yomi, id_mozc, id_mozc, str(cost), hyouki[c]]
+        entry = [yomi, '0000', '0000', str(cost), hyouki[c]]
         l2.append('\t'.join(entry) + '\n')
 
 lines = sorted(set(l2))

@@ -9,7 +9,6 @@ import html
 import jaconv
 import re
 import subprocess
-import urllib.request
 from multiprocessing import Pool, cpu_count
 from unicodedata import normalize
 
@@ -170,15 +169,6 @@ def convert_jawiki(article):
 
 
 def main():
-    # Mozc の一般名詞のIDを取得
-    url = 'https://raw.githubusercontent.com/' + \
-        'google/mozc/master/src/data/dictionary_oss/id.def'
-
-    with urllib.request.urlopen(url) as response:
-        id_mozc = response.read().decode()
-
-    id_mozc = id_mozc.split(' 名詞,一般,')[0].split('\n')[-1]
-
     subprocess.run(
         ['wget', '-N', 'https://dumps.wikimedia.org/jawiki/latest/' +
             'jawiki-latest-pages-articles-multistream.xml.bz2'])
@@ -216,7 +206,7 @@ def main():
         if line is None:
             continue
 
-        line = [line[0], id_mozc, id_mozc, '8000', line[1]]
+        line = [line[0], '0000', '0000', '8000', line[1]]
         l2.append('\t'.join(line) + '\n')
 
     # 重複する行を削除

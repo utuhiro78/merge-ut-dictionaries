@@ -30,15 +30,6 @@ with ZipFile('notcore_lex.zip') as zip_ref:
 
 lines = lines.splitlines()
 
-# Mozc の一般名詞のIDを取得
-url = 'https://raw.githubusercontent.com/' + \
-        'google/mozc/master/src/data/dictionary_oss/id.def'
-
-with urllib.request.urlopen(url) as response:
-    id_mozc = response.read().decode()
-
-id_mozc = id_mozc.split(' 名詞,一般,')[0].split('\n')[-1]
-
 l2 = []
 
 for i in range(len(lines)):
@@ -105,8 +96,8 @@ for i in range(len(lines)):
     if entry1[0:2] == entry2[0:2]:
         continue
 
-    # [読み, id_mozc, id_mozc, コスト, 表記] の順に並べる
-    entry1 = [entry1[0], id_mozc, id_mozc, entry1[2], entry1[1]]
+    # Mozc 辞書の並びに変更
+    entry1 = [entry1[0], '0000', '0000', entry1[2], entry1[1]]
     l2.append('\t'.join(entry1) + '\n')
 
 lines = l2

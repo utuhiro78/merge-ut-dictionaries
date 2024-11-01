@@ -15,15 +15,6 @@ urllib.request.urlretrieve(
 with gzip.open('edict2.gz', 'rt', encoding='EUC-JP') as file:
     lines = file.read().splitlines()
 
-# Mozc の一般名詞のIDを取得
-url = 'https://raw.githubusercontent.com/' + \
-        'google/mozc/master/src/data/dictionary_oss/id.def'
-
-with urllib.request.urlopen(url) as response:
-    id_mozc = response.read().decode()
-
-id_mozc = id_mozc.split(' 名詞,一般,')[0].split('\n')[-1]
-
 l2 = []
 
 for i in range(len(lines)):
@@ -67,7 +58,7 @@ for i in range(len(lines)):
     # 表記の全角英数を半角に変換
     hyouki = normalize('NFKC', hyouki)
 
-    entry = [yomi, id_mozc, id_mozc, '8000', hyouki]
+    entry = [yomi, '0000', '0000', '8000', hyouki]
     l2.append('\t'.join(entry) + '\n')
 
 lines = sorted(set(l2))

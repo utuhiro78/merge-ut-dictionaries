@@ -21,15 +21,6 @@ with tarfile.open('alt-cannadic-110208.tar.bz2') as tar:
 
 lines = lines.splitlines()
 
-# Mozc の一般名詞のIDを取得
-url = 'https://raw.githubusercontent.com/' + \
-        'google/mozc/master/src/data/dictionary_oss/id.def'
-
-with urllib.request.urlopen(url) as response:
-    id_mozc = response.read().decode()
-
-id_mozc = id_mozc.split(' 名詞,一般,')[0].split('\n')[-1]
-
 l2 = []
 
 for line in lines:
@@ -78,7 +69,7 @@ for line in lines:
                 hinsi.startswith('#JN') or \
                 hinsi.startswith('#KK') or \
                 hinsi.startswith('#CN'):
-            entry = [yomi, hyouki, id_mozc, id_mozc, str(cost_mozc)]
+            entry = [yomi, hyouki, str(cost_mozc)]
             l2.append(entry)
 
 lines = sorted(l2)
@@ -86,14 +77,12 @@ l2 = []
 
 for i in range(len(lines)):
     # 読みと表記が前のエントリと同じ場合はスキップ
+    #     [yomi, hyouki, str(cost_mozc)]
     if lines[i][:2] == lines[i - 1][:2]:
         continue
 
     # Mozc 辞書の並びに変更
-    # 現時点では [yomi, hyouki, id_mozc, id_mozc, str(cost_mozc)]
-    entry = lines[i].copy()
-    entry.append(entry[1])
-    entry.pop(1)
+    entry = [lines[i][0], '0000', '0000', lines[i][2], lines[i][1]]
     l2.append('\t'.join(entry) + '\n')
 
 lines = l2
