@@ -36,11 +36,7 @@ git clone --depth 1 https://github.com/utuhiro78/merge-ut-dictionaries.git
 
 ## Configure
 
-```
-cd merge-ut-dictionaries/src/merge/
-```
-
-Comment out unnecessary dictionaries in make.sh.
+Comment out unnecessary dictionaries in src/merge/make.sh.
 
 Default settings:
 
@@ -58,6 +54,7 @@ sudachidict="true"
 ## Build
 
 ```
+cd src/merge/
 sh make.sh
 cat mozcdic-ut.txt >> ../../../mozc-master/src/data/dictionary_oss/dictionary00.txt
 ```
