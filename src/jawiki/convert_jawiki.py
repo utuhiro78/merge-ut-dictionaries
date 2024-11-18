@@ -13,6 +13,56 @@ from multiprocessing import Pool, cpu_count
 from unicodedata import normalize
 
 
+def main():
+    subprocess.run(
+        ['wget', '-N', 'https://dumps.wikimedia.org/jawiki/latest/' +
+            'jawiki-latest-pages-articles-multistream.xml.bz2'])
+
+    article_fragment = ''
+    cache_size = 200 * 1024 * 1024
+    core_num = cpu_count()
+    dict_ut = []
+
+    with bz2.open(
+        'jawiki-latest-pages-articles-multistream.xml.bz2', 'rt',
+            encoding='utf-8') as reader:
+        while True:
+            articles = reader.read(cache_size)
+
+            # 最後まで読み切ったら終了
+            if articles == '':
+                break
+
+            articles = articles.split('  </page>')
+            articles[0] = article_fragment + articles[0]
+
+            # 記事の断片を別名で保存
+            article_fragment = articles[-1]
+
+            # 記事の断片をカット
+            articles = articles[0:-1]
+
+            with Pool(processes=core_num) as p:
+                dict_ut += p.map(convert_jawiki, articles)
+
+    l2 = []
+
+    for entry in dict_ut:
+        if entry is None:
+            continue
+
+        entry = [entry[0], '0000', '0000', '8000', entry[1]]
+        l2.append('\t'.join(entry) + '\n')
+
+    # 重複する行を削除
+    dict_ut = sorted(list(set(l2)))
+
+    dict_name = 'mozcdic-ut-jawiki.txt'
+
+    with open(dict_name, 'w', encoding='utf-8') as file:
+        file.writelines(dict_ut)
+
+
 def convert_jawiki(article):
     # Wikipediaの記事の例
     #     <title>あいの里公園駅</title>
@@ -37,7 +87,7 @@ def convert_jawiki(article):
     hyouki = hyouki.split(' (')[0]
 
     # 表記にスペースがある場合はスキップ
-    #     記事のスペースを削除したのち「表記(読み」を検索するので、残してもマッチしない
+    #     記事のスペースを削除して「表記(読み」を検索するので、残してもマッチしない
     # 表記が26文字以上の場合はスキップ。候補ウィンドウが大きくなりすぎる
     # 内部用のページをスキップ
     if ' ' in hyouki or \
@@ -51,27 +101,27 @@ def convert_jawiki(article):
             'プロジェクト:' in hyouki:
         return
 
-    # 読みにならない文字「!?」などを削除したhyouki_stripを作る
-    hyouki_strip = hyouki.translate(str.maketrans('', '', ',.!?-+*=:/・、。×★☆'))
+    # 読みにならない文字「!?」などを削除した hyouki2 を作る
+    hyouki2 = hyouki.translate(str.maketrans('', '', ',.!?-+*=:/・、。×★☆'))
 
-    # hyouki_stripが1文字の場合はスキップ
-    if len(hyouki_strip) < 2:
+    # hyouki2 が1文字の場合はスキップ
+    if len(hyouki2) < 2:
         return
 
-    # hyouki_stripがひらがなとカタカナだけの場合は、読みをhyouki_stripから作る
+    # hyouki2 がひらがなとカタカナだけの場合は、読みを hyouki2 から作る
     #     さいたまスーパーアリーナ
-    if hyouki_strip == ''.join(re.findall('[ぁ-ゔァ-ヴー]', hyouki_strip)):
-        yomi = jaconv.kata2hira(hyouki_strip)
+    if hyouki2 == ''.join(re.findall('[ぁ-ゔァ-ヴー]', hyouki2)):
+        yomi = jaconv.kata2hira(hyouki2)
         yomi = yomi.translate(str.maketrans('ゐゑ', 'いえ'))
 
-        entry = [yomi, hyouki]
-        return (entry)
+        dict_ut = [yomi, hyouki]
+        return (dict_ut)
 
     # テンプレート末尾と記事本文の間に改行を入れる
     lines = article.replace("}}'''", "}}\n'''")
     lines = lines.splitlines()
 
-    entry = []
+    l2 = []
 
     # 記事の量を減らす
     for line in lines:
@@ -84,14 +134,13 @@ def convert_jawiki(article):
                 line[0] == '*':
             continue
 
-        entry.append(line)
+        l2.append(line)
 
         # 記事が100行になったらbreak
-        if len(entry) == 100:
+        if len(l2) == 100:
             break
 
-    lines = entry
-    entry = ''
+    lines = l2
 
     # 記事から読みを作る
     for line in lines:
@@ -101,21 +150,21 @@ def convert_jawiki(article):
         # HTML特殊文字を変換
         line = html.unescape(line)
 
-        # '{{.*?}}' を削除
+        # '{{.+?}}' を削除。'.+' に '?' を付けると最短一致
         #     '''皆藤 愛子'''{{efn2|一部のプロフィールが「皆'''籐'''
         #     （たけかんむり）」となっている}}（かいとう あいこ、
         if '{{' in line:
-            line = re.sub(r'{{.*?}}', '', line)
+            line = re.sub(r'{{.+?}}', '', line)
 
-        # '<ref.*?<\/ref>' を削除
+        # '<ref.+?<\/ref>' を削除
         #     '''井上 陽水'''（いのうえ ようすい<ref name="FMPJ">
         #     {{Cite web|和書|title=アーティスト・アーカイヴ 井上陽水|
         #     url=https://www.kiokunokiroku.jp/}}</ref>、
-        line = re.sub(r'<ref.*?<\/ref>', '', line)
+        line = re.sub(r'<ref.+?<\/ref>', '', line)
 
-        # '<ref\ name.*?\/>' を削除
+        # '<ref\ name.+?\/>' を削除
         #     <ref name="雑誌1" />
-        line = re.sub(r'<ref\ name.*?\/>', '', line)
+        line = re.sub(r'<ref\ name.+?\/>', '', line)
 
         # 『』などを削除
         #     『不適切にもほどがある！』（ふてきせつにもほどがある）は、
@@ -164,58 +213,8 @@ def convert_jawiki(article):
         if yomi != ''.join(re.findall('[ぁ-ゔー]', yomi)):
             continue
 
-        entry = [yomi, hyouki]
-        return (entry)
-
-
-def main():
-    subprocess.run(
-        ['wget', '-N', 'https://dumps.wikimedia.org/jawiki/latest/' +
-            'jawiki-latest-pages-articles-multistream.xml.bz2'])
-
-    article_fragment = ''
-    cache_size = 200 * 1024 * 1024
-    core_num = cpu_count()
-    dict_ut = []
-
-    with bz2.open(
-        'jawiki-latest-pages-articles-multistream.xml.bz2', 'rt',
-            encoding='utf-8') as reader:
-        while True:
-            articles = reader.read(cache_size)
-
-            # 最後まで読み切ったら終了
-            if articles == '':
-                break
-
-            articles = articles.split('  </page>')
-            articles[0] = article_fragment + articles[0]
-
-            # 記事の断片を別名で保存
-            article_fragment = articles[-1]
-
-            # 記事の断片を削除
-            articles = articles[0:-1]
-
-            with Pool(processes=core_num) as p:
-                dict_ut += p.map(convert_jawiki, articles)
-
-    l2 = []
-
-    for line in dict_ut:
-        if line is None:
-            continue
-
-        line = [line[0], '0000', '0000', '8000', line[1]]
-        l2.append('\t'.join(line) + '\n')
-
-    # 重複する行を削除
-    dict_ut = sorted(list(set(l2)))
-
-    dict_name = 'mozcdic-ut-jawiki.txt'
-
-    with open(dict_name, 'w', encoding='utf-8') as file:
-        file.writelines(dict_ut)
+        dict_ut = [yomi, hyouki]
+        return (dict_ut)
 
 
 if __name__ == '__main__':

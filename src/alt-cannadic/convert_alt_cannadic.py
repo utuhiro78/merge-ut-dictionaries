@@ -58,8 +58,8 @@ for line in lines:
             continue
 
         # alt-cannadic のコストから Mozc 辞書のコストを作る
-        # 「#T35*202 空き瓶 空瓶 #T35*151 空きビン 空ビン」の場合、
-        # 「空き瓶 空瓶 空きビン 空ビン」の順に優先されるようにする
+        #     「#T35*202 空き瓶 空瓶 #T35*151 空きビン 空ビン」の場合、
+        #     「空き瓶 空瓶 空きビン 空ビン」の順に優先されるようにする
         # Mozc 辞書のコストは 8000 台にする
         cost_mozc = (9000 - cost_anthy) + c
 
@@ -76,7 +76,7 @@ lines = sorted(l2)
 l2 = []
 
 for i in range(len(lines)):
-    # 読みと表記が前のエントリと同じ場合はスキップ
+    # [読み, 表記] が重複するエントリをスキップ
     #     [yomi, hyouki, str(cost_mozc)]
     if lines[i][:2] == lines[i - 1][:2]:
         continue
