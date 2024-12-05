@@ -90,8 +90,11 @@ if [[ $sudachidict = "true" ]] && [[ $generate_latest = "true" ]]; then
     cd -
 fi
 
-bzip2 -dfk mozcdic-ut-*/mozcdic-ut-*.txt.bz2
-mv mozcdic-ut-*/mozcdic-ut-*.txt .
+if [[ $generate_latest != "true" ]]; then
+    bzip2 -dfk mozcdic-ut-*/mozcdic-ut-*.txt.bz2
+    mv mozcdic-ut-*/mozcdic-ut-*.txt .
+fi
+
 cat mozcdic-ut-*.txt > mozcdic-ut.txt
 
 # IDを更新、重複エントリを削除、コストを調整
