@@ -56,19 +56,22 @@ for i in range(len(lines)):
     # 読みが2文字以下の場合はスキップ
     # hyouki_stripが1文字の場合はスキップ
     # 表記が26文字以上の場合はスキップ。候補ウィンドウが大きくなりすぎる
-    # hyouki_stripの1文字に対して読みが平均4文字を超える場合はスキップ
+    # hyouki_stripの1文字に対する読みが平均4文字を超える場合はスキップ
     #     「さくらざかふぉーてぃーしっくす[15文字] 櫻坂46[4文字]」までは残す
-    # 読み1文字に対してhyouki_stripのバイト数が平均3バイトを超える場合はスキップ
+    # 読み1文字に対するhyouki_stripのバイト数が平均3バイトを超える場合はスキップ
     #     「あいてぃー[5文字] ITエンジニア[17bytes]」をスキップ
     # 読みがひらがな以外を含む場合はスキップ
     # 表記がコードポイントを含む場合はスキップ
+    # 表記が「/」を含む場合はスキップ
+    #     「ひかりのあと 光の跡/生命体」をスキップ
     if len(yomi) < 3 or \
             len(hyouki_strip) < 2 or \
             len(hyouki) > 25 or \
             len(yomi) / len(hyouki_strip) > 4 or \
             len(hyouki_strip.encode()) / len(yomi) > 3 or \
             yomi != ''.join(re.findall('[ぁ-ゔー]', yomi)) or \
-            '\\u' in hyouki:
+            '\\u' in hyouki or \
+            '/' in hyouki:
         continue
 
     # hyouki_stripに数字が3個以上ある場合はスキップ
