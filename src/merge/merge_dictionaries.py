@@ -86,9 +86,11 @@ def count_word_hits():
         # 「三浦大知」を前方一致検索できるようにする
         line = line.split(' (')[-1]
 
+        # 表記が1文字の場合はスキップ
         # 表記が26文字以上の場合はスキップ。候補ウィンドウが大きくなりすぎる
         # 内部用のページをスキップ
-        if len(line) > 25 or \
+        if len(line) < 2 or \
+                len(line) > 25 or \
                 line.startswith('ファイル:') or \
                 line.startswith('Wikipedia:') or \
                 line.startswith('Template:') or \
