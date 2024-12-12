@@ -4,7 +4,8 @@
 # Author: UTUMI Hirosi (utuhiro78 at yahoo dot co dot jp)
 # License: Apache License, Version 2.0
 
-import gzip
+import bz2
+import html
 import subprocess
 import sys
 import urllib.request
@@ -61,42 +62,54 @@ def remove_duplicates(file_name):
 
 
 def count_word_hits():
-    # jawiki-latest-all-titles を取得
     subprocess.run(
         ['wget', '-N', 'https://dumps.wikimedia.org/jawiki/latest/' +
-            'jawiki-latest-all-titles-in-ns0.gz'], check=True)
+            'jawiki-latest-pages-articles-multistream-index.txt.bz2'],
+        check=True)
 
-    with gzip.open(
-            'jawiki-latest-all-titles-in-ns0.gz', 'rt',
-            encoding='utf-8') as file:
+    with bz2.open(
+            'jawiki-latest-pages-articles-multistream-index.txt.bz2',
+            'rt', encoding='utf-8') as file:
         lines = file.read().splitlines()
 
     l2 = []
 
     for line in lines:
-        # 「BEST_(三浦大知のアルバム)」を
+        # 1004375:312:数学
+        line = ':'.join(line.split(':')[2:])
+
+        # 表記のHTML特殊文字を変換
+        line = html.unescape(line)
+
+        # 「BEST (三浦大知のアルバム)」を
         # 「三浦大知のアルバム)」に変更。
         # 「三浦大知」を前方一致検索できるようにする
-        line = line.split('_(')[-1]
+        line = line.split(' (')[-1]
 
-        # 表記が1文字の場合はスキップ
-        if len(line) < 2:
+        # 表記が26文字以上の場合はスキップ。候補ウィンドウが大きくなりすぎる
+        # 内部用のページをスキップ
+        if len(line) > 25 or \
+                line.startswith('ファイル:') or \
+                line.startswith('Wikipedia:') or \
+                line.startswith('Template:') or \
+                line.startswith('Portal:') or \
+                line.startswith('Help:') or \
+                line.startswith('Category:') or \
+                line.startswith('プロジェクト:'):
             continue
-
-        # '_' を ' ' に置き換える
-        # THE_BEATLES
-        line = line.replace('_', ' ')
 
         l2.append(line)
 
     lines = sorted(list(set(l2)))
     l2 = []
 
-    for i in range(len(lines)):
+    lines_len = len(lines)
+
+    for i in range(lines_len):
         c = 1
 
         # 前方一致するエントリがなくなるまでカウント
-        while i + c < len(lines) and lines[i + c].startswith(lines[i]):
+        while i + c < lines_len and lines[i + c].startswith(lines[i]):
             c = c + 1
 
         entry = ['jawiki_hits', '0', '0', str(c), lines[i]]
@@ -151,7 +164,7 @@ def apply_word_hits(lines):
         else:
             line[4] = str(8000 - (line_wiki[4] * 10))
 
-        # Mozc 辞書の並びに戻す
+        # Mozc の並びに戻す
         line.append(line[0])
         line = line[1:]
         l2.append('\t'.join(line) + '\n')
