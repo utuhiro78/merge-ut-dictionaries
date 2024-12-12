@@ -86,19 +86,22 @@ def convert_jawiki(article):
     # 田中瞳 (アナウンサー)
     hyouki = hyouki.split(' (')[0]
 
+    # 表記のHTML特殊文字を変換
+    hyouki = html.unescape(hyouki)
+
     # 表記にスペースがある場合はスキップ
     #     記事のスペースを削除して「表記(読み」を検索するので、残してもマッチしない
     # 表記が26文字以上の場合はスキップ。候補ウィンドウが大きくなりすぎる
     # 内部用のページをスキップ
     if ' ' in hyouki or \
             len(hyouki) > 25 or \
-            'Wikipedia:' in hyouki or \
-            'ファイル:' in hyouki or \
-            'Portal:' in hyouki or \
-            'Help:' in hyouki or \
-            'Template:' in hyouki or \
-            'Category:' in hyouki or \
-            'プロジェクト:' in hyouki:
+            hyouki.startswith('ファイル:') or \
+            hyouki.startswith('Wikipedia:') or \
+            hyouki.startswith('Template:') or \
+            hyouki.startswith('Portal:') or \
+            hyouki.startswith('Help:') or \
+            hyouki.startswith('Category:') or \
+            hyouki.startswith('プロジェクト:'):
         return
 
     # 読みにならない文字「!?」などを削除した hyouki2 を作る
