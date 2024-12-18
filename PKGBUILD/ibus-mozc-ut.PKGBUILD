@@ -6,7 +6,7 @@
 ## The UT dictionary's project page: http://linuxplayers.g1.xrea.com/mozc-ut.html
 
 ## Helpful internal stuff
-_mozcver=2.30.5618.102.20241021
+_mozcver=2.30.5618.102.20241218
 _pkgver=${_mozcver}
 
 pkgname=ibus-mozc-ut
@@ -29,7 +29,7 @@ prepare() {
 
 build() {
     cd mozc-${_mozcver}/src
-    bazel build package --cxxopt=-Wno-uninitialized --host_cxxopt=-Wno-uninitialized --config oss_linux --config release_build
+    bazel build package --config oss_linux --config release_build
 }
 
 package() {
