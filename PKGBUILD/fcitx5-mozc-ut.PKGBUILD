@@ -6,7 +6,7 @@
 ## The UT dictionary's project page: http://linuxplayers.g1.xrea.com/mozc-ut.html
 
 ## Helpful internal stuff
-_mozcver=2.30.5618.102.20241218
+_mozcver=2.30.5618.102.20241223
 _pkgver=${_mozcver}
 
 pkgname=fcitx5-mozc-ut
@@ -29,8 +29,6 @@ prepare() {
 
 build() {
     cd mozc-${_mozcver}/src
-    # Fix for gcc14
-    # https://github.com/fcitx/mozc/commit/6562496
     sh ../scripts/build_fcitx5_bazel
 }
 
