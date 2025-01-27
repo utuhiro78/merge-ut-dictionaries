@@ -102,8 +102,8 @@ def remove_duplicates(mozc_dic):
         # あいおい\t相生\tid\tid\t8400
 
         # Mozc 公式辞書をスキップ
-        # 公式辞書と重複するUTエントリをスキップ
-        # UT辞書内で重複するエントリをスキップ
+        # 公式辞書と [読み, 表記] が重複するUTエントリをスキップ
+        # UT辞書内で [読み, 表記] が重複するエントリをスキップ
         if mozc_dic[i][2] != 'id' or \
                 mozc_dic[i][:2] == mozc_dic[i - 1][:2]:
             continue
