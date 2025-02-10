@@ -23,8 +23,8 @@ merge-ut-dictionaries: [40 Stars](https://github.com/utuhiro78/merge-ut-dictiona
 - [jawiki-latest-pages-articles-multistream-index.txt](https://dumps.wikimedia.org/jawiki/latest/): [CC BY-SA](https://ja.wikipedia.org/wiki/Wikipedia:ウィキペディアを二次利用する)
   - merge-ut-dictionaries use it to generate the costs for words.
 
-- [id.def](https://github.com/google/mozc/blob/master/src/data/dictionary_oss/id.def) from Mozc: [BSD-3-Clause](https://github.com/google/mozc)
-  - merge-ut-dictionaries use it to get the latest ID.
+- [dictionary*.txt and id.def](https://github.com/google/mozc/tree/master/src/data/dictionary_oss) from Mozc: [BSD-3-Clause](https://github.com/google/mozc)
+  - merge-ut-dictionaries use them to remove duplicate entries and update ID.
 
 - Source code: Apache License, Version 2.0
 
