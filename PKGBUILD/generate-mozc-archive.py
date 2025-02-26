@@ -27,11 +27,11 @@ def main():
     date = get_committed_date('https://github.com/google/mozc/commits/master/')
 
     # mozc のアーカイブが古い場合は取得
-    global mozcver
-    mozcver = version + date
-    mozcdir = 'mozc-' + mozcver
+    global mozc_ver
+    mozc_ver = version + date
+    mozc_dir = 'mozc-' + mozc_ver
 
-    if not os.path.exists(mozcdir + '.tar.zst'):
+    if not os.path.exists(mozc_dir + '.tar.zst'):
         if os.path.exists('mozc'):
             shutil.rmtree('mozc')
 
@@ -40,10 +40,10 @@ def main():
                     '--recursive', '--shallow-submodules',
                     'https://github.com/fcitx/mozc.git'], check=True)
         shutil.rmtree('mozc/.git')
-        os.rename('mozc', mozcdir)
+        os.rename('mozc', mozc_dir)
     else:
-        print(mozcdir + ' is up to date.')
-        subprocess.run(['tar', 'xf', f'{mozcdir}.tar.zst'], check=True)
+        print(mozc_dir + ' is up to date.')
+        subprocess.run(['tar', 'xf', f'{mozc_dir}.tar.zst'], check=True)
 
     # mozc-fcitx の最終コミット日を取得
     date = get_committed_date('https://github.com/fcitx/mozc/commits/fcitx/')
@@ -59,17 +59,15 @@ def main():
         shutil.rmtree('mozc-fcitx')
 
     # mozc-fcitx を展開して、mozc-fcitx/src/unix を mozc に移動
-    subprocess.run(
-        ['unzip', '-q', f'mozc-fcitx-{date}.zip',
-            'mozc-fcitx/src/unix/*'], check=True)
-    shutil.rmtree(mozcdir + '/src/unix')
-    os.rename('mozc-fcitx/src/unix', mozcdir + '/src/unix')
+    shutil.unpack_archive(f'mozc-fcitx-{date}.zip')
+    shutil.rmtree(f'{mozc_dir}/src/unix')
+    os.rename('mozc-fcitx/src/unix', f'{mozc_dir}/src/unix')
     shutil.rmtree('mozc-fcitx')
 
     # mozc のアーカイブを作成
     subprocess.run(
-        ['tar', '--zstd', '-cf', f'{mozcdir}.tar.zst', mozcdir], check=True)
-    shutil.rmtree(mozcdir)
+        ['tar', '--zstd', '-cf', f'{mozc_dir}.tar.zst', mozc_dir], check=True)
+    shutil.rmtree(mozc_dir)
 
     # PKGBUILD を更新
     update_pkgbuild('fcitx5-mozc-ut.PKGBUILD')
@@ -93,7 +91,7 @@ def update_pkgbuild(pkgbuild):
     with open(pkgbuild, 'r') as file:
         lines = file.read()
 
-    lines = re.sub('_mozcver=.*\n', f'_mozcver={mozcver}\n', lines)
+    lines = re.sub('_mozcver=.*\n', f'_mozcver={mozc_ver}\n', lines)
 
     with open(pkgbuild, 'w') as file:
         file.write(lines)
