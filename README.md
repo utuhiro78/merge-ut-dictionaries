@@ -87,4 +87,4 @@ Mozc UT dictionaries contain the following dictionaries:
 
 * [mozcdic-ut-sudachidict](https://github.com/utuhiro78/mozcdic-ut-sudachidict)
 
-[HOME](https://ss1.xrea.com/linuxplayers.g1.xrea.com/)
+[HOME](https://ss1.xrea.com/linuxplayers.g1.xrea.com/mozc-ut.html)
