@@ -22,7 +22,7 @@ fi
 
 if [[ $alt_cannadic = "true" ]] && [[ $generate_latest = "true" ]]; then
     cd ../alt-cannadic/
-    sh make.sh
+    bash make.sh
     cd -
 fi
 
@@ -32,7 +32,7 @@ fi
 
 if [[ $edict2 = "true" ]] && [[ $generate_latest = "true" ]]; then
     cd ../edict2/
-    sh make.sh
+    bash make.sh
     cd -
 fi
 
@@ -42,7 +42,7 @@ fi
 
 if [[ $jawiki = "true" ]] && [[ $generate_latest = "true" ]]; then
     cd ../jawiki/
-    sh make.sh
+    bash make.sh
     cd -
 fi
 
@@ -52,7 +52,7 @@ fi
 
 if [[ $neologd = "true" ]] && [[ $generate_latest = "true" ]]; then
     cd ../neologd/
-    sh make.sh
+    bash make.sh
     cd -
 fi
 
@@ -66,7 +66,7 @@ fi
 
 if [[ $place_names = "true" ]] && [[ $generate_latest = "true" ]]; then
     cd ../place-names/
-    sh make.sh
+    bash make.sh
     cd -
 fi
 
@@ -76,7 +76,7 @@ fi
 
 if [[ $skk_jisyo = "true" ]] && [[ $generate_latest = "true" ]]; then
     cd ../skk-jisyo/
-    sh make.sh
+    bash make.sh
     cd -
 fi
 
@@ -86,7 +86,7 @@ fi
 
 if [[ $sudachidict = "true" ]] && [[ $generate_latest = "true" ]]; then
     cd ../sudachidict/
-    sh make.sh
+    bash make.sh
     cd -
 fi
 

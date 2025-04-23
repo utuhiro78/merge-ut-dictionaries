@@ -23,7 +23,7 @@ jobs:
           cd src/merge
           # enable all dicts
           sed -i -r '/^#generate_latest=/! s/^#([^=]*="true")$/\1/' make.sh
-          sh make.sh
+          bash make.sh
         shell: bash
 
       - name: Upload mozcdic-ut.txt artifact
