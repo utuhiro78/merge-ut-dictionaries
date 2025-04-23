@@ -12,6 +12,7 @@ place_names="true"
 #skk_jisyo="true"
 sudachidict="true"
 
+#generate_user_dictionaries="true"
 #generate_latest="true"
 
 rm -rf mozcdic-ut*
@@ -99,3 +100,7 @@ cat mozcdic-ut-*.txt > mozcdic-ut.txt
 
 # IDを更新、重複エントリを削除、コストを調整
 python merge_dictionaries.py mozcdic-ut.txt
+
+if [[ $generate_user_dictionaries = "true" ]]; then
+    python convert_to_user_dictionaries.py mozcdic-ut.txt mozcdic-ut.user
+fi

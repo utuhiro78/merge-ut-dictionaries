@@ -22,7 +22,9 @@ jobs:
         run: |
           cd src/merge
           # enable all dicts
-          sed -i -r '/^#generate_latest=/! s/^#([^=]*="true")$/\1/' make.sh
+          sed -i -r '/^#generate_latest=/! s/^#([a-zA-Z0-9_]+="true")$/\1/' make.sh
+          echo "Configures: "
+          sed -n -r '/^#?[a-zA-Z0-9_]+=[^ ]*$/p' make.sh
           bash make.sh
         shell: bash
 
@@ -31,3 +33,11 @@ jobs:
         with:
           name: mozcdic-ut
           path: src/merge/mozcdic-ut.txt
+          if-no-files-found: error
+
+      - name: Upload mozcdic-ut.txt artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mozcdic-ut-user
+          path: src/merge/mozcdic-ut.user.*.txt
+          if-no-files-found: error
