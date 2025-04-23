@@ -16,7 +16,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y nkf wget bzip2 python3 perl coreutils
+          sudo apt-get install -y wget bzip2 python3 coreutils
 
       - name: Build the dictionary
         run: |
@@ -28,14 +28,14 @@ jobs:
           bash make.sh
         shell: bash
 
-      - name: Upload mozcdic-ut.txt artifact
+      - name: Upload mozcdic-ut.txt to artifact
         uses: actions/upload-artifact@v4
         with:
           name: mozcdic-ut
           path: src/merge/mozcdic-ut.txt
           if-no-files-found: error
 
-      - name: Upload mozcdic-ut.txt artifact
+      - name: Upload user dictionary files to artifact
         uses: actions/upload-artifact@v4
         with:
           name: mozcdic-ut-user
