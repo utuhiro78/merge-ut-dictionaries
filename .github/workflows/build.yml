@@ -1,0 +1,33 @@
+name: Build Mozc UT Dictionary
+
+on:
+  push:
+    branches: ["main"] # Or your default branch
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout workflow repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y nkf wget bzip2 python3 perl coreutils
+
+      - name: Build the dictionary
+        run: |
+          cd src/merge
+          # enable all dicts
+          sed -i -r '/^#generate_latest=/! s/^#([^=]*="true")$/\1/' make.sh
+          sh make.sh
+        shell: bash
+
+      - name: Upload mozcdic-ut.txt artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mozcdic-ut
+          path: src/merge/mozcdic-ut.txt
