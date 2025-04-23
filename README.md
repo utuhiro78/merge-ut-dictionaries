@@ -55,7 +55,7 @@ sudachidict="true"
 
 ```
 cd src/merge/
-sh make.sh
+bash make.sh
 cat mozcdic-ut.txt >> ../../../mozc-master/src/data/dictionary_oss/dictionary00.txt
 ```
 
@@ -66,6 +66,12 @@ Build Mozc as usual.
 Uncomment ```#generate_latest="true"``` in src/merge/make.sh.
 
 It downloads the latest "jawiki-latest-pages-articles-multistream.xml.bz2" (4.1 GB).
+
+## Option: Generate user dictionary files
+
+Uncomment ```#generate_user_dictionaries="true"``` in src/merge/make.sh.
+
+This tool converts the generated dictionary into several files that you can import as a user dictionary directly, without rebuilding mozc. However, adding the dictionary at compile time generally yields better results, so prefer that approach if possible.
 
 ## Dictionaries
 
