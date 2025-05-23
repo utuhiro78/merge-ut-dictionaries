@@ -4,14 +4,14 @@
 # Author: UTUMI Hirosi (utuhiro78 at yahoo dot co dot jp)
 # License: Apache License, Version 2.0
 
-import gzip
 import urllib.request
 from unicodedata import normalize
 
 urllib.request.urlretrieve(
-    'https://skk-dev.github.io/dict/SKK-JISYO.L.gz', 'SKK-JISYO.L.gz')
+    'https://github.com/skk-dev/dict/raw/refs/heads/master/SKK-JISYO.L',
+    'SKK-JISYO.L')
 
-with gzip.open('SKK-JISYO.L.gz', 'rt', encoding='EUC-JP') as file:
+with open('SKK-JISYO.L', 'r', encoding='EUC-JP') as file:
     lines = file.read().splitlines()
 
 l2 = []
