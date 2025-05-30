@@ -81,9 +81,13 @@ It downloads the latest "jawiki-latest-pages-articles-multistream.xml.bz2" (over
 
   merge-ut-dictionaries use it to generate the costs for words.
 
-- [dictionary*.txt and id.def](https://github.com/google/mozc/tree/master/src/data/dictionary_oss) from Mozc: [BSD-3-Clause](https://github.com/google/mozc)
+- [dictionary*.txt](https://github.com/google/mozc/tree/master/src/data/dictionary_oss) in Mozc: [BSD-3-Clause](https://github.com/google/mozc)
 
-  merge-ut-dictionaries use them to remove duplicate words and update ID.
+  merge-ut-dictionaries use them to remove duplicate words.
+
+- [id.def](https://github.com/google/mozc/tree/master/src/data/dictionary_oss) in Mozc: [BSD-3-Clause](https://github.com/google/mozc)
+
+  merge-ut-dictionaries use it to update ID.
 
 - Source code: Apache License, Version 2.0
 
