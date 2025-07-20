@@ -14,6 +14,7 @@ from unicodedata import normalize
 
 
 def main():
+    # Wikipedia のダンプを取得
     subprocess.run(
         ['wget', '-N', 'https://dumps.wikimedia.org/jawiki/latest/' +
             'jawiki-latest-pages-articles-multistream.xml.bz2'])
@@ -21,33 +22,33 @@ def main():
     article_fragment = ''
     cache_size = 200 * 1024 * 1024
     core_num = cpu_count()
-    dict_ut = []
+    jawiki_dict = []
 
+    # Wikipedia のダンプを読み込む
     with bz2.open(
         'jawiki-latest-pages-articles-multistream.xml.bz2', 'rt',
             encoding='utf-8') as reader:
         while True:
             articles = reader.read(cache_size)
 
-            # 最後まで読み切ったら終了
+            # 最後まで読んだら終了
             if articles == '':
                 break
 
             articles = articles.split('  </page>')
             articles[0] = article_fragment + articles[0]
 
-            # 記事の断片を別名で保存
+            # 項目の断片を別名で保存
             article_fragment = articles[-1]
 
-            # 記事の断片をカット
             articles = articles[0:-1]
 
             with Pool(processes=core_num) as p:
-                dict_ut += p.map(convert_jawiki, articles)
+                jawiki_dict += p.map(convert_jawiki, articles)
 
     l2 = []
 
-    for entry in dict_ut:
+    for entry in jawiki_dict:
         if entry is None:
             continue
 
@@ -55,12 +56,12 @@ def main():
         l2.append('\t'.join(entry) + '\n')
 
     # 重複する行を削除
-    dict_ut = sorted(list(set(l2)))
+    jawiki_dict = sorted(list(set(l2)))
 
     dict_name = 'mozcdic-ut-jawiki.txt'
 
     with open(dict_name, 'w', encoding='utf-8') as file:
-        file.writelines(dict_ut)
+        file.writelines(jawiki_dict)
 
 
 def convert_jawiki(article):
@@ -117,8 +118,8 @@ def convert_jawiki(article):
         yomi = jaconv.kata2hira(hyouki2)
         yomi = yomi.translate(str.maketrans('ゐゑ', 'いえ'))
 
-        dict_ut = [yomi, hyouki]
-        return (dict_ut)
+        jawiki_dict = [yomi, hyouki]
+        return (jawiki_dict)
 
     # テンプレート末尾と記事本文の間に改行を入れる
     lines = article.replace("}}'''", "}}\n'''")
@@ -153,19 +154,19 @@ def convert_jawiki(article):
         # HTML特殊文字を変換
         line = html.unescape(line)
 
-        # '{{.+?}}' を削除。'.+' に '?' を付けると最短一致
+        # '{{' から '}}' までの最短一致を削除
         #     '''皆藤 愛子'''{{efn2|一部のプロフィールが「皆'''籐'''
         #     （たけかんむり）」となっている}}（かいとう あいこ、
         if '{{' in line:
             line = re.sub(r'{{.+?}}', '', line)
 
-        # '<ref.+?<\/ref>' を削除
+        # '<ref' から '/ref>' までの最短一致を削除
         #     '''井上 陽水'''（いのうえ ようすい<ref name="FMPJ">
         #     {{Cite web|和書|title=アーティスト・アーカイヴ 井上陽水|
         #     url=https://www.kiokunokiroku.jp/}}</ref>、
         line = re.sub(r'<ref.+?<\/ref>', '', line)
 
-        # '<ref\ name.+?\/>' を削除
+        # '<ref name' から '/>' までの最短一致を削除
         #     <ref name="雑誌1" />
         line = re.sub(r'<ref\ name.+?\/>', '', line)
 
@@ -216,8 +217,8 @@ def convert_jawiki(article):
         if yomi != ''.join(re.findall('[ぁ-ゔー]', yomi)):
             continue
 
-        dict_ut = [yomi, hyouki]
-        return (dict_ut)
+        jawiki_dict = [yomi, hyouki]
+        return (jawiki_dict)
 
 
 if __name__ == '__main__':
