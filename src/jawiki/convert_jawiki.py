@@ -104,15 +104,11 @@ def get_hyouki(article):
             len(hyouki) > 25:
         return
 
-    hyouki = [hyouki, article]
-    jawiki_dict = get_yomi(hyouki)
+    jawiki_dict = get_yomi(hyouki, article)
     return (jawiki_dict)
 
 
-def get_yomi(hyouki):
-    article = hyouki[1]
-    hyouki = hyouki[0]
-
+def get_yomi(hyouki, article):
     # 表記から記号を削除して hyouki2 を作る
     hyouki2 = remove_kigou(hyouki)
 
@@ -120,14 +116,14 @@ def get_yomi(hyouki):
     if len(hyouki2) < 2:
         return
 
-    # hyouki2 がひらがなとカタカナだけの場合は、読みを hyouki2 から作る
+    # hyouki2 がひらがなカタカナのみの場合は、読みを hyouki2 から作る
     #     さいたまスーパーアリーナ
     if hyouki2 == ''.join(re.findall('[ぁ-ゔァ-ヴー]', hyouki2)):
         yomi = convert_to_hira(hyouki2)
         jawiki_dict = [yomi, hyouki]
         return (jawiki_dict)
 
-    # 最初の見出し以降を削除
+    # 記事の最初の見出し以降を削除
     lines = article.split('\n==')[0]
 
     # テンプレート末尾と記事本文の間に改行を入れる
@@ -194,15 +190,13 @@ def get_yomi(hyouki):
 
         # 読みが2文字以下の場合はスキップ
         # 読みが「ー」で始まる場合はスキップ
-        # 読みが全てカタカナの場合はスキップ
+        # 読みがすべてカタカナの場合はスキップ
         #     ミュージシャン一覧(グループ)
+        # 読みがひらがなカタカナ以外を含む場合はスキップ
         if len(yomi) < 3 or \
                 yomi[0] == 'ー' or \
-                yomi == ''.join(re.findall('[ァ-ヴー]', yomi)):
-            continue
-
-        # 読みがひらがなとカタカナだけでない場合はスキップ
-        if yomi != ''.join(re.findall('[ぁ-ゔァ-ヴー]', yomi)):
+                yomi == ''.join(re.findall('[ァ-ヴー]', yomi)) or \
+                yomi != ''.join(re.findall('[ぁ-ゔァ-ヴー]', yomi)):
             continue
 
         # 読みのカタカナをひらがなに変換
