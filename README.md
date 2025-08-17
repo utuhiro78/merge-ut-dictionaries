@@ -2,7 +2,7 @@
 
 [Mozc UT dictionaries](https://github.com/utuhiro78?tab=repositories&q=mozcdic-ut&type=&language=&sort=) are additional dictionaries for [Mozc](https://github.com/google/mozc).
 
-This tool merges Mozc UT dictionaries into one and modify it for the latest Mozc.
+[Merge-ut-dictionaries](https://github.com/utuhiro78/merge-ut-dictionaries) merges the UT dictionaries into one and modify it for the latest Mozc.
 
 ## Press the Star button on GitHub
 
