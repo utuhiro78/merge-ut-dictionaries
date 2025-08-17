@@ -1,16 +1,18 @@
 ## Overview
 
-Merge multiple [Mozc UT dictionaries](https://github.com/utuhiro78?tab=repositories&q=mozcdic-ut&type=&language=&sort=) into one and modify the costs.
+[Mozc UT dictionaries](https://github.com/utuhiro78?tab=repositories&q=mozcdic-ut&type=&language=&sort=) are additional dictionaries for [Mozc](https://github.com/google/mozc).
+
+This tool merges Mozc UT dictionaries into one and modify it for the latest Mozc.
 
 ## Press the Star button on GitHub
 
 They need more Stars.
 
-mozc: [1930 Stars](https://github.com/google/mozc)
+Mozc: [1930 Stars](https://github.com/google/mozc)
 
-fcitx5-mozc: [82 Stars](https://github.com/fcitx/mozc)
+Fcitx5-mozc: [82 Stars](https://github.com/fcitx/mozc)
 
-merge-ut-dictionaries: [40 Stars](https://github.com/utuhiro78/merge-ut-dictionaries)
+Merge-ut-dictionaries: [40 Stars](https://github.com/utuhiro78/merge-ut-dictionaries)
 
 > Starring a repository also shows appreciation to the repository maintainer for their work. - [GitHub Docs](https://docs.github.com/en/get-started/exploring-projects-on-github/saving-repositories-with-stars)
 
