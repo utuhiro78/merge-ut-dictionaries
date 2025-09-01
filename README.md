@@ -93,4 +93,4 @@ It downloads the latest "jawiki-latest-pages-articles-multistream.xml.bz2" (over
 
 - Source code: Apache License, Version 2.0
 
-[HOME](https://ss1.xrea.com/linuxplayers.g1.xrea.com/mozc-ut.html)
+[HOME](http://linuxplayers.g1.xrea.com/mozc-ut.html)
