@@ -195,7 +195,7 @@ def get_yomi(hyouki, article):
         # 読みがひらがなカタカナ以外を含む場合はスキップ
         if len(yomi) < 3 or \
                 yomi[0] == 'ー' or \
-                yomi == ''.join(re.findall('[ァ-ヴー]', yomi)) or \
+                yomi == collect_katakana(yomi) or \
                 yomi != collect_hiragana_katakana(yomi):
             continue
 
@@ -207,20 +207,23 @@ def get_yomi(hyouki, article):
 
 
 def remove_kigou(entry):
-    table = str.maketrans('', '', ',.!?-+*=:・、。×★☆')
-    entry = entry.translate(table)
+    entry = entry.translate(str.maketrans('', '', ',.!?-+*=:・、。×★☆'))
     return (entry)
 
 
 def convert_to_hiragana(entry):
     entry = jaconv.kata2hira(entry)
-    table = str.maketrans('ゐゑ', 'いえ', '')
-    entry = entry.translate(table)
+    entry = entry.translate(str.maketrans('ゐゑ', 'いえ', ''))
     return (entry)
 
 
 def collect_hiragana_katakana(entry):
     entry = ''.join(re.findall('[ぁ-ゔァ-ヴー]', entry))
+    return (entry)
+
+
+def collect_katakana(entry):
+    entry = ''.join(re.findall('[ァ-ヴー]', entry))
     return (entry)
 
 
