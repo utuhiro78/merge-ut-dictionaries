@@ -16,8 +16,10 @@ def main():
             'sudachidict-raw/'
 
     with urllib.request.urlopen(url) as response:
-        date = response.read().decode()
-        date = date.split('/core_lex.zip')[0].split("'")[-1]
+        html = response.read().decode()
+
+    # <a href='20250825/small_lex.zip'>
+    date = html.split('/small_lex.zip')[0].split('\'')[-1]
 
     lines = get_sudachidict(f'small_lex_{date}.zip', url, date)
     lines += get_sudachidict(f'core_lex_{date}.zip', url, date)
