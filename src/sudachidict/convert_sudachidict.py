@@ -78,22 +78,25 @@ def generate_dict(lines):
         # 「正規化表記」を表記にする
         hyouki = entry[12]
 
-        # 読みが2文字以下の場合はスキップ
-        # 表記が1文字以下の場合はスキップ
-        # 名詞以外の場合はスキップ
-        # 地名の場合はスキップ。地名は郵便番号データから作成する
+        # 2文字以下の読みをスキップ
+        # 1文字以下の表記をスキップ
+        # 名詞以外をスキップ
+        # 地名をスキップ
+        #     地名は郵便番号データから作成する。
+        # 「人名,名」をスキップ
+        #     「科学（すすむ）」のような当て読みがあるので。
         if len(yomi) < 3 or \
                 len(hyouki) < 2 or \
                 entry[5] != '名詞' or \
-                entry[7] == '地名':
+                entry[7] == '地名' or \
+                (entry[7] == '人名' and entry[8] == '名'):
             continue
 
         # 読みのカタカナをひらがなに変換
-        yomi = jaconv.kata2hira(yomi)
-        yomi = yomi.replace('ゐ', 'い').replace('ゑ', 'え')
+        yomi = convert_to_hiragana(yomi)
 
         # 読みがひらがな以外を含む場合はスキップ
-        if yomi != ''.join(re.findall('[ぁ-ゔー]', yomi)):
+        if yomi != collect_hiragana(yomi):
             continue
 
         cost = int(entry[3])
@@ -132,6 +135,17 @@ def remove_duplicates(lines):
         l2.append('\t'.join(entry1) + '\n')
 
     return (l2)
+
+
+def convert_to_hiragana(entry):
+    entry = jaconv.kata2hira(entry)
+    entry = entry.translate(str.maketrans('ゐゑ', 'いえ', ''))
+    return (entry)
+
+
+def collect_hiragana(entry):
+    entry = ''.join(re.findall('[ぁ-ゔー]', entry))
+    return (entry)
 
 
 if __name__ == '__main__':
