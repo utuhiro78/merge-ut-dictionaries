@@ -12,15 +12,6 @@ from zipfile import ZipFile
 
 
 def main():
-    lines = get_files()
-    lines = generate_dict(lines)
-    lines = remove_duplicates(lines)
-
-    with open('mozcdic-ut-sudachidict.txt', 'w', encoding='utf-8') as file:
-        file.writelines(lines)
-
-
-def get_files():
     url = 'http://sudachi.s3-website-ap-northeast-1.amazonaws.com/' + \
             'sudachidict-raw/'
 
@@ -28,31 +19,29 @@ def get_files():
         date = response.read().decode()
         date = date.split('/core_lex.zip')[0].split("'")[-1]
 
-    if os.path.exists(f'small_lex_{date}.zip') is False:
-        urllib.request.urlretrieve(
-                f'{url}{date}/small_lex.zip', f'small_lex_{date}.zip')
+    lines = get_sudachidict(f'small_lex_{date}.zip', url, date)
+    lines += get_sudachidict(f'core_lex_{date}.zip', url, date)
+    lines += get_sudachidict(f'notcore_lex_{date}.zip', url, date)
+    lines = lines.splitlines()
 
-    if os.path.exists(f'core_lex_{date}.zip') is False:
-        urllib.request.urlretrieve(
-                f'{url}{date}/core_lex.zip', f'core_lex_{date}.zip')
+    lines = generate_dict(lines)
+    lines = remove_duplicates(lines)
 
-    if os.path.exists(f'notcore_lex_{date}.zip') is False:
-        urllib.request.urlretrieve(
-                f'{url}{date}/notcore_lex.zip', f'notcore_lex_{date}.zip')
+    with open('mozcdic-ut-sudachidict.txt', 'w', encoding='utf-8') as file:
+        file.writelines(lines)
 
-    with ZipFile(f'small_lex_{date}.zip') as zip_ref:
-        with zip_ref.open('small_lex.csv') as file:
+
+def get_sudachidict(zip_file, url, date):
+    file_orig = '_'.join(zip_file.split('_')[:-1])
+
+    if os.path.exists(zip_file) is False:
+        urllib.request.urlretrieve(
+                f'{url}{date}/{file_orig}.zip', zip_file)
+
+    with ZipFile(zip_file) as zip_ref:
+        with zip_ref.open(f'{file_orig}.csv') as file:
             lines = file.read().decode()
 
-    with ZipFile(f'core_lex_{date}.zip') as zip_ref:
-        with zip_ref.open('core_lex.csv') as file:
-            lines += file.read().decode()
-
-    with ZipFile(f'notcore_lex_{date}.zip') as zip_ref:
-        with zip_ref.open('notcore_lex.csv') as file:
-            lines += file.read().decode()
-
-    lines = lines.splitlines()
     return (lines)
 
 
