@@ -181,9 +181,9 @@ def get_yomi(hyouki, article):
 
         yomi = line[1]
 
-        # 読みを「)」「、」「/」「{」「[」で切る
+        # 読みを ')、/{[,' で切る
         yomi = yomi.split(')')[0].split('、')[0].split('/')[0].\
-            split('{')[0].split('[')[0]
+            split('{')[0].split('[')[0].split(',')[0]
 
         # 読みから記号を削除
         yomi = remove_kigou(yomi)
