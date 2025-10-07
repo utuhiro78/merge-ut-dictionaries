@@ -181,6 +181,13 @@ def get_yomi(hyouki, article):
 
         yomi = line[1]
 
+        # 読みが2文字以下の場合はスキップ
+        # 読みが「-」で始まる場合はスキップ
+        #     スロバキア共和国(-きょうわこく
+        if len(yomi) < 3 or \
+                yomi[0] == '-':
+            continue
+
         # 読みを ')、/{[,' で切る
         yomi = yomi.split(')')[0].split('、')[0].split('/')[0].\
             split('{')[0].split('[')[0].split(',')[0]
