@@ -76,9 +76,6 @@ def main():
         f'{fcitx_mozc_dir}/src/MODULE.bazel',
         f'{mozc_dir}/src/MODULE.bazel')
     os.replace(
-        f'{fcitx_mozc_dir}/src/build_mozc.py',
-        f'{mozc_dir}/src/build_mozc.py')
-    os.replace(
         f'{fcitx_mozc_dir}/src/session/BUILD.bazel',
         f'{mozc_dir}/src/session/BUILD.bazel')
 
