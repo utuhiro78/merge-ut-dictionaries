@@ -5,11 +5,16 @@
 # License: Apache License, Version 2.0
 
 import bz2
+import csv
 import html
-import os
-import subprocess
+import io
+import json
+import re
 import sys
 import urllib.request
+import xml.etree.ElementTree as ET
+from datetime import datetime
+from pathlib import Path
 from unicodedata import normalize
 from zipfile import ZipFile
 
@@ -20,221 +25,269 @@ def main():
         sys.exit()
 
     file_ut = sys.argv[1]
-    ut_dic = get_ut_dic(file_ut)
+    ut_entry = get_ut_entry(file_ut)
+    mozc_entry, id_mozc = get_mozc_entry()
 
-    mozc_dic = get_mozc_dic()
-    id_mozc = mozc_dic[-1]
-    mozc_dic = ut_dic + mozc_dic[:-1]
-
-    ut_dic = remove_duplicates(mozc_dic)
-    ut_dic += count_word_hits()
-
-    ut_dic.append(id_mozc)
-    ut_dic = apply_word_hits(ut_dic)
+    ut_entry = remove_duplicate(mozc_entry, ut_entry)
+    jawiki_hit_dict = generate_jawiki_hit_dict()
+    ut_entry = apply_jawiki_hit(ut_entry, jawiki_hit_dict)
 
     with open(file_ut, 'w', encoding='utf-8') as file:
-        file.writelines(ut_dic)
+        for entry in ut_entry:
+            entry[1] = entry[2] = id_mozc
+            file.write(f'{'\t'.join(entry)}\n')
 
 
-def get_ut_dic(file_ut):
+def get_ut_entry(file_ut):
+    ut_entry = []
+
     with open(file_ut, 'r', encoding='utf-8') as file:
-        ut_dic = file.read().splitlines()
+        reader = csv.reader(file, delimiter='\t')
 
-    # UT辞書のIDを 'id' にする
-    for i in range(len(ut_dic)):
-        entry = ut_dic[i].split('\t')
-        entry[1] = entry[2] = 'id'
-        ut_dic[i] = '\t'.join(entry)
+        for row in reader:
+            yomi, id1, id2, cost, hyouki = row
 
-    return (ut_dic)
+            # 不要な表記をスキップ
+            hyouki = remove_short_or_long_hyouki(hyouki)
+            if not hyouki:
+                continue
+
+            # 表記を正規化
+            hyouki = normalize_entry(hyouki)
+
+            # ID はソートしたとき Mozc エントリより後になるものにする
+            id1 = id2 = 'id_ut'
+
+            ut_entry.append([yomi, id1, id2, cost, hyouki])
+
+    return ut_entry
 
 
-def get_mozc_dic():
+def get_mozc_entry():
     # Mozc の最終コミット日を取得
-    url = 'https://github.com/google/mozc/commits/master/'
+    url = 'https://api.github.com/repos/google/mozc/commits/master'
 
     with urllib.request.urlopen(url) as response:
-        date = response.read().decode()
-        date = date.split('"committedDate":"')[1]
-        date = date[:10]
-        date = date.replace('-', '')
+        data = json.loads(response.read().decode())
+        date_str = data['commit']['committer']['date']
 
-    # Mozc のアーカイブが古い場合は取得
+    date_str = datetime.fromisoformat(date_str)
+    date_str = date_str.strftime('%Y%m%d')
+
+    # Mozc のアーカイブを取得
     url = 'https://github.com/google/mozc/archive/refs/heads/master.zip'
 
-    if os.path.exists(f'mozc-{date}.zip') is False:
+    if not Path(f'mozc-{date_str}.zip').exists():
         urllib.request.urlretrieve(
-                url, f'mozc-{date}.zip')
+                url, f'mozc-{date_str}.zip')
 
-    with ZipFile(f'mozc-{date}.zip') as zip_ref:
-        # 一般名詞のIDを取得
+    with ZipFile(f'mozc-{date_str}.zip') as zip_ref:
+        # 一般名詞の ID を取得
         with zip_ref.open(
                 'mozc-master/src/data/dictionary_oss/id.def') as file:
-            id_mozc = file.read().decode()
-            id_mozc = id_mozc.split(' 名詞,一般,')[0].split('\n')[-1]
+            for line in file:
+                line = line.decode()
 
-        # Mozc 公式辞書を取得
-        mozc_dic = []
+                if ' 名詞,一般,' in line:
+                    id_mozc = line.split(' 名詞,一般,')[0]
+                    break
 
-        for i in range(10):
-            with zip_ref.open(
-                    'mozc-master/src/data/dictionary_oss/' +
-                    f'dictionary0{i}.txt') as file:
-                mozc_dic += file.read().decode().splitlines()
+        # Mozc 辞書のファイルリストを取得
+        all_files = zip_ref.namelist()
+        dict_path = 'mozc-master/src/data/dictionary_oss/dictionary0'
+        dict_files = [f for f in all_files if f.startswith(dict_path)]
 
-    mozc_dic.append(id_mozc)
-    return (mozc_dic)
+        # Mozc 辞書のエントリを取得
+        mozc_entry = []
 
+        for dict_file in dict_files:
+            with zip_ref.open(dict_file) as file:
+                # バイナリストリームをテキストストリームに変換
+                file_text = io.TextIOWrapper(file, encoding='utf-8')
+                reader = csv.reader(file_text, delimiter='\t')
+                mozc_entry.extend(list(reader))
 
-def remove_duplicates(mozc_dic):
-    for i in range(len(mozc_dic)):
-        # 並び順を [読み, 表記, ID, ID, コスト] にする
-        entry = mozc_dic[i].split('\t')
-        entry.insert(1, entry[4])
-        mozc_dic[i] = entry[:5]
+        mozc_entry_mod = []
 
-    mozc_dic.sort()
-    ut_dic = []
+        for entry in mozc_entry:
+            yomi, id1, id2, cost, hyouki = entry[:5]
 
-    for i in range(len(mozc_dic)):
-        # あいおい\t相生\t1851\t433\t7582
-        # あいおい\t相生\tid\tid\t8200
-        # あいおい\t相生\tid\tid\t8400
+            # 不要な表記をスキップ
+            hyouki = remove_short_or_long_hyouki(hyouki)
+            if not hyouki:
+                continue
 
-        # Mozc 公式辞書をスキップ
-        # 公式辞書と [読み, 表記] が重複するUTエントリをスキップ
-        # UT辞書内で [読み, 表記] が重複するエントリをスキップ
-        if mozc_dic[i][2] != 'id' or \
-                mozc_dic[i][:2] == mozc_dic[i - 1][:2]:
-            continue
+            # 表記を正規化
+            hyouki = normalize_entry(hyouki)
 
-        ut_dic.append(mozc_dic[i])
+            mozc_entry_mod.append([yomi, id1, id2, cost, hyouki])
 
-    mozc_dic = []
-
-    for i in range(len(ut_dic)):
-        # Mozc 辞書の並びに戻す
-        ut_dic[i].append(ut_dic[i][1])
-        ut_dic[i].pop(1)
-
-    return (ut_dic)
+    return mozc_entry_mod, id_mozc
 
 
-def count_word_hits():
-    subprocess.run(
-        ['wget', '-N', 'https://dumps.wikimedia.org/jawiki/latest/' +
-            'jawiki-latest-pages-articles-multistream-index.txt.bz2'],
-        check=True)
+def remove_duplicate(mozc_entry, ut_entry):
+    all_entry = mozc_entry + ut_entry
+    mozc_entry = []
+    ut_entry = []
 
-    with bz2.open(
-            'jawiki-latest-pages-articles-multistream-index.txt.bz2',
-            'rt', encoding='utf-8') as file:
-        lines = file.read().splitlines()
+    # yomi -> hyouki -> id1 の優先順でソート
+    all_entry.sort(key=lambda x: (x[0], x[4], x[1]))
+    prev_key = ()
 
-    l2 = []
+    for entry in all_entry:
+        yomi, id1, id2, cost, hyouki = entry
+        current_key = (yomi, hyouki)
 
-    for line in lines:
-        # 1004375:312:数学
-        line = ':'.join(line.split(':')[2:])
+        # 重複する UT エントリを削除
+        if id1 == 'id_ut' and prev_key != current_key:
+            ut_entry.append(entry)
 
-        # 表記のHTML特殊文字を変換
-        line = html.unescape(line)
+        prev_key = current_key
 
-        # 「BEST (三浦大知のアルバム)」を
-        # 「三浦大知のアルバム)」に変更。
-        # 「三浦大知」を前方一致検索できるようにする
-        line = line.split(' (')[-1]
+    return ut_entry
 
-        # 表記が1文字の場合はスキップ
-        # 表記が26文字以上の場合はスキップ。候補ウィンドウが大きくなりすぎる
-        # 内部用のページをスキップ
-        if len(line) < 2 or \
-                len(line) > 25 or \
-                line.startswith('ファイル:') or \
-                line.startswith('Wikipedia:') or \
-                line.startswith('Template:') or \
-                line.startswith('Portal:') or \
-                line.startswith('Help:') or \
-                line.startswith('Category:') or \
-                line.startswith('プロジェクト:'):
-            continue
 
-        l2.append(line)
+def generate_jawiki_hit_dict():
+    # jawiki-*-multistream-index.txt.bz2 を取得
+    url = 'https://dumps.wikimedia.org/jawiki/latest/' + \
+        'jawiki-latest-pages-articles-multistream-index.txt.bz2-rss.xml'
 
-    lines = sorted(list(set(l2)))
-    l2 = []
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
+        Chrome/91.0.4472.124"}
 
-    lines_len = len(lines)
+    try:
+        req = urllib.request.Request(url, headers=headers)
+        with urllib.request.urlopen(req) as response:
+            root = ET.fromstring(response.read().decode())
+    except urllib.error.HTTPError as e:
+        print(f'Error: {e.code}')
 
-    for i in range(lines_len):
+    description_text = root.find('.//item/description').text
+    url = re.search(r'href="([^"]+)"', description_text).group(1)
+
+    jawiki_index_file = url.rsplit('/', 1)[1]
+
+    if not Path(jawiki_index_file).exists():
+        try:
+            req = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(req) as response, \
+                    open(jawiki_index_file, "wb") as out_file:
+                # 1MB ずつ書き込む
+                while True:
+                    chunk = response.read(1024 * 1024)
+                    if not chunk:
+                        break
+                    out_file.write(chunk)
+        except urllib.error.HTTPError as e:
+            print(f'Error: {e.code}')
+
+    jawiki_index = []
+
+    with bz2.open(jawiki_index_file, 'rt', encoding='utf-8') as file:
+        entry_to_skip = (
+            'ファイル:', 'Wikipedia:', 'Template:', 'Portal:',
+            'Help:', 'Category:', 'プロジェクト:', '曖昧さ回避')
+
+        for entry in file:
+            # 1004375:312:数学\n
+            entry = entry.rstrip()
+            entry = entry.split(':', 2)[2]
+
+            # HTML特殊文字を変換
+            entry = html.unescape(entry)
+
+            # 「BEST (三浦大知のアルバム)」を
+            # 「三浦大知のアルバム)」に変更。
+            # 「三浦大知」を前方一致検索できるようにする
+            entry = entry.split(' (')[-1]
+
+            # 不要な表記をスキップ
+            entry = remove_short_or_long_hyouki(entry)
+            if not entry or \
+                    entry.startswith(entry_to_skip):
+                continue
+
+            # 表記を正規化
+            entry = normalize_entry(entry)
+
+            jawiki_index.append(entry)
+
+    # 重複を削除してリストに戻してソート
+    jawiki_index = sorted(list(set(jawiki_index)))
+
+    jawiki_hit_dict = {}
+    i = 0
+    jawiki_index_len = len(jawiki_index)
+
+    while i < jawiki_index_len:
+        jawiki_entry = jawiki_index[i]
         c = 1
 
         # 前方一致するエントリがなくなるまでカウント
-        while i + c < lines_len and lines[i + c].startswith(lines[i]):
+        while i + c < jawiki_index_len and \
+                jawiki_index[i + c].startswith(jawiki_entry):
             c = c + 1
 
-        entry = ['jawiki_hits', '0', '0', str(c), lines[i]]
-        l2.append(entry)
+        jawiki_hit_dict[jawiki_entry] = c
+        i += 1
 
-    return (l2)
+    return jawiki_hit_dict
 
 
-def apply_word_hits(lines):
-    id_mozc = lines[-1]
-    lines = lines[:-1]
+def apply_jawiki_hit(ut_entry, jawiki_hit_dict):
+    ut_entry_mod = []
 
-    for i in range(len(lines)):
-        # 表記の「~」を「〜」に置き換える
-        lines[i][4] = lines[i][4].replace('~', '〜')
+    for entry in ut_entry:
+        yomi, id1, id2, cost, hyouki = entry
+        cost = int(cost)
+        jawiki_hit_count = jawiki_hit_dict.get(hyouki, 0)
 
-        # 表記を正規化
-        lines[i][4] = normalize('NFKC', lines[i][4])
+        # 最大ヒット数を抑制する
+        jawiki_hit_count = min(jawiki_hit_count, 30)
+        is_ascii = hyouki.isascii()
 
-        # 表記を先頭にする
-        lines[i].insert(0, lines[i][4])
-        lines[i] = lines[i][0:5]
-
-    lines.sort()
-    l2 = []
-
-    for line in lines:
-        line[4] = int(line[4])
-
-        if line[1] == 'jawiki_hits':
-            line_jawiki = line
-
-            # jawiki のヒット数を最大 30 にする
-            if line_jawiki[4] > 30:
-                line_jawiki[4] = 30
-
-            continue
-
-        # 英数字のみの表記で jawiki に存在しないものはスキップ
-        # 存在する場合はコストを 9000 台にする
-        if len(line[0]) == len(line[0].encode()):
-            if line[0] != line_jawiki[0]:
+        # 英数字のみの表記で、
+        # jawiki のヒット数が 0 の場合はスキップ
+        # jawiki のヒット数が 1 以上の場合はコストを 9000 台にする
+        if is_ascii:
+            if jawiki_hit_count == 0:
                 continue
             else:
-                line[4] = str(9000 + (line[4] // 20))
-        # 英数字以外を含む表記で jawiki に存在しないものはコストを 9000 台にする
-        elif line[0] != line_jawiki[0]:
-            line[4] = str(9000 + (line[4] // 20))
-        # jawiki のヒット数が 1 の表記はコストを 8000 台にする
-        elif line_jawiki[4] == 1:
-            line[4] = str(8000 + (line[4] // 20))
-        # jawiki のヒット数が 2 以上の表記はコストを 7000 台にする
+                cost = 9000 + (cost // 20)
+        # 英数字以外を含む表記で、
+        # jawiki のヒット数が 0 の場合はコストを 9000 台にする
+        # jawiki のヒット数が 1 の場合はコストを 8000 台にする
+        # jawiki のヒット数が 2 以上の場合はコストを 7000 台にする
+        elif jawiki_hit_count == 0:
+            cost = 9000 + (cost // 20)
+        elif jawiki_hit_count == 1:
+            cost = 8000 + (cost // 20)
         else:
-            line[4] = str(8000 - (line_jawiki[4] * 10))
+            cost = 8000 - (jawiki_hit_count * 10)
 
-        # Mozc の並びに戻す
-        line.append(line[0])
-        line = line[1:]
-        # IDを更新
-        line[1] = line[2] = id_mozc
-        l2.append('\t'.join(line) + '\n')
+        ut_entry_mod.append([yomi, id1, id2, str(cost), hyouki])
 
-    l2.sort()
-    return (l2)
+    ut_entry = ut_entry_mod
+    ut_entry_mod = []
+    ut_entry.sort()
+    return ut_entry
+
+
+def remove_short_or_long_hyouki(hyouki):
+    # 表記が1文字の場合はスキップ
+    # 表記が26文字以上の場合はスキップ。候補ウィンドウが大きくなりすぎる
+    len_hyouki = len(hyouki)
+    if len_hyouki < 2 or len_hyouki > 25:
+        hyouki = None
+
+    return hyouki
+
+
+def normalize_entry(entry):
+    entry = normalize('NFKC', entry)
+    entry = entry.replace('~', '〜')
+    return entry
 
 
 if __name__ == '__main__':
