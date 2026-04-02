@@ -9,24 +9,44 @@ import re
 import sys
 from unicodedata import normalize
 
-args = sys.argv[1:]
+RE_HIRAGANA_KATAKANA = re.compile(r'[ぁ-ゔァ-ヴー]')
+RE_HIRAGANA = re.compile(r'[ぁ-ゔー]')
 
-if not args:
-    print('No file specified.')
-    sys.exit()
+TRANS_NON_YOMI = str.maketrans('', '', ',.!?-+*=:・、。×★☆')
+TRANS_OLD_I_E = str.maketrans('ゐゑ', 'いえ', '')
 
-file_name = args[0]
 
-with open(file_name, 'r', encoding='utf-8') as file:
-    lines = file.read().splitlines()
+def main():
+    args = sys.argv[1:]
 
-l2 = []
+    if not args:
+        print('No file specified.')
+        sys.exit()
 
-for i in range(len(lines)):
-    entry = lines[i].split('\t')
-    yomi = entry[0]
-    hyouki = entry[4]
+    file_name = args[0]
 
+    with open(file_name, 'r', encoding='utf-8') as file:
+        lines = file.read().splitlines()
+
+    lines_mod = []
+
+    for entry in lines:
+        entry = entry.split('\t')
+        yomi = entry[0]
+        hyouki = entry[4]
+
+        hyouki = modify_hyouki(hyouki)
+        entry[0], entry[4] = remove_unnecessary_entry(yomi, hyouki)
+        if entry[0]:
+            lines_mod.append(f'{'\t'.join(entry)}\n')
+
+    lines = lines_mod
+
+    with open(file_name, 'w', encoding='utf-8') as dict_file:
+        dict_file.writelines(lines)
+
+
+def modify_hyouki(hyouki):
     # 表記の「~」を「〜」に置き換える
     hyouki = hyouki.replace('~', '〜')
 
@@ -34,7 +54,7 @@ for i in range(len(lines)):
     hyouki = normalize('NFKC', hyouki)
 
     # 表記の最初が空白の場合は取る
-    if hyouki[0] == ' ':
+    if hyouki.startswith(' '):
         hyouki = hyouki[1:]
 
     # 表記の全角カンマを半角に変換
@@ -42,16 +62,21 @@ for i in range(len(lines)):
 
     # 表記の最後が空白の場合は取る（全角カンマが「, 」に変換されている）
     # 表記の最後が「。」の場合は取る
-    if hyouki[-1] == ' ' or hyouki[-1] == '。':
+    if hyouki.endswith(' ') or hyouki.endswith('。'):
         hyouki = hyouki[:-1]
 
-    # 読みにならない文字「 !?」などを削除したhyouki_stripを作る
-    hyouki_strip = hyouki.translate(str.maketrans('', '', ' .!?-+*=:/・。×★☆'))
+    return hyouki
 
-    # hyouki_stripがひらがなとカタカナだけの場合は、読みをhyouki_stripから作る
-    if hyouki_strip == ''.join(re.findall('[ぁ-ゔァ-ヴー]', hyouki_strip)):
-        yomi = jaconv.kata2hira(hyouki_strip)
-        yomi = yomi.translate(str.maketrans('ゐゑ', 'いえ'))
+
+def remove_unnecessary_entry(yomi, hyouki):
+    # 読みにならない文字を削除して hyouki_strip を作る
+    hyouki_strip = hyouki.translate(TRANS_NON_YOMI)
+
+    # hyouki_strip がひらがなカタカナのみの場合は、
+    # 読みを hyouki_strip から作る
+    #     さいたまスーパーアリーナ
+    if hyouki_strip == collect_hiragana_katakana(hyouki_strip):
+        yomi = convert_to_hiragana(hyouki_strip)
 
     # 読みが2文字以下の場合はスキップ
     # hyouki_stripが1文字の場合はスキップ
@@ -69,26 +94,32 @@ for i in range(len(lines)):
             len(hyouki) > 25 or \
             len(yomi) / len(hyouki_strip) > 4 or \
             len(hyouki_strip.encode()) / len(yomi) > 3 or \
-            yomi != ''.join(re.findall('[ぁ-ゔー]', yomi)) or \
+            yomi != ''.join(RE_HIRAGANA.findall(yomi)) or \
             '\\u' in hyouki or \
             '/' in hyouki:
-        continue
+        return None, None
 
     # hyouki_stripに数字が3個以上ある場合はスキップ
     # ただし「100円ショップ」は残す
-    n = re.findall(r'\d+', hyouki)
+    nums = re.findall(r'\d+', hyouki)
+    if nums:
+        nums = int(''.join(nums))
+        if nums > 100:
+            return None, None
 
-    if n != []:
-        n = int(''.join(n))
+    return yomi, hyouki
 
-        if n > 100:
-            continue
 
-    entry[0] = yomi
-    entry[4] = hyouki
-    l2.append('\t'.join(entry) + '\n')
+def collect_hiragana_katakana(entry):
+    entry = ''.join(RE_HIRAGANA_KATAKANA.findall(entry))
+    return entry
 
-lines = l2
 
-with open(file_name, 'w', encoding='utf-8') as dict_file:
-    dict_file.writelines(lines)
+def convert_to_hiragana(entry):
+    entry = jaconv.kata2hira(entry)
+    entry = entry.translate(TRANS_OLD_I_E)
+    return entry
+
+
+if __name__ == '__main__':
+    main()

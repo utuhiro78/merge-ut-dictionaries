@@ -8,41 +8,65 @@ import os
 import re
 import sys
 
-args = sys.argv[1:]
 
-if not args:
-    print('No file specified.')
-    exit()
+def main():
+    args = sys.argv[1:]
 
-file_name = args[0]
+    if not args:
+        print('No file specified.')
+        sys.exit()
 
-# Mozc 形式の辞書を読み込む
-#     なかいまさひろ    1917    1917    6477    中居正広
-with open(file_name, 'r', encoding='utf-8') as file:
-    lines = file.read().splitlines()
+    file_name = args[0]
 
-# NGリストを読み込む
-dir_python = os.path.dirname(__file__)
+    # NG エントリを読む
+    unsuitables = get_unsuitables()
 
-with open(f'{dir_python}/unsuitable_words.txt', 'r', encoding='utf-8') as file:
-    unsuitables = file.read().splitlines()
+    # UT エントリを読む
+    with open(file_name, 'r', encoding='utf-8') as file:
+        lines = file.read().splitlines()
 
-for i in range(len(unsuitables)):
-    if unsuitables[i][0] == '/':
-        unsuitables[i] = re.compile(unsuitables[i][1:])
+    lines_mod = []
 
-with open(file_name, 'w', encoding='utf-8') as dict_file:
     for line in lines:
-        hyouki = line.split('\t')[4]
+        hyouki = line.rsplit('\t', 1)[1]
+        hyouki = remove_unsuitable_entry(hyouki, unsuitables)
+        if not hyouki:
+            continue
 
-        for unsuitable in unsuitables:
-            if type(unsuitable) is re.Pattern:
-                if re.match(unsuitable, hyouki) is not None:
-                    hyouki = None
-                    break
-            elif unsuitable in hyouki:
-                hyouki = None
-                break
+        lines_mod.append(f'{line}\n')
 
-        if hyouki is not None:
-            dict_file.write(line + '\n')
+    lines = lines_mod
+
+    with open(file_name, 'w', encoding='utf-8') as dict_file:
+        dict_file.writelines(lines)
+
+
+def get_unsuitables():
+    # NG エントリを読む
+    dir_python = os.path.dirname(__file__)
+
+    with open(
+            f'{dir_python}/unsuitable_words.txt', 'r',
+            encoding='utf-8') as file:
+        unsuitables = file.read().splitlines()
+
+    for i in range(len(unsuitables)):
+        if unsuitables[i].startswith('/'):
+            unsuitables[i] = re.compile(unsuitables[i][1:])
+
+    return unsuitables
+
+
+def remove_unsuitable_entry(hyouki, unsuitables):
+    for unsuitable in unsuitables:
+        if type(unsuitable) is re.Pattern:
+            if re.match(unsuitable, hyouki):
+                return None
+        elif unsuitable in hyouki:
+            return None
+
+    return hyouki
+
+
+if __name__ == '__main__':
+    main()
