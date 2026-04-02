@@ -15,7 +15,7 @@ from pathlib import Path
 from unicodedata import normalize
 
 # 「}}'''」にマッチ
-RE_HYOUKI_AFTER_TEMPLATE = re.compile(r'\}\}(?=\'\'\'|「|『)')
+RE_TEMPLATE_END_AND_BOLD = re.compile(r'\}\}(?=\'\'\'|「|『)')
 # 「{{...}}」にマッチ
 RE_TEMPLATE = re.compile(r'{{.*?}}')
 # 「<ref .../>」と「<ref>...</ref>」にマッチ
@@ -180,7 +180,7 @@ def get_yomi(hyouki, article):
     lines = article.split('\n==')[0]
 
     # 「}}'''」を「}}\n'''」に置換
-    lines = RE_HYOUKI_AFTER_TEMPLATE.sub('}}\n\'\'\'', lines)
+    lines = RE_TEMPLATE_END_AND_BOLD.sub('}}\n\'\'\'', lines)
 
     # 「{{読み仮名」の前に改行を入れる
     lines = lines.replace('{{読み仮名', '\n{{読み仮名')
