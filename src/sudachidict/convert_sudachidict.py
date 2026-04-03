@@ -4,11 +4,21 @@
 # Author: UTUMI Hirosi (utuhiro78 at yahoo dot co dot jp)
 # License: Apache License, Version 2.0
 
+import csv
+import io
 import jaconv
 import os
 import re
 import urllib.request
 from zipfile import ZipFile
+
+# ひらがなと長音のいずれか1文字にマッチ
+RE_HIRAGANA = re.compile(r'[ぁ-ゔー]')
+
+# 「=」「・」を削除
+TRANS_NON_YOMI = str.maketrans('', '', '=・')
+# 「ゐ」「ゑ」を「い」「え」に置換
+TRANS_OLD_I_E = str.maketrans('ゐゑ', 'いえ', '')
 
 
 def main():
@@ -21,122 +31,118 @@ def main():
     # <a href='20250825/small_lex.zip'>
     date = html.split('/small_lex.zip')[0].split('\'')[-1]
 
-    lines = get_sudachidict(f'small_lex_{date}.zip', url, date)
-    lines += get_sudachidict(f'core_lex_{date}.zip', url, date)
-    lines += get_sudachidict(f'notcore_lex_{date}.zip', url, date)
-    lines = lines.splitlines()
+    sudachidict = []
+    base_name = ['small', 'core', 'notcore']
+    for entry in base_name:
+        zip_file = f'{entry}_lex_{date}.zip'
+        sudachidict.extend(get_sudachi_file(zip_file, url, date))
 
-    lines = generate_dict(lines)
-    lines = remove_duplicates(lines)
+    sudachidict = remove_duplicate(sudachidict)
 
     with open('mozcdic-ut-sudachidict.txt', 'w', encoding='utf-8') as file:
-        file.writelines(lines)
+        for entry in sudachidict:
+            file.write(f'{"\t".join(entry)}\n')
 
 
-def get_sudachidict(zip_file, url, date):
-    file_orig = '_'.join(zip_file.split('_')[:-1])
+def get_sudachi_file(zip_file, url, date):
+    # 'small_lex_20250825.zip' -> 'small_lex'
+    file_orig = zip_file.rsplit('_', 1)[0]
 
     if os.path.exists(zip_file) is False:
         urllib.request.urlretrieve(
                 f'{url}{date}/{file_orig}.zip', zip_file)
 
+    sudachidict = []
+
     with ZipFile(zip_file) as zip_ref:
-        with zip_ref.open(f'{file_orig}.csv') as file:
-            lines = file.read().decode()
+        with zip_ref.open(f'{file_orig}.csv') as f:
+            reader = csv.reader(io.TextIOWrapper(f, encoding='utf-8'))
+            for row in reader:
+                row = generate_dict_entry(row)
+                if row:
+                    sudachidict.append(row)
 
-    return (lines)
-
-
-def generate_dict(lines):
-    l2 = []
-
-    for i in range(len(lines)):
-        # https://github.com/WorksApplications/Sudachi/blob/develop/docs/user_dict.md
-        # 見出し (TRIE 用),左連接ID,右連接ID,コスト,\
-        # 見出し (解析結果表示用),品詞1,品詞2,品詞3,品詞4,品詞 (活用型),品詞 (活用形),
-        # 読み,正規化表記,辞書形ID,分割タイプ,A単位分割情報,B単位分割情報,※未使用
-
-        # ihi corporation,4785,4785,5000,
-        # ihi corporation,名詞,固有名詞,一般,*,*,*,
-        # アイエイチアイ,IHI,*,A,*,*,*,*
-
-        entry = lines[i].split(',')
-
-        # 「読み」を読みにする
-        yomi = entry[11].replace('=', '')
-        yomi = yomi.replace('・', '')
-
-        # 「正規化表記」を表記にする
-        hyouki = entry[12]
-
-        # 2文字以下の読みをスキップ
-        # 1文字以下の表記をスキップ
-        # 名詞以外をスキップ
-        # 地名をスキップ
-        #     地名は郵便番号データから作成する。
-        # 「人名,名」をスキップ
-        #     「科学（すすむ）」のような当て読みがあるので。
-        if len(yomi) < 3 or \
-                len(hyouki) < 2 or \
-                entry[5] != '名詞' or \
-                entry[7] == '地名' or \
-                (entry[7] == '人名' and entry[8] == '名'):
-            continue
-
-        # 読みのカタカナをひらがなに変換
-        yomi = convert_to_hiragana(yomi)
-
-        # 読みがひらがな以外を含む場合はスキップ
-        if yomi != collect_hiragana(yomi):
-            continue
-
-        cost = int(entry[3])
-
-        # コストが 0 未満の場合は 0 にする
-        if cost < 0:
-            cost = 0
-        # コストが 10000 以上の場合は 9999 にする
-        elif cost > 9999:
-            cost = 9999
-
-        # 全体のコストを 8000 台にする
-        cost = 8000 + (cost // 10)
-
-        # 読み, 表記, コスト の順に並べる
-        entry = [yomi, hyouki, str(cost)]
-        l2.append('\t'.join(entry))
-
-    return (l2)
+    return sudachidict
 
 
-def remove_duplicates(lines):
-    lines.sort()
-    l2 = []
+def generate_dict_entry(entry):
+    # 0 見出し (TRIE 用),1 左連接ID,2 右連接ID,3 コスト
+    # 4 見出し (解析結果表示用),5 品詞1,6 品詞2,7 品詞3
+    # 8 品詞4,9 品詞 (活用型),10 品詞 (活用形),11 読み
+    # 8 12 正規化表記,13 辞書形ID,14 分割タイプ,15 A単位分割情報,
+    # 16 B単位分割情報,17 ※未使用
 
-    for i in range(len(lines)):
-        entry1 = lines[i].split('\t')
-        entry2 = lines[i - 1].split('\t')
+    # 6角,5146,5146,4005,
+    # 6角,名詞,普通名詞,一般,
+    # *,*,*,ロッカク,
+    # 六角,*,A,*,
+    # *,*,*
 
-        # [読み, 表記] が重複するエントリをスキップ
-        if entry1[0:2] == entry2[0:2]:
-            continue
+    id1, id3, id4 = entry[5], entry[7], entry[8]
+    yomi, hyouki = entry[11], entry[12]
+    yomi = yomi.translate(TRANS_NON_YOMI)
 
-        # Mozc 辞書の並びに変更
-        entry1 = [entry1[0], '0000', '0000', entry1[2], entry1[1]]
-        l2.append('\t'.join(entry1) + '\n')
+    # 2文字以下の読みをスキップ
+    # 1文字以下の表記をスキップ
+    # 名詞以外をスキップ
+    # 地名をスキップ
+    #     地名は郵便番号データから作成する。
+    # 「人名,名」をスキップ
+    #     「科学（すすむ）」のような当て読みがあるので。
+    if len(yomi) < 3 or \
+            len(hyouki) < 2 or \
+            id1 != '名詞' or \
+            id3 == '地名' or \
+            (id3 == '人名' and id4 == '名'):
+        return None
 
-    return (l2)
+    # 読みのカタカナをひらがなに変換
+    yomi = convert_to_hiragana(yomi)
+
+    # 読みがひらがな以外を含む場合はスキップ
+    if yomi != collect_hiragana(yomi):
+        return None
+
+    cost = int(entry[3])
+    # 0 から 9999 の範囲に収める
+    cost = max(0, min(cost, 9999))
+
+    # 全体のコストを 8000 台にする
+    cost = 8000 + (cost // 10)
+
+    return [yomi, cost, hyouki]
+
+
+def remove_duplicate(sudachidict):
+    # yomi -> hyouki -> cost の優先順でソート
+    sudachidict.sort(key=lambda x: (x[0], x[2], x[1]))
+    sudachidict_mod = []
+    prev_key = ()
+
+    for entry in sudachidict:
+        yomi, cost, hyouki = entry
+        current_key = (yomi, hyouki)
+
+        # 重複する UT エントリを削除
+        # Mozc 形式のエントリを作成
+        if prev_key != current_key:
+            entry = [yomi, '0000', '0000', str(cost), hyouki]
+            sudachidict_mod.append(entry)
+
+        prev_key = current_key
+
+    return sudachidict_mod
 
 
 def convert_to_hiragana(entry):
     entry = jaconv.kata2hira(entry)
-    entry = entry.translate(str.maketrans('ゐゑ', 'いえ', ''))
-    return (entry)
+    entry = entry.translate(TRANS_OLD_I_E)
+    return entry
 
 
 def collect_hiragana(entry):
-    entry = ''.join(re.findall('[ぁ-ゔー]', entry))
-    return (entry)
+    entry = ''.join(RE_HIRAGANA.findall(entry))
+    return entry
 
 
 if __name__ == '__main__':
