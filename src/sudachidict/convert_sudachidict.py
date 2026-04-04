@@ -7,13 +7,13 @@
 import csv
 import io
 import jaconv
-import os
 import re
 import urllib.request
+from pathlib import Path
 from zipfile import ZipFile
 
-# ひらがなと長音のいずれか1文字にマッチ
-RE_HIRAGANA = re.compile(r'[ぁ-ゔー]')
+# ひらがなと長音にマッチ
+RE_HIRAGANA = re.compile(r'[ぁ-ゔー]+')
 
 # 「=」「・」を削除
 TRANS_NON_YOMI = str.maketrans('', '', '=・')
@@ -48,7 +48,7 @@ def get_sudachi_file(zip_file, url, date):
     # 'small_lex_20250825.zip' -> 'small_lex'
     file_orig = zip_file.rsplit('_', 1)[0]
 
-    if os.path.exists(zip_file) is False:
+    if not Path(zip_file).exists():
         urllib.request.urlretrieve(
                 f'{url}{date}/{file_orig}.zip', zip_file)
 
@@ -100,7 +100,7 @@ def generate_dict_entry(entry):
     yomi = convert_to_hiragana(yomi)
 
     # 読みがひらがな以外を含む場合はスキップ
-    if yomi != collect_hiragana(yomi):
+    if not RE_HIRAGANA.fullmatch(yomi):
         return None
 
     cost = int(entry[3])
@@ -137,11 +137,6 @@ def remove_duplicate(sudachidict):
 def convert_to_hiragana(entry):
     entry = jaconv.kata2hira(entry)
     entry = entry.translate(TRANS_OLD_I_E)
-    return entry
-
-
-def collect_hiragana(entry):
-    entry = ''.join(RE_HIRAGANA.findall(entry))
     return entry
 
 
