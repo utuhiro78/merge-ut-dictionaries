@@ -9,8 +9,10 @@ import re
 import sys
 from unicodedata import normalize
 
-RE_HIRAGANA_KATAKANA = re.compile(r'[ぁ-ゔァ-ヴー]')
-RE_HIRAGANA = re.compile(r'[ぁ-ゔー]')
+# ひらがなとカタカナと長音のいずれか1文字にマッチ
+RE_HIRAGANA_KATAKANA = re.compile(r'[ぁ-ゔァ-ヴー]+')
+# ひらがなと長音のいずれか1文字にマッチ
+RE_HIRAGANA = re.compile(r'[ぁ-ゔー]+')
 
 TRANS_NON_YOMI = str.maketrans('', '', ',.!?-+*=:・、。×★☆')
 TRANS_OLD_I_E = str.maketrans('ゐゑ', 'いえ', '')
@@ -38,7 +40,7 @@ def main():
         hyouki = modify_hyouki(hyouki)
         entry[0], entry[4] = remove_unnecessary_entry(yomi, hyouki)
         if entry[0]:
-            lines_mod.append(f'{'\t'.join(entry)}\n')
+            lines_mod.append(f'{"\t".join(entry)}\n')
 
     lines = lines_mod
 
@@ -75,7 +77,7 @@ def remove_unnecessary_entry(yomi, hyouki):
     # hyouki_strip がひらがなカタカナのみの場合は、
     # 読みを hyouki_strip から作る
     #     さいたまスーパーアリーナ
-    if hyouki_strip == collect_hiragana_katakana(hyouki_strip):
+    if RE_HIRAGANA_KATAKANA.fullmatch(hyouki_strip):
         yomi = convert_to_hiragana(hyouki_strip)
 
     # 読みが2文字以下の場合はスキップ
@@ -94,25 +96,18 @@ def remove_unnecessary_entry(yomi, hyouki):
             len(hyouki) > 25 or \
             len(yomi) / len(hyouki_strip) > 4 or \
             len(hyouki_strip.encode()) / len(yomi) > 3 or \
-            yomi != ''.join(RE_HIRAGANA.findall(yomi)) or \
+            not RE_HIRAGANA.fullmatch(yomi) or \
             '\\u' in hyouki or \
             '/' in hyouki:
         return None, None
 
     # hyouki_stripに数字が3個以上ある場合はスキップ
     # ただし「100円ショップ」は残す
-    nums = re.findall(r'\d+', hyouki)
-    if nums:
-        nums = int(''.join(nums))
-        if nums > 100:
-            return None, None
+    nums = ''.join(re.findall(r'\d+', hyouki))
+    if nums and int(nums) > 100:
+        return None, None
 
     return yomi, hyouki
-
-
-def collect_hiragana_katakana(entry):
-    entry = ''.join(RE_HIRAGANA_KATAKANA.findall(entry))
-    return entry
 
 
 def convert_to_hiragana(entry):
