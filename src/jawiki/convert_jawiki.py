@@ -23,10 +23,10 @@ RE_REF = re.compile(r'<ref.*?(/>|>.*?</ref>)', re.DOTALL)
 # 「)、/{\[,」のいずれか1文字にマッチ
 RE_YOMI_KUGIRI = re.compile(r'[)、/{\[,]')
 
-# ひらがなとカタカナと長音のいずれか1文字にマッチ
-RE_HIRAGANA_KATAKANA = re.compile(r'[ぁ-ゔァ-ヴー]')
-# カタカナと長音のいずれか1文字にマッチ
-RE_KATAKANA = re.compile(r'[ァ-ヴー]')
+# ひらがなとカタカナと長音にマッチ
+RE_HIRAGANA_KATAKANA = re.compile(r'[ぁ-ゔァ-ヴー]+')
+# カタカナと長音にマッチ
+RE_KATAKANA = re.compile(r'[ァ-ヴー]+')
 
 # 「 \'"「」『』」を削除
 TRANS_KAKKO = str.maketrans('', '', ' \'"「」『』')
@@ -172,7 +172,7 @@ def get_yomi(hyouki, article):
     # hyouki_strip がひらがなカタカナのみの場合は、
     # 読みを hyouki_strip から作る
     #     さいたまスーパーアリーナ
-    if hyouki_strip == collect_hiragana_katakana(hyouki_strip):
+    if RE_HIRAGANA_KATAKANA.fullmatch(hyouki_strip):
         yomi = convert_to_hiragana(hyouki_strip)
         return yomi
 
@@ -245,8 +245,8 @@ def get_yomi(hyouki, article):
         # 読みがひらがなカタカナ以外を含む場合はスキップ
         if len(yomi) < 3 or \
                 yomi.startswith('ー') or \
-                yomi == collect_katakana(yomi) or \
-                yomi != collect_hiragana_katakana(yomi):
+                RE_KATAKANA.fullmatch(yomi) or \
+                not RE_HIRAGANA_KATAKANA.fullmatch(yomi):
             continue
 
         # 読みのカタカナをひらがなに変換
@@ -255,19 +255,9 @@ def get_yomi(hyouki, article):
         return yomi
 
 
-def collect_hiragana_katakana(entry):
-    entry = ''.join(RE_HIRAGANA_KATAKANA.findall(entry))
-    return entry
-
-
 def convert_to_hiragana(entry):
     entry = jaconv.kata2hira(entry)
     entry = entry.translate(TRANS_OLD_I_E)
-    return entry
-
-
-def collect_katakana(entry):
-    entry = ''.join(RE_KATAKANA.findall(entry))
     return entry
 
 
