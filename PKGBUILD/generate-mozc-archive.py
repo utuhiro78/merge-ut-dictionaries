@@ -17,7 +17,7 @@ HEADERS = {'User-Agent': 'Mozilla/5.0'}
 
 
 def main():
-    # mozc のバージョンを取得
+    # Mozc のバージョンを取得
     url = 'https://raw.githubusercontent.com/' + \
             'google/mozc/refs/heads/master/src/version.bzl'
     req = urllib.request.Request(url, headers=HEADERS)
@@ -32,64 +32,59 @@ def main():
     url = 'https://api.github.com/repos/google/mozc/commits/master'
     committed_date = get_committed_date(url)
 
-    # mozc のアーカイブが古い場合は取得
     mozc_ver_full = f'{mozc_ver}.{committed_date}'
     mozc_dir = f'mozc-{mozc_ver_full}'
 
-    if not Path(f'{mozc_dir}.tar.zst').exists():
-        if Path('mozc').exists():
-            shutil.rmtree('mozc')
-
-        subprocess.run(
-                ['git', 'clone', '--depth', '1', '-b', 'master',
-                    'https://github.com/google/mozc.git'], check=True)
-        shutil.rmtree('mozc/.git')
-        shutil.rmtree('mozc/.github')
-
-        if Path(mozc_dir).exists():
-            shutil.rmtree(mozc_dir)
-
-        Path('mozc').replace(mozc_dir)
-    else:
-        print(f'{mozc_dir} is up to date.')
+    # Mozc の最新アーカイブが存在する場合は終了
+    if Path(f'{mozc_dir}.tar.zst').exists():
+        print('The archive is up to date.')
         sys.exit()
 
-    fcitx_file = 'fcitx-mozc.zip'
+    # Mozc の最新アーカイブを取得
+    mozc_file = 'mozc.zip'
+    Path(mozc_file).unlink(missing_ok=True)
 
-    # 既存の 'fcitx-mozc.zip' を削除
+    url = 'https://github.com/google/mozc/archive/refs/heads/master.zip'
+    urllib.request.urlretrieve(url, mozc_file)
+
+    extract_dir = 'mozc-master'
+    if Path(extract_dir).exists():
+        shutil.rmtree(extract_dir)
+
+    shutil.unpack_archive(mozc_file)
+    Path(mozc_file).unlink(missing_ok=True)
+    Path(extract_dir).replace(mozc_dir)
+
+    # Fcitx-mozc の最新アーカイブを取得
+    fcitx_file = 'fcitx-mozc.zip'
     Path(fcitx_file).unlink(missing_ok=True)
 
-    # 'fcitx-mozc.zip' を取得
-    subprocess.run(
-        ['wget', 'https://github.com/' +
-            'fcitx/mozc/archive/refs/heads/fcitx.zip',
-            '-O', fcitx_file], check=True)
+    url = 'https://github.com/fcitx/mozc/archive/refs/heads/fcitx.zip'
+    urllib.request.urlretrieve(url, fcitx_file)
 
-    fcitx_dir = 'mozc-fcitx'
+    extract_dir = 'mozc-fcitx'
+    if Path(extract_dir).exists():
+        shutil.rmtree(extract_dir)
 
-    # 既存の 'mozc-fcitx' を削除
-    if Path(fcitx_dir).exists():
-        shutil.rmtree(fcitx_dir)
-
-    # 'fcitx-mozc.zip' を展開
     shutil.unpack_archive(fcitx_file)
+    Path(fcitx_file).unlink(missing_ok=True)
 
-    # fcitx-mozc のファイルを mozc に移動
-    Path(f'{fcitx_dir}/scripts').replace(f'{mozc_dir}/scripts')
+    # Fcitx-mozc のファイルを Mozc に移動
+    Path(f'{extract_dir}/scripts').replace(f'{mozc_dir}/scripts')
 
     shutil.rmtree(f'{mozc_dir}/src/unix')
-    Path(f'{fcitx_dir}/src/unix').replace(f'{mozc_dir}/src/unix')
+    Path(f'{extract_dir}/src/unix').replace(f'{mozc_dir}/src/unix')
 
     Path(
-        f'{fcitx_dir}/src/MODULE.bazel').replace(
+        f'{extract_dir}/src/MODULE.bazel').replace(
         f'{mozc_dir}/src/MODULE.bazel')
     Path(
-        f'{fcitx_dir}/src/session/BUILD.bazel').replace(
+        f'{extract_dir}/src/session/BUILD.bazel').replace(
         f'{mozc_dir}/src/session/BUILD.bazel')
 
-    shutil.rmtree(fcitx_dir)
+    shutil.rmtree(extract_dir)
 
-    # mozc のアーカイブを作成
+    # Mozc のアーカイブを作成
     subprocess.run(
         ['tar', '--zstd', '-cf', f'{mozc_dir}.tar.zst', mozc_dir], check=True)
 
