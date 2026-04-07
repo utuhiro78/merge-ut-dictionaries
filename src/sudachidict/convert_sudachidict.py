@@ -35,7 +35,19 @@ def main():
     base_name = ['small', 'core', 'notcore']
     for entry in base_name:
         zip_file = f'{entry}_lex_{date}.zip'
-        sudachidict.extend(get_sudachi_file(zip_file, url, date))
+        file_orig = zip_file.rsplit('_', 1)[0]
+
+        if not Path(zip_file).exists():
+            urllib.request.urlretrieve(
+                    f'{url}{date}/{file_orig}.zip', zip_file)
+
+        with ZipFile(zip_file) as zip_ref:
+            with zip_ref.open(f'{file_orig}.csv') as f:
+                reader = csv.reader(io.TextIOWrapper(f, encoding='utf-8'))
+                for row in reader:
+                    row = generate_dict_entry(row)
+                    if row:
+                        sudachidict.append(row)
 
     sudachidict = remove_duplicate(sudachidict)
 
@@ -44,32 +56,11 @@ def main():
             file.write(f'{"\t".join(entry)}\n')
 
 
-def get_sudachi_file(zip_file, url, date):
-    # 'small_lex_20250825.zip' -> 'small_lex'
-    file_orig = zip_file.rsplit('_', 1)[0]
-
-    if not Path(zip_file).exists():
-        urllib.request.urlretrieve(
-                f'{url}{date}/{file_orig}.zip', zip_file)
-
-    sudachidict = []
-
-    with ZipFile(zip_file) as zip_ref:
-        with zip_ref.open(f'{file_orig}.csv') as f:
-            reader = csv.reader(io.TextIOWrapper(f, encoding='utf-8'))
-            for row in reader:
-                row = generate_dict_entry(row)
-                if row:
-                    sudachidict.append(row)
-
-    return sudachidict
-
-
 def generate_dict_entry(entry):
     # 0 見出し (TRIE 用),1 左連接ID,2 右連接ID,3 コスト
     # 4 見出し (解析結果表示用),5 品詞1,6 品詞2,7 品詞3
     # 8 品詞4,9 品詞 (活用型),10 品詞 (活用形),11 読み
-    # 8 12 正規化表記,13 辞書形ID,14 分割タイプ,15 A単位分割情報,
+    # 12 正規化表記,13 辞書形ID,14 分割タイプ,15 A単位分割情報,
     # 16 B単位分割情報,17 ※未使用
 
     # 6角,5146,5146,4005,
@@ -88,7 +79,7 @@ def generate_dict_entry(entry):
     # 地名をスキップ
     #     地名は郵便番号データから作成する。
     # 「人名,名」をスキップ
-    #     「科学（すすむ）」のような当て読みがあるので。
+    #     数が膨大で候補が増えすぎる。
     if len(yomi) < 3 or \
             len(hyouki) < 2 or \
             id1 != '名詞' or \
