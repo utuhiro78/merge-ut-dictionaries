@@ -4,98 +4,126 @@
 # Author: UTUMI Hirosi (utuhiro78 at yahoo dot co dot jp)
 # License: Apache License, Version 2.0
 
+import csv
+import io
 import jaconv
 import lzma
 import re
-import subprocess
 import urllib.request
+from pathlib import Path
 
-url = 'https://github.com/neologd/mecab-ipadic-neologd/tree/master/seed'
-with urllib.request.urlopen(url) as response:
-    html = response.read().decode('utf-8')
+# ひらがなと長音にマッチ
+RE_HIRAGANA = re.compile(r'[ぁ-ゔー]+')
 
-neologdver = html.split('mecab-user-dict-seed.')[1]
-neologdver = neologdver.split('.csv.xz')[0]
+# 「=」「・」を削除
+TRANS_NON_YOMI = str.maketrans('', '', '=・')
+# 「ゐ」「ゑ」を「い」「え」に置換
+TRANS_OLD_I_E = str.maketrans('ゐゑ', 'いえ', '')
 
-subprocess.run(
-    ['wget', '-nc', 'https://github.com/neologd/mecab-ipadic-neologd/' +
-        f'raw/master/seed/mecab-user-dict-seed.{neologdver}.csv.xz'])
 
-with lzma.open(f'mecab-user-dict-seed.{neologdver}.csv.xz') as xz_ref:
-    lines = xz_ref.read().decode()
+def main():
+    url = 'https://github.com/neologd/mecab-ipadic-neologd/tree/master/seed'
+    with urllib.request.urlopen(url) as response:
+        html = response.read().decode('utf-8')
 
-lines = lines.splitlines()
+    neologd_ver = html.split('mecab-user-dict-seed.')[1]
+    neologd_ver = neologd_ver.split('.csv.xz')[0]
+    neologd_file = f'mecab-user-dict-seed.{neologd_ver}.csv.xz'
 
-l2 = []
+    if not Path(neologd_file).exists():
+        url = 'https://github.com/neologd/mecab-ipadic-neologd/raw/refs/' + \
+            f'heads/master/seed/{neologd_file}'
+        urllib.request.urlretrieve(url)
 
-for i in range(len(lines)):
+    neologd_dict = []
+
+    with lzma.open(neologd_file) as xz_ref:
+        reader = csv.reader(io.TextIOWrapper(xz_ref, encoding='utf-8'))
+        for row in reader:
+            row = generate_dict_entry(row)
+            if row:
+                neologd_dict.append(row)
+
+    neologd_dict = remove_duplicate(neologd_dict)
+
+    with open('mozcdic-ut-neologd.txt', 'w', encoding='utf-8') as file:
+        for entry in neologd_dict:
+            file.write(f'{"\t".join(entry)}\n')
+
+
+def generate_dict_entry(entry):
     # https://taku910.github.io/mecab/dic.html
-    # 表層形,左文脈ID,右文脈ID,コスト,品詞1,品詞2,品詞3,品詞4,品詞5,品詞6,
-    # 原形,読み,発音
+    # 0 表層形,1 左文脈ID,2 右文脈ID,3 コスト,
+    # 4 品詞1,5 品詞2,6 品詞3,7 品詞4,
+    # 8 品詞5,9 品詞6,10 原形,11 読み,
+    # 12 発音
 
-    # ihi corporation,1292,1292,5893,名詞,固有名詞,組織,*,*,*,
-    # IHI,アイエイチアイ,アイエイチアイ
+    # ihi corporation,1292,1292,5893,
+    # 名詞,固有名詞,組織,*,
+    # *,*,IHI,アイエイチアイ,
+    # アイエイチアイ
 
-    entry = lines[i].split(',')
+    id1, id3, id4 = entry[4], entry[6], entry[7]
+    yomi, hyouki = entry[11], entry[10]
+    yomi = yomi.translate(TRANS_NON_YOMI)
 
-    # 「読み」を読みにする
-    yomi = entry[11].replace('=', '')
-    yomi = yomi.replace('・', '')
-
-    # 「原形」を表記にする
-    hyouki = entry[10]
-
-    # 読みが2文字以下の場合はスキップ
-    # 表記が1文字以下の場合はスキップ
-    # 名詞以外の場合はスキップ
-    # 地名の場合はスキップ。地名は郵便番号データから作成する
+    # 2文字以下の読みをスキップ
+    # 1文字以下の表記をスキップ
+    # 名詞以外をスキップ
+    # 地域をスキップ
+    #     地名は郵便番号データから作成する。
+    # 「人名,名」をスキップ
+    #     数が膨大で候補が増えすぎる。
     if len(yomi) < 3 or \
             len(hyouki) < 2 or \
-            entry[4] != '名詞' or \
-            entry[6] == '地域':
-        continue
+            id1 != '名詞' or \
+            id3 == '地域' or \
+            (id3 == '人名' and id4 == '名'):
+        return None
 
     # 読みのカタカナをひらがなに変換
-    yomi = jaconv.kata2hira(yomi)
-    yomi = yomi.replace('ゐ', 'い').replace('ゑ', 'え')
+    yomi = convert_to_hiragana(yomi)
 
     # 読みがひらがな以外を含む場合はスキップ
-    if yomi != ''.join(re.findall('[ぁ-ゔー]', yomi)):
-        continue
+    if not RE_HIRAGANA.fullmatch(yomi):
+        return None
 
     cost = int(entry[3])
-
-    # コストが 0 未満の場合は 0 にする
-    if cost < 0:
-        cost = 0
-    # コストが 10000 以上の場合は 9999 にする
-    elif cost > 9999:
-        cost = 9999
+    # 0 から 9999 の範囲に収める
+    cost = max(0, min(cost, 9999))
 
     # 全体のコストを 8000 台にする
     cost = 8000 + (cost // 10)
 
-    # 読み, 表記, コスト の順に並べる
-    entry = [yomi, hyouki, str(cost)]
-    l2.append('\t'.join(entry))
+    return [yomi, cost, hyouki]
 
-lines = sorted(l2)
-l2 = []
 
-for i in range(len(lines)):
-    entry1 = lines[i].split('\t')
-    entry2 = lines[i - 1].split('\t')
+def remove_duplicate(neologd_dict):
+    # yomi -> hyouki -> cost の優先順でソート
+    neologd_dict.sort(key=lambda x: (x[0], x[2], x[1]))
+    neologd_dict_mod = []
+    prev_key = ()
 
-    # [読み, 表記] が重複するエントリをスキップ
-    if entry1[0:2] == entry2[0:2]:
-        continue
+    for entry in neologd_dict:
+        yomi, cost, hyouki = entry
+        current_key = (yomi, hyouki)
 
-    # Mozc 辞書の並びに変更
-    entry1 = [entry1[0], '0000', '0000', entry1[2], entry1[1]]
-    l2.append('\t'.join(entry1) + '\n')
+        # 重複する UT エントリを削除
+        # Mozc 形式のエントリを作成
+        if prev_key != current_key:
+            entry = [yomi, '0000', '0000', str(cost), hyouki]
+            neologd_dict_mod.append(entry)
 
-lines = l2
-dict_name = 'mozcdic-ut-neologd.txt'
+        prev_key = current_key
 
-with open(dict_name, 'w', encoding='utf-8') as file:
-    file.writelines(lines)
+    return neologd_dict_mod
+
+
+def convert_to_hiragana(entry):
+    entry = jaconv.kata2hira(entry)
+    entry = entry.translate(TRANS_OLD_I_E)
+    return entry
+
+
+if __name__ == '__main__':
+    main()
