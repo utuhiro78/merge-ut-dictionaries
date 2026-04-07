@@ -29,8 +29,8 @@ def main():
     place_dict = get_zipcode_file()
 
     with open('mozcdic-ut-place-names.txt', 'w', encoding='utf-8') as file:
-        for entry in place_dict:
-            entry = [entry[0], '0000', '0000', '9000', entry[1]]
+        for yomi, hyouki in place_dict:
+            entry = [yomi, '0000', '0000', '9000', hyouki]
             file.write(f'{"\t".join(entry)}\n')
 
 
@@ -45,7 +45,7 @@ def get_zipcode_file():
 
     with ZipFile('ken_all.zip') as zip_ref:
         with zip_ref.open('KEN_ALL.CSV') as f:
-            reader = csv.reader(io.TextIOWrapper(f, encoding='sjis'))
+            reader = csv.reader(io.TextIOWrapper(f, encoding='Shift_JIS'))
             for row in reader:
                 entry = generate_dict_entry(row)
                 if entry:
@@ -91,20 +91,22 @@ def generate_dict_entry(entry):
     # chou_hyouki 全体に除外文字列があるか確認
     if any(s in chou_hyouki for s in ng_str):
         # マッチする場合は (shi_yomi, shi_hyouki) のみを返す
-        return [(shi_yomi, shi_hyouki)]
+        return {(shi_yomi, shi_hyouki)}
 
     chou_yomi = update_chou_yomi(chou_yomi)
     if not chou_yomi:
         return None
 
+    entry_mod = set()
+
     # 市のエントリを作成
-    entry_mod = [(shi_yomi, shi_hyouki)]
+    entry_mod.add((shi_yomi, shi_hyouki))
 
     # 町のエントリを作成
-    entry_mod.append((chou_yomi, chou_hyouki))
+    entry_mod.add((chou_yomi, chou_hyouki))
 
     # 市+町のエントリを作成
-    entry_mod.append((shi_yomi + chou_yomi, shi_hyouki + chou_hyouki))
+    entry_mod.add((shi_yomi + chou_yomi, shi_hyouki + chou_hyouki))
 
     return entry_mod
 
