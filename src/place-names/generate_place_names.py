@@ -38,7 +38,7 @@ def get_zipcode_file():
     Path('ken_all.zip').unlink(missing_ok=True)
 
     urllib.request.urlretrieve(
-        'https://www.post.japanpost.jp/zipcode/dl/kogaki/zip/ken_all.zip',
+        'https://www.post.japanpost.jp/service/search/zipcode/download/kogaki/zip/ken_all.zip',
         'ken_all.zip')
 
     place_dict = set()
