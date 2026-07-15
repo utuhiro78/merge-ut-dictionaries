@@ -45,7 +45,7 @@ sudachidict="true"
 
 ```
 cd src/merge/
-sh make.sh
+bash make.sh
 cat mozcdic-ut.txt >> ../../../mozc-master/src/data/dictionary_oss/dictionary00.txt
 ```
 
