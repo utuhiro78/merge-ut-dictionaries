@@ -26,7 +26,7 @@ git clone --depth 1 https://github.com/utuhiro78/merge-ut-dictionaries.git
 
 ## Configure
 
-Comment out unnecessary dictionaries in `src/merge/make.sh`.
+Comment out unnecessary dictionaries in src/merge/make.sh.
 
 Default settings:
 
@@ -53,7 +53,7 @@ Build Mozc as usual.
 
 ## Option: Generate the UT dictionaries using the latest stuff
 
-Uncomment ```#generate_latest="true"``` in `src/merge/make.sh`.
+Uncomment `#generate_latest="true"` in src/merge/make.sh.
 
 It downloads the latest "jawiki-latest-pages-articles-multistream.xml.bz2" (over 4.2 GB).
 
