@@ -29,7 +29,7 @@ def main():
         html = response.read().decode()
 
     # <a href='20250825/small_lex.zip'>
-    date = html.split('/small_lex.zip')[0].split('\'')[-1]
+    date = html.split('/small_lex.zip')[0][-8:]
 
     sudachidict = []
     base_name = ['small', 'core', 'notcore']
