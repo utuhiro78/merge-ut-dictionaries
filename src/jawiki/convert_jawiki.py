@@ -9,6 +9,7 @@ import html
 import jaconv
 import multiprocessing
 import re
+import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -60,6 +61,7 @@ def generate_jawiki_dict():
             root = ET.fromstring(response.read().decode())
     except urllib.error.HTTPError as e:
         print(f'Error: {e.code}')
+        return []
 
     description_text = root.find('.//item/description').text
     url = re.search(r'href="([^"]+)"', description_text).group(1)
@@ -79,6 +81,7 @@ def generate_jawiki_dict():
                     out_file.write(chunk)
         except urllib.error.HTTPError as e:
             print(f'Error: {e.code}')
+            return []
 
     # Wikipedia のダンプを読み込む
     jawiki_dict = []
@@ -104,10 +107,10 @@ def generate_jawiki_dict():
 
 def get_jawiki_article(jawiki_articles_file):
     with bz2.open(jawiki_articles_file, 'rt', encoding='utf-8') as file:
-        context = ET.iterparse(file, events=('start', 'end'))
-        event, root = next(context)
-
         try:
+            context = ET.iterparse(file, events=('start', 'end'))
+            event, root = next(context)
+
             for event, elem in context:
                 if event == 'end' and elem.tag.endswith('page'):
                     title = elem.findtext('{*}title')
